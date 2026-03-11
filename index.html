@@ -1199,6 +1199,68 @@ body {
 .fade-transition {
   transition: opacity 0.8s ease;
 }
+
+/* أزرار التحكم بالصوت والاستماع */
+#audio-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  display: flex;
+  gap: 10px;
+}
+
+.audio-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(10,10,20,0.8);
+  border: 1px solid var(--gold);
+  color: var(--gold-light);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+}
+
+.audio-btn:hover {
+  background: var(--gold);
+  color: var(--black);
+  transform: scale(1.1);
+  box-shadow: 0 0 20px var(--gold);
+}
+
+.listen-btn {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.2);
+  border: 1px solid var(--gold);
+  color: var(--gold-light);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.listen-btn:hover {
+  background: var(--gold);
+  color: var(--black);
+  transform: scale(1.1);
+}
+
+.section-header {
+  position: relative;
+  padding-right: 50px; /* مساحة للزر */
+}
 </style>
 </head>
 <body>
@@ -1321,7 +1383,8 @@ body {
   <!-- ===== INTRO / PREFACE ===== -->
   <section id="intro-section">
     <div class="section-container">
-      <div class="reveal">
+      <div class="reveal section-header">
+        <button class="listen-btn" onclick="speakText('intro-section')" title="استماع للمقدمة">🎧</button>
         <span class="section-label">الجزء التمهيدي · Prelude</span>
         <h2 class="section-title">دهليز التساؤلات</h2>
         
@@ -1376,7 +1439,8 @@ body {
 
   <!-- ===== PART 1 ===== -->
   <section id="part1">
-    <div class="part-header reveal">
+    <div class="part-header reveal section-header">
+      <button class="listen-btn" onclick="speakText('part1')" title="استماع للجزء الأول">🎧</button>
       <span class="part-number">الجزء الأول · Part One</span>
       <h2 class="part-title">النفق الأول — بوابات التأسيس الداخلي</h2>
       <p class="part-subtitle">Seven Gates of Inner Foundation</p>
@@ -1440,7 +1504,8 @@ body {
 
   <!-- ===== PART 2 ===== -->
   <section id="part2">
-    <div class="part-header reveal">
+    <div class="part-header reveal section-header">
+      <button class="listen-btn" onclick="speakText('part2')" title="استماع للجزء الثاني">🎧</button>
       <span class="part-number" style="color:#64b48c;">الجزء الثاني · Part Two</span>
       <h2 class="part-title">النفق الثاني — بوابات المخلوقات والمرايا</h2>
       <p class="part-subtitle">The Mirrors of Creation</p>
@@ -1614,7 +1679,8 @@ body {
   <!-- ===== APPENDIX ===== -->
   <section id="appendix-section">
     <div class="section-container">
-      <div class="reveal">
+      <div class="reveal section-header">
+        <button class="listen-btn" onclick="speakText('appendix-section')" title="استماع للخاتمة">🎧</button>
         <span class="section-label">الخاتمة والملحق · Epilogue</span>
         <h2 class="section-title">الخروج من النفق إلى العالم</h2>
         <p class="section-text">
@@ -1712,6 +1778,11 @@ body {
 
 <!-- Floating particles -->
 <div id="particles-container"></div>
+
+<!-- ===== AUDIO CONTROLS ===== -->
+<div id="audio-controls">
+  <button class="audio-btn" id="mute-toggle" onclick="toggleMute()" title="كتم/تشغيل الأصوات">🔊</button>
+</div>
 
 <script>
 // ===== MODAL CONTENT =====
@@ -2024,8 +2095,6 @@ const mirrorMessages = [
   "حين تتوقف الجسد يستمر. الروح تمشي في كل لحظة توقف — تلك الرحلة الصامتة هي الأعمق."
 ];
 
-          
-
 // ===== STATE =====
 let selectedShard = null;
 let placedShards = 0;
@@ -2034,13 +2103,16 @@ let mirrorComplete = false;
 const totalSlots = 15;
 
 // ===== متغيرات للتحكم بالصوت =====
-let audioCtx = null; // سننشئه عند أول تفاعل
-let backgroundNoise = null; // للتحكم بصوت الخلفية
+let audioCtx = null;
+let backgroundNoise = null;
+let isMuted = false;
+let muteBtn = document.getElementById('mute-toggle');
 
-// ===== SOUND GENERATOR (موسع) =====
+// ===== SOUND GENERATOR (مع مراعاة حالة الكتم) =====
 function playSound(type, options = {}) {
+  if (isMuted) return; // إذا كان الصوت مكتوماً، لا نفعل شيء
+  
   try {
-    // إنشاء AudioContext عند أول استخدام (بعد تفاعل المستخدم)
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
@@ -2050,7 +2122,6 @@ function playSound(type, options = {}) {
 
     const now = audioCtx.currentTime;
     
-    // دالة مساعدة لتوليد ضوضاء (لمؤثرات مثل الحفيف)
     const createNoise = (duration, gainValue, filterFreq) => {
       const bufferSize = audioCtx.sampleRate * duration;
       const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
@@ -2109,7 +2180,6 @@ function playSound(type, options = {}) {
           osc1.stop(now + 3);
           osc2.stop(now + 3);
           
-          // إضافة صدى (echo)
           const delay = audioCtx.createDelay(1.5);
           delay.delayTime.value = 0.8;
           const feedback = audioCtx.createGain();
@@ -2121,16 +2191,16 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'background': // خلفية مستمرة (همس هواء)
+      case 'background': // خلفية مستمرة
         {
           if (backgroundNoise) {
-            backgroundNoise.stop(); // إيقاف القديم إذا كان موجوداً
+            backgroundNoise.stop();
           }
-          const bufferSize = audioCtx.sampleRate * 2; // 2 seconds
+          const bufferSize = audioCtx.sampleRate * 2;
           const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
           const data = buffer.getChannelData(0);
           for (let i = 0; i < bufferSize; i++) {
-            data[i] = (Math.random() * 2 - 1) * 0.03; // low volume
+            data[i] = (Math.random() * 2 - 1) * 0.03;
           }
           const noise = audioCtx.createBufferSource();
           noise.buffer = buffer;
@@ -2148,14 +2218,14 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'stopBackground': // إيقاف الخلفية (عند كتم الصوت)
+      case 'stopBackground':
         if (backgroundNoise) {
           backgroundNoise.stop();
           backgroundNoise = null;
         }
         break;
         
-      case 'scroll': // تمرير سلس
+      case 'scroll':
         {
           const osc = audioCtx.createOscillator();
           osc.type = 'sine';
@@ -2170,7 +2240,7 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'click': // نقرة ناعمة
+      case 'click':
         {
           const osc = audioCtx.createOscillator();
           osc.type = 'sine';
@@ -2185,7 +2255,7 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'modal': // فتح كتاب
+      case 'modal':
         {
           const osc = audioCtx.createOscillator();
           osc.type = 'triangle';
@@ -2201,7 +2271,7 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'part1': // صوت ترابي (للجزء الأول)
+      case 'part1':
         {
           const osc = audioCtx.createOscillator();
           osc.type = 'sawtooth';
@@ -2220,7 +2290,7 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'part2': // صوت أخضر (طبيعي)
+      case 'part2':
         {
           const osc1 = audioCtx.createOscillator();
           osc1.type = 'sine';
@@ -2245,7 +2315,7 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'part3': // صوت معدني
+      case 'part3':
         {
           const osc = audioCtx.createOscillator();
           osc.type = 'square';
@@ -2258,7 +2328,6 @@ function playSound(type, options = {}) {
           osc.start(now);
           osc.stop(now + 0.2);
           
-          // إضافة صدى معدني
           const delay = audioCtx.createDelay(0.5);
           delay.delayTime.value = 0.1;
           const feedback = audioCtx.createGain();
@@ -2270,7 +2339,7 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'select': // تحديد شظية
+      case 'select':
         {
           const osc = audioCtx.createOscillator();
           osc.type = 'sine';
@@ -2285,7 +2354,7 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'place': // وضع شظية
+      case 'place':
         {
           const osc = audioCtx.createOscillator();
           osc.type = 'sine';
@@ -2300,7 +2369,7 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'reveal': // ظهور الشظية الخاصة
+      case 'reveal':
         {
           const osc1 = audioCtx.createOscillator();
           osc1.type = 'sine';
@@ -2325,7 +2394,7 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'complete': // اكتمال المرآة
+      case 'complete':
         {
           const notes = [523.25, 659.25, 783.99, 1046.5];
           notes.forEach((freq, i) => {
@@ -2343,7 +2412,7 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'wrong': // فشل المحاولة
+      case 'wrong':
         {
           const osc = audioCtx.createOscillator();
           osc.type = 'sawtooth';
@@ -2362,15 +2431,14 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'note': // إضافة ملاحظة (حفيف ورق)
+      case 'note':
         {
           createNoise(0.2, 0.05, 2000);
         }
         break;
         
-      case 'pdf': // تحميل PDF (آلة كاتبة + رنة)
+      case 'pdf':
         {
-          // نقرات الآلة الكاتبة
           for (let i = 0; i < 5; i++) {
             const osc = audioCtx.createOscillator();
             osc.type = 'square';
@@ -2383,9 +2451,8 @@ function playSound(type, options = {}) {
             osc.start(now + i * 0.08);
             osc.stop(now + i * 0.08 + 0.04);
           }
-          // رنة نهائية بعد 0.6 ثانية
           setTimeout(() => {
-            if (audioCtx) {
+            if (audioCtx && !isMuted) {
               const osc = audioCtx.createOscillator();
               osc.type = 'sine';
               osc.frequency.value = 1000;
@@ -2401,7 +2468,7 @@ function playSound(type, options = {}) {
         }
         break;
         
-      case 'shard-remove': // اختفاء شظية (عند إزالتها من الإطار)
+      case 'shard-remove':
         {
           const osc = audioCtx.createOscillator();
           osc.type = 'sine';
@@ -2427,8 +2494,7 @@ function playSound(type, options = {}) {
 
 // ===== FUNCTIONS =====
 function enterSite() {
-  playSound('entrance'); // صوت دخول النفق
-  // يمكن بدء الخلفية بعد دخول الموقع (اختياري)
+  playSound('entrance');
   setTimeout(() => playSound('background'), 1000);
   
   const tunnel = document.getElementById('tunnel-screen');
@@ -2450,7 +2516,7 @@ function enterSite() {
 }
 
 function scrollToSection(id) {
-  playSound('click'); // صوت نقرة
+  playSound('click');
   const el = document.getElementById(id);
   if (el) {
     const offset = 70;
@@ -2460,7 +2526,7 @@ function scrollToSection(id) {
 }
 
 function openModal(key) {
-  playSound('modal'); // صوت فتح النافذة
+  playSound('modal');
   const content = modalContent[key];
   if (!content) return;
   document.getElementById('modal-title').innerHTML = content.title;
@@ -2470,7 +2536,7 @@ function openModal(key) {
   document.getElementById('modal-notes').value = saved || '';
   document.getElementById('modal-notes').onchange = () => {
     localStorage.setItem('note_' + key, document.getElementById('modal-notes').value);
-    playSound('note'); // صوت عند حفظ الملاحظة
+    playSound('note');
   };
   
   document.getElementById('modal').classList.add('active');
@@ -2487,7 +2553,6 @@ function closeModalOnBg(e) {
 }
 
 function showMirrorMsg(idx) {
-  // صوت الجزء الثالث عند النقر على المرآة
   playSound('part3');
   const overlay = document.createElement('div');
   overlay.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;display:flex;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(15px);cursor:pointer;`;
@@ -2509,7 +2574,7 @@ function selectShard(el) {
   document.querySelectorAll('.shard.selected').forEach(s => s.classList.remove('selected'));
   el.classList.add('selected');
   selectedShard = el;
-  playSound('select'); // صوت تحديد الشظية
+  playSound('select');
   
   if (el.dataset.num === 'special' && placedShards < totalSlots) {
     showHint("هذه الشظية المضيئة تحمل الرقم ١ — لكن لا يمكنك وضعها مكان الأولى. ستجد مكانها في النهاية.");
@@ -2519,7 +2584,7 @@ function selectShard(el) {
 function placeSelectedShard(slot) {
   if (!selectedShard) {
     showHint("اختر شظية أولاً، ثم انقر على الموقع المناسب.");
-    playSound('wrong'); // صوت خطأ
+    playSound('wrong');
     return;
   }
   
@@ -2545,7 +2610,6 @@ function placeSelectedShard(slot) {
     return;
   }
   
-  // وضع الشظية
   const num = selectedShard.dataset.num;
   const numMap = {'2':'٢','3':'٣','4':'٤','5':'٥','6':'٦','7':'٧','8':'٨','9':'٩','10':'١٠','11':'١١','12':'١٢','13':'١٣','14':'١٤','15':'١٥','special':'١✦'};
   
@@ -2559,7 +2623,7 @@ function placeSelectedShard(slot) {
   }
   
   selectedShard.remove();
-  playSound('place'); // صوت وضع الشظية
+  playSound('place');
   selectedShard = null;
   
   if (!isSpecial) placedShards++;
@@ -2570,7 +2634,7 @@ function placeSelectedShard(slot) {
     if (sp) {
       sp.style.display = 'flex';
       sp.classList.add('special');
-      playSound('reveal'); // صوت ظهور الشظية الخاصة
+      playSound('reveal');
       showHint("✨ ظهرت شظية مضيئة غريبة تحمل الرقم ١ أيضاً... لا يمكن استبدال الشظية الأولى. أين ستضعها؟");
     }
   }
@@ -2585,7 +2649,7 @@ function placeSelectedShard(slot) {
 }
 
 function completeMirror() {
-  playSound('complete'); // صوت اكتمال المرآة
+  playSound('complete');
   mirrorComplete = true;
   
   const frame = document.getElementById('mirror-frame');
@@ -2625,7 +2689,7 @@ function saveNote(key) {
   const el = document.getElementById(key + '-notes') || document.getElementById('start-notes');
   if (el) {
     localStorage.setItem('note_' + key, el.value);
-    playSound('note'); // صوت عند كتابة ملاحظة
+    playSound('note');
   }
 }
 
@@ -2641,8 +2705,8 @@ function initScrollObserver() {
   let lastScrollTime = 0;
   window.addEventListener('scroll', () => {
     const now = Date.now();
-    if (now - lastScrollTime > 300) { // منع تكرار الصوت كثيراً
-      playSound('scroll'); // صوت تمرير خفيف
+    if (now - lastScrollTime > 300) {
+      playSound('scroll');
       lastScrollTime = now;
     }
     
@@ -2693,14 +2757,54 @@ function initParticles() {
   }
 }
 
-// إضافة زر كتم الصوت (اختياري - يمكن إضافته في HTML)
+// ===== TEXT TO SPEECH =====
+function speakText(sectionId) {
+  const section = document.getElementById(sectionId);
+  if (!section) return;
+  
+  // استخراج النصوص النظيفة من القسم
+  const textElements = section.querySelectorAll('p, h1, h2, h3, .section-text, .intro-header-note p, .quran-verse p, .gate-desc');
+  let textToSpeak = '';
+  textElements.forEach(el => {
+    let text = el.innerText || el.textContent;
+    // إزالة أيقونات وعلامات غير مرغوب فيها
+    text = text.replace(/[❓🕯️📒🔦🐜🌌🗝️⚙️🌾⭐📚🦅🌿🐝🕸️⚗️🪞👁️🤝🔄]/g, '');
+    textToSpeak += text + '. ';
+  });
+  
+  if (!textToSpeak.trim()) return;
+  
+  // إيقاف أي كلام سابق
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+  }
+  
+  const utterance = new SpeechSynthesisUtterance(textToSpeak);
+  utterance.lang = 'ar-SA'; // العربية
+  utterance.rate = 0.9; // سرعة القراءة
+  utterance.pitch = 1;
+  utterance.volume = 1;
+  
+  // اختيار صوت عربي إذا متاح
+  const voices = speechSynthesis.getVoices();
+  const arabicVoice = voices.find(voice => voice.lang.includes('ar'));
+  if (arabicVoice) {
+    utterance.voice = arabicVoice;
+  }
+  
+  window.speechSynthesis.speak(utterance);
+}
+
+// ===== MUTE TOGGLE =====
 function toggleMute() {
-  if (backgroundNoise) {
-    if (backgroundNoise.context.state === 'running') {
-      backgroundNoise.context.suspend();
-    } else {
-      backgroundNoise.context.resume();
-    }
+  isMuted = !isMuted;
+  if (muteBtn) {
+    muteBtn.innerHTML = isMuted ? '🔇' : '🔊';
+  }
+  if (isMuted) {
+    playSound('stopBackground'); // إيقاف صوت الخلفية
+  } else {
+    playSound('background'); // إعادة تشغيل الخلفية
   }
 }
 
@@ -2709,7 +2813,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeModal();
 });
 
-// عند تحميل الصفحة، نضيف مستمع لأول تفاعل لتفعيل الصوت
+// عند تحميل الصفحة، تفعيل الصوت بعد أول تفاعل
 document.addEventListener('click', function initAudio() {
   if (!audioCtx) {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -2725,9 +2829,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const pdfBtn = document.getElementById('pdf-download');
   if (pdfBtn) {
     pdfBtn.addEventListener('click', (e) => {
-      // لا نمنع الحدث لأننا نريد التحميل الفعلي
       playSound('pdf');
     });
+  }
+  
+  // تحميل الأصوات المتاحة للـ TTS (اختياري)
+  if (window.speechSynthesis) {
+    window.speechSynthesis.getVoices();
   }
 });
 </script>

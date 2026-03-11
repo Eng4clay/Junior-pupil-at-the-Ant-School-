@@ -5,99 +5,55 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>تلميذ مبتدئ في مدرسة النمل</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Scheherazade+New:wght@400;500;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --void: #050508;
-  --deep: #0a0a12;
-  --midnight: #0e0e1a;
-  --smoke: #1a1a2e;
-  --ash: #2a2a3e;
+  --black: #050505;
+  --deep: #0a0a0f;
+  --tunnel: #0d0b10;
   --gold: #c9a84c;
-  --gold-dim: #8a6d2a;
-  --gold-bright: #f0c96a;
-  --ivory: #f5f0e8;
-  --ivory-dim: #d4cbb8;
-  --ember: #8b2a2a;
-  --rust: #6b3a1a;
-  --ghost: rgba(255,255,255,0.06);
-  --glow: rgba(201,168,76,0.15);
-  --font-main: 'Amiri', serif;
-  --font-display: 'Scheherazade New', serif;
-  --font-body: 'Noto Naskh Arabic', serif;
+  --gold-light: #e8c97a;
+  --silver: #b8bcc8;
+  --silver-light: #d0d4e0;
+  --sand: #8b7355;
+  --earth: #3d2e1e;
+  --gray-mist: #1a1a24;
+  --gray-fog: #2a2a38;
+  --green-deep: #0d1f1a;
+  --green-mid: #1a3428;
+  --text-light: #e8e4d9;
+  --text-dim: #a09885;
+  --glow: rgba(201, 168, 76, 0.15);
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
 
 body {
-  background: var(--void);
-  color: var(--ivory);
-  font-family: var(--font-body);
-  font-size: 18px;
-  line-height: 1.9;
+  background: var(--black);
+  color: var(--text-light);
+  font-family: 'Amiri', 'Noto Naskh Arabic', serif;
   overflow-x: hidden;
+  cursor: default;
 }
 
-/* ═══════════════════════════════════════
-   NAVIGATION
-═══════════════════════════════════════ */
-nav {
+/* ===== ENTRANCE TUNNEL ===== */
+#tunnel-screen {
   position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 1000;
-  background: rgba(5,5,8,0.92);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(201,168,76,0.12);
-  padding: 0 2rem;
-  height: 64px;
+  inset: 0;
+  background: #000;
+  z-index: 9999;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.nav-brand {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  color: var(--gold);
-  letter-spacing: 0.05em;
-  text-decoration: none;
-}
-.nav-links {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-}
-.nav-links a {
-  color: var(--ivory-dim);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: color 0.3s;
-  letter-spacing: 0.02em;
-}
-.nav-links a:hover { color: var(--gold); }
-
-/* ═══════════════════════════════════════
-   HERO / LANDING
-═══════════════════════════════════════ */
-#hero {
-  min-height: 100vh;
-  position: relative;
-  display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   overflow: hidden;
-  padding: 6rem 2rem 4rem;
 }
 
-.tunnel-bg {
+.tunnel-canvas {
   position: absolute;
   inset: 0;
-  background: 
-    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.04) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 80% at 50% 50%, rgba(10,10,18,0.9) 0%, transparent 100%);
-  z-index: 0;
 }
 
 .tunnel-rings {
@@ -106,1701 +62,2232 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 0;
-  pointer-events: none;
 }
 
 .ring {
   position: absolute;
+  border: 1px solid rgba(201, 168, 76, 0.08);
   border-radius: 50%;
-  border: 1px solid rgba(201,168,76,0.06);
-  animation: ringPulse 8s ease-in-out infinite;
-}
-.ring:nth-child(1) { width: 180px; height: 180px; animation-delay: 0s; border-color: rgba(201,168,76,0.12); }
-.ring:nth-child(2) { width: 380px; height: 380px; animation-delay: 1s; }
-.ring:nth-child(3) { width: 600px; height: 600px; animation-delay: 2s; }
-.ring:nth-child(4) { width: 850px; height: 850px; animation-delay: 3s; }
-.ring:nth-child(5) { width: 1100px; height: 1100px; animation-delay: 4s; }
-
-@keyframes ringPulse {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.01); }
+  animation: tunnel-zoom 4s linear infinite;
 }
 
-.particles {
+@keyframes tunnel-zoom {
+  0% { transform: scale(0.1); opacity: 0.8; }
+  100% { transform: scale(20); opacity: 0; }
+}
+
+.ring:nth-child(1) { width: 80px; height: 60px; animation-delay: 0s; }
+.ring:nth-child(2) { width: 160px; height: 120px; animation-delay: 0.5s; }
+.ring:nth-child(3) { width: 240px; height: 180px; animation-delay: 1s; }
+.ring:nth-child(4) { width: 320px; height: 240px; animation-delay: 1.5s; }
+.ring:nth-child(5) { width: 400px; height: 300px; animation-delay: 2s; }
+.ring:nth-child(6) { width: 480px; height: 360px; animation-delay: 2.5s; }
+.ring:nth-child(7) { width: 560px; height: 420px; animation-delay: 3s; }
+.ring:nth-child(8) { width: 640px; height: 480px; animation-delay: 3.5s; }
+
+.tunnel-walls {
   position: absolute;
   inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.particle {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: var(--gold);
-  border-radius: 50%;
-  animation: float linear infinite;
-  opacity: 0;
-}
-@keyframes float {
-  0% { transform: translateY(100vh) translateX(0); opacity: 0; }
-  10% { opacity: 0.6; }
-  90% { opacity: 0.4; }
-  100% { transform: translateY(-20px) translateX(50px); opacity: 0; }
+  background: 
+    linear-gradient(to right, rgba(0,0,0,0.95) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.95) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.9) 100%);
 }
 
-.ant-path {
+.tunnel-light {
   position: absolute;
-  bottom: 15%;
-  right: 0;
-  left: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  box-shadow: 0 0 30px 15px rgba(201,168,76,0.4), 0 0 80px 40px rgba(201,168,76,0.15);
+  animation: light-pulse 3s ease-in-out infinite;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes light-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+  50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+}
+
+.tunnel-ant {
+  position: absolute;
+  bottom: 45%;
+  left: 52%;
+  animation: ant-walk 8s linear infinite;
+  z-index: 10;
+}
+
+.tunnel-ant svg {
+  width: 20px;
+  height: 20px;
+  filter: drop-shadow(0 0 8px var(--gold));
+  animation: ant-glow 2s ease-in-out infinite;
+}
+
+@keyframes ant-walk {
+  0% { transform: translateX(-60px); }
+  100% { transform: translateX(60px); }
+}
+
+@keyframes ant-glow {
+  0%, 100% { filter: drop-shadow(0 0 4px var(--gold)); }
+  50% { filter: drop-shadow(0 0 12px var(--gold-light)); }
+}
+
+.footprints {
+  position: absolute;
+  bottom: 43%;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
+  gap: 12px;
+}
+
+.footprint {
+  width: 4px;
+  height: 6px;
+  background: rgba(201,168,76,0.3);
+  border-radius: 50% 50% 40% 40%;
+  animation: footprint-fade 3s ease-in-out infinite;
+}
+
+.footprint:nth-child(odd) { transform: rotate(-15deg) translateY(2px); }
+.footprint:nth-child(even) { transform: rotate(15deg) translateY(-2px); }
+.footprint:nth-child(1) { animation-delay: 0s; }
+.footprint:nth-child(2) { animation-delay: 0.3s; }
+.footprint:nth-child(3) { animation-delay: 0.6s; }
+.footprint:nth-child(4) { animation-delay: 0.9s; }
+.footprint:nth-child(5) { animation-delay: 1.2s; }
+.footprint:nth-child(6) { animation-delay: 1.5s; }
+.footprint:nth-child(7) { animation-delay: 1.8s; }
+
+@keyframes footprint-fade {
+  0% { opacity: 0; }
+  30% { opacity: 0.6; }
+  70% { opacity: 0.3; }
+  100% { opacity: 0; }
+}
+
+.tunnel-text {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  animation: text-appear 2s ease-out 1.5s both;
+}
+
+@keyframes text-appear {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.tunnel-title-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+  letter-spacing: 0.3em;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  opacity: 0.9;
+}
+
+.tunnel-subtitle-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.7rem, 1.5vw, 0.95rem);
+  letter-spacing: 0.25em;
+  color: var(--silver);
+  font-style: italic;
+  margin-bottom: 40px;
+}
+
+.tunnel-enter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 36px;
+  border: 1px solid rgba(201,168,76,0.4);
+  background: transparent;
+  color: var(--gold-light);
+  font-family: 'Amiri', serif;
+  font-size: 1.1rem;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  animation: btn-appear 1s ease-out 4s both, btn-pulse 3s ease-in-out 5s infinite;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tunnel-enter-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(201,168,76,0.05);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.tunnel-enter-btn:hover::before { transform: scaleX(1); }
+.tunnel-enter-btn:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 30px rgba(201,168,76,0.2);
+  color: var(--gold);
+}
+
+@keyframes btn-appear {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes btn-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(201,168,76,0.1); }
+  50% { box-shadow: 0 0 25px rgba(201,168,76,0.3); }
+}
+
+.enter-arrow {
+  display: inline-block;
+  animation: arrow-bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes arrow-bounce {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-6px); }
+}
+
+/* ===== MAIN SITE ===== */
+#main-site {
+  display: none;
+  min-height: 100vh;
+}
+
+/* Navigation */
+#nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 0 2rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(5,5,5,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+}
+
+.nav-logo {
+  font-family: 'Amiri', serif;
+  font-size: 1rem;
+  color: var(--gold-light);
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.nav-logo:hover { color: var(--gold); }
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.nav-links a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.nav-links a:hover { color: var(--gold-light); }
+
+/* Progress bar */
+#progress-bar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 99;
+  background: rgba(201,168,76,0.08);
+}
+
+#progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  width: 0%;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px var(--gold);
+}
+
+/* ===== HERO SECTION ===== */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  z-index: 1;
-  pointer-events: none;
+  background: var(--black);
+  position: relative;
+  overflow: hidden;
+  padding-top: 60px;
 }
-.ant-svg {
-  animation: antWalk 12s linear infinite;
-  opacity: 0.5;
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 50% 60%, rgba(201,168,76,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(139,115,85,0.06) 0%, transparent 40%);
 }
-@keyframes antWalk {
-  0% { transform: translateX(40vw) scale(0.8); }
-  50% { transform: translateX(-40vw) scale(0.8) scaleX(-1); }
-  100% { transform: translateX(40vw) scale(0.8); }
+
+.hero-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
   text-align: center;
-  max-width: 700px;
+  padding: 2rem;
+  max-width: 900px;
 }
 
-.hero-pre {
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  letter-spacing: 0.3em;
-  color: var(--gold-dim);
-  text-transform: uppercase;
+.hero-ant-svg {
   margin-bottom: 2rem;
-  animation: fadeInUp 1.2s ease forwards;
-  opacity: 0;
+  animation: hero-ant-float 4s ease-in-out infinite;
 }
 
-.hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(2.4rem, 7vw, 5rem);
-  font-weight: 700;
+@keyframes hero-ant-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.hero-eyebrow {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.4em;
   color: var(--gold);
-  line-height: 1.3;
-  margin-bottom: 1rem;
-  animation: fadeInUp 1.2s ease 0.2s forwards;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
   opacity: 0;
-  text-shadow: 0 0 60px rgba(201,168,76,0.3);
+  animation: fade-up 0.8s ease-out 0.3s forwards;
 }
 
-.hero-sub {
-  font-family: var(--font-main);
-  font-size: 1.1rem;
-  color: var(--ivory-dim);
+.hero-title-ar {
+  font-family: 'Amiri', serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 700;
+  color: var(--text-light);
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  animation: fade-up 0.8s ease-out 0.5s forwards;
+}
+
+.hero-subtitle {
+  font-family: 'Amiri', serif;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  color: var(--text-dim);
   font-style: italic;
   margin-bottom: 3rem;
-  animation: fadeInUp 1.2s ease 0.4s forwards;
   opacity: 0;
+  animation: fade-up 0.8s ease-out 0.7s forwards;
+}
+
+.hero-divider {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto 2rem;
+  opacity: 0;
+  animation: fade-up 0.8s ease-out 0.9s forwards;
 }
 
 .hero-quote {
-  font-family: var(--font-main);
-  font-size: 0.95rem;
-  color: rgba(245,240,232,0.5);
+  font-family: 'Amiri', serif;
+  font-size: clamp(0.95rem, 2vw, 1.2rem);
+  color: var(--silver);
   line-height: 2;
-  border-right: 2px solid var(--gold-dim);
-  padding-right: 1.5rem;
-  margin: 2rem auto;
-  max-width: 500px;
-  text-align: right;
-  animation: fadeInUp 1.2s ease 0.6s forwards;
+  max-width: 650px;
+  margin: 0 auto 3rem;
   opacity: 0;
+  animation: fade-up 0.8s ease-out 1.1s forwards;
 }
 
 .hero-cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 16px;
+  padding: 16px 48px;
   background: transparent;
-  border: 1px solid var(--gold);
-  color: var(--gold);
-  padding: 0.9rem 2.5rem;
-  font-family: var(--font-body);
-  font-size: 1rem;
+  border: 1px solid rgba(201,168,76,0.5);
+  color: var(--gold-light);
+  font-family: 'Amiri', serif;
+  font-size: 1.15rem;
   cursor: pointer;
-  transition: all 0.4s;
-  letter-spacing: 0.05em;
-  animation: fadeInUp 1.2s ease 0.8s forwards;
+  transition: all 0.4s ease;
+  letter-spacing: 0.08em;
   opacity: 0;
+  animation: fade-up 0.8s ease-out 1.3s forwards;
   text-decoration: none;
 }
+
 .hero-cta:hover {
-  background: var(--gold);
-  color: var(--void);
-  box-shadow: 0 0 40px rgba(201,168,76,0.3);
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ═══════════════════════════════════════
-   SECTION WRAPPER
-═══════════════════════════════════════ */
-.section {
-  padding: 6rem 2rem;
-  max-width: 900px;
-  margin: 0 auto;
-  position: relative;
-}
-
-.section-divider {
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
-  margin: 0;
-}
-
-.section-label {
-  font-family: var(--font-body);
-  font-size: 0.75rem;
-  letter-spacing: 0.4em;
-  color: var(--gold-dim);
-  text-transform: uppercase;
-  margin-bottom: 1.5rem;
-}
-
-.section-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  color: var(--gold);
-  margin-bottom: 2rem;
-  line-height: 1.4;
-}
-
-/* ═══════════════════════════════════════
-   PART I — THE CORRIDOR OF QUESTIONS
-═══════════════════════════════════════ */
-#part1 {
-  background: linear-gradient(180deg, var(--void) 0%, var(--deep) 100%);
-  position: relative;
-}
-#part1::before {
-  content: 'أنا؟';
-  position: fixed;
-  top: 80px;
-  left: 2rem;
-  font-family: var(--font-display);
-  font-size: 0.75rem;
-  color: rgba(201,168,76,0.2);
-  letter-spacing: 0.2em;
-  writing-mode: vertical-rl;
-  pointer-events: none;
-  z-index: 100;
-  transition: opacity 0.5s;
-}
-
-.chapter {
-  margin-bottom: 5rem;
-  position: relative;
-}
-
-.chapter-num {
-  font-family: var(--font-body);
-  font-size: 0.7rem;
-  letter-spacing: 0.4em;
-  color: var(--gold-dim);
-  margin-bottom: 0.5rem;
-}
-
-.chapter-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.4rem, 3vw, 2rem);
-  color: var(--gold);
-  margin-bottom: 2rem;
-  position: relative;
-  padding-bottom: 1rem;
-}
-.chapter-title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 60px;
-  height: 1px;
-  background: var(--gold-dim);
-}
-
-.prose {
-  font-family: var(--font-main);
-  font-size: 1.05rem;
-  line-height: 2.1;
-  color: var(--ivory-dim);
-  text-align: justify;
-}
-
-.prose p { margin-bottom: 1.5rem; }
-
-.prose .highlight {
-  color: var(--gold-bright);
-  font-style: italic;
-}
-
-.ayah {
-  background: rgba(201,168,76,0.04);
-  border: 1px solid rgba(201,168,76,0.15);
-  padding: 1.5rem 2rem;
-  margin: 2.5rem 0;
-  text-align: center;
-  position: relative;
-}
-.ayah::before, .ayah::after {
-  content: '✦';
-  position: absolute;
-  top: -8px;
-  color: var(--gold-dim);
-  font-size: 0.8rem;
-  background: var(--deep);
-  padding: 0 8px;
-}
-.ayah::before { right: 2rem; }
-.ayah::after { left: 2rem; }
-
-.ayah-text {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  color: var(--gold-bright);
-  line-height: 2.2;
-  direction: rtl;
-}
-
-.ayah-ref {
-  font-size: 0.8rem;
-  color: var(--gold-dim);
-  margin-top: 0.5rem;
-  letter-spacing: 0.1em;
-}
-
-.drop-cap::first-letter {
-  font-family: var(--font-display);
-  font-size: 4.5rem;
-  float: right;
-  line-height: 0.7;
-  margin-left: 0.15em;
-  margin-top: 0.1em;
-  color: var(--gold);
-  text-shadow: 0 0 30px rgba(201,168,76,0.4);
-}
-
-/* ═══════════════════════════════════════
-   PART II — THE TUNNEL / GATES
-═══════════════════════════════════════ */
-#part2 {
-  background: var(--midnight);
-  position: relative;
-}
-
-.gates-nav {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 4rem;
-}
-.gate-btn {
-  background: transparent;
-  border: 1px solid rgba(201,168,76,0.2);
-  color: var(--ivory-dim);
-  padding: 0.6rem 1.2rem;
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.3s;
-  border-radius: 2px;
-}
-.gate-btn:hover, .gate-btn.active {
-  border-color: var(--gold);
-  color: var(--gold);
-  background: rgba(201,168,76,0.06);
-}
-
-.gate-panel {
-  display: none;
-  animation: fadeGate 0.6s ease;
-}
-.gate-panel.active { display: block; }
-@keyframes fadeGate {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.gate-header {
-  text-align: center;
-  padding: 3rem 0 2rem;
-  border-bottom: 1px solid rgba(201,168,76,0.1);
-  margin-bottom: 3rem;
-}
-
-.gate-number {
-  font-size: 0.75rem;
-  letter-spacing: 0.4em;
-  color: var(--gold-dim);
-  margin-bottom: 1rem;
-}
-
-.gate-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 4vw, 2.6rem);
-  color: var(--gold);
-  margin-bottom: 1rem;
-}
-
-.gate-motto {
-  font-family: var(--font-main);
-  font-style: italic;
-  color: rgba(245,240,232,0.5);
-  font-size: 1rem;
-}
-
-.secret-card {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(201,168,76,0.1);
-  border-right: 3px solid var(--gold-dim);
-  padding: 2.5rem;
-  margin: 2rem 0;
-  position: relative;
-  transition: all 0.4s;
-}
-.secret-card:hover {
-  background: rgba(201,168,76,0.04);
-  border-right-color: var(--gold);
-}
-
-.secret-num {
-  position: absolute;
-  top: 1rem;
-  left: 1.5rem;
-  font-family: var(--font-display);
-  font-size: 3rem;
-  color: rgba(201,168,76,0.06);
-  line-height: 1;
-  pointer-events: none;
-}
-
-.secret-title {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  color: var(--gold-bright);
-  margin-bottom: 1.5rem;
-}
-
-.quantum-symbol {
-  display: inline-block;
   background: rgba(201,168,76,0.08);
-  border: 1px solid rgba(201,168,76,0.2);
-  padding: 0.2rem 0.8rem;
-  font-size: 0.85rem;
-  color: var(--gold-dim);
-  margin: 0.5rem 0.3rem;
-  letter-spacing: 0.05em;
-}
-
-.exercise-box {
-  background: var(--smoke);
-  border: 1px solid rgba(201,168,76,0.15);
-  padding: 2.5rem;
-  margin-top: 3rem;
-  position: relative;
-}
-.exercise-box::before {
-  content: 'تمرين';
-  position: absolute;
-  top: -12px;
-  right: 2rem;
-  background: var(--smoke);
-  padding: 0 1rem;
-  font-family: var(--font-body);
-  font-size: 0.75rem;
-  letter-spacing: 0.3em;
+  border-color: var(--gold);
+  box-shadow: 0 0 40px rgba(201,168,76,0.15), inset 0 0 20px rgba(201,168,76,0.05);
   color: var(--gold);
+  transform: translateY(-2px);
 }
 
-.pause-page {
-  text-align: center;
-  padding: 4rem 2rem;
-  border: 1px solid rgba(201,168,76,0.08);
-  margin-top: 3rem;
-}
-.pause-text {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  color: rgba(245,240,232,0.4);
-  line-height: 2;
+@keyframes fade-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
-/* ═══════════════════════════════════════
-   PART III — THE MIRROR WORKSHOP
-═══════════════════════════════════════ */
-#part3 {
-  background: linear-gradient(180deg, var(--midnight) 0%, var(--void) 100%);
-}
-
-.mirror-scene {
-  max-width: 700px;
+/* ===== SECTIONS COMMON ===== */
+.section-container {
+  max-width: 860px;
   margin: 0 auto;
-  text-align: center;
-  padding: 4rem 2rem;
-}
-
-/* Mirror shards puzzle */
-.shard-container {
-  position: relative;
-  width: 360px;
-  height: 360px;
-  margin: 3rem auto;
-  cursor: pointer;
-}
-
-.mirror-frame {
-  position: absolute;
-  inset: 0;
-  border: 2px solid rgba(201,168,76,0.15);
-  z-index: 0;
-}
-
-.shard {
-  position: absolute;
-  background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.02));
-  border: 1px solid rgba(201,168,76,0.2);
-  cursor: pointer;
-  transition: all 0.5s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  color: rgba(201,168,76,0.4);
-  user-select: none;
-  clip-path: polygon(var(--clip));
-}
-
-.shard.collected {
-  background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(201,168,76,0.08));
-  border-color: var(--gold-dim);
-  color: var(--gold);
-  transform: scale(1) !important;
-}
-
-.shard.glowing {
-  background: linear-gradient(135deg, rgba(240,201,106,0.4), rgba(201,168,76,0.2));
-  border-color: var(--gold-bright);
-  box-shadow: 0 0 20px rgba(201,168,76,0.5), inset 0 0 15px rgba(201,168,76,0.3);
-  color: var(--gold-bright);
-  animation: shardGlow 2s ease-in-out infinite;
-}
-
-@keyframes shardGlow {
-  0%, 100% { box-shadow: 0 0 20px rgba(201,168,76,0.5), inset 0 0 15px rgba(201,168,76,0.3); }
-  50% { box-shadow: 0 0 40px rgba(201,168,76,0.8), inset 0 0 25px rgba(201,168,76,0.5); }
-}
-
-.shard:hover:not(.collected) {
-  background: rgba(201,168,76,0.15);
-  transform: scale(1.05);
-  z-index: 10;
-}
-
-.mirror-complete {
-  display: none;
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, rgba(201,168,76,0.25) 0%, rgba(5,5,8,0.8) 70%);
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  z-index: 20;
-  border: 1px solid var(--gold);
-  animation: mirrorReveal 1.5s ease;
-}
-.mirror-complete.show { display: flex; }
-
-@keyframes mirrorReveal {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.infinity-symbol {
-  font-family: var(--font-display);
-  font-size: 5rem;
-  color: var(--gold);
-  text-shadow: 0 0 40px rgba(201,168,76,0.6);
-  animation: infinityFloat 3s ease-in-out infinite;
-}
-@keyframes infinityFloat {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-10px) scale(1.05); }
-}
-
-.mirror-message {
-  font-family: var(--font-main);
-  font-size: 1rem;
-  color: var(--gold-bright);
-  margin-top: 1rem;
-  font-style: italic;
-}
-
-.shard-counter {
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  color: var(--gold-dim);
-  letter-spacing: 0.2em;
-  margin-bottom: 1rem;
-}
-
-.mirror-instructions {
-  font-family: var(--font-main);
-  font-size: 0.95rem;
-  color: rgba(245,240,232,0.4);
-  font-style: italic;
-  margin-bottom: 2rem;
-}
-
-/* ═══════════════════════════════════════
-   BOOK CONTENT SECTIONS
-═══════════════════════════════════════ */
-.content-block {
-  max-width: 820px;
-  margin: 0 auto;
-}
-
-.marginal-note {
-  float: left;
-  width: 160px;
-  margin: 0 0 1rem 2rem;
-  padding-right: 1rem;
-  border-right: 1px solid rgba(201,168,76,0.2);
-  font-family: var(--font-main);
-  font-size: 0.8rem;
-  font-style: italic;
-  color: rgba(245,240,232,0.35);
-  line-height: 1.7;
-  direction: rtl;
-}
-
-.page-header-note {
-  display: flex;
-  justify-content: space-between;
-  font-family: var(--font-body);
-  font-size: 0.7rem;
-  letter-spacing: 0.3em;
-  color: rgba(201,168,76,0.25);
-  border-bottom: 1px solid rgba(201,168,76,0.08);
-  padding-bottom: 0.5rem;
-  margin-bottom: 2.5rem;
-}
-
-.separator {
-  text-align: center;
-  color: var(--gold-dim);
-  font-size: 1.2rem;
-  letter-spacing: 1em;
-  margin: 3rem 0;
-  opacity: 0.4;
-}
-
-/* ═══════════════════════════════════════
-   APPENDIX / QUANTUM VERSES
-═══════════════════════════════════════ */
-#appendix {
-  background: var(--smoke);
   padding: 5rem 2rem;
 }
 
-.verse-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
-}
-
-.verse-card {
-  background: rgba(5,5,8,0.6);
-  border: 1px solid rgba(201,168,76,0.12);
-  padding: 2rem;
-  position: relative;
-  transition: all 0.4s;
-}
-.verse-card:hover {
-  border-color: rgba(201,168,76,0.3);
-  background: rgba(201,168,76,0.03);
-}
-
-.verse-card-text {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  color: var(--gold-bright);
-  direction: rtl;
-  line-height: 2;
-  margin-bottom: 1rem;
-}
-
-.verse-card-ref {
+.section-label {
+  font-family: 'Cormorant Garamond', serif;
   font-size: 0.75rem;
-  color: var(--gold-dim);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.4em;
+  color: var(--gold);
+  text-transform: uppercase;
   margin-bottom: 1rem;
+  display: block;
 }
 
-.verse-card-analogy {
-  font-size: 0.85rem;
-  color: rgba(245,240,232,0.4);
-  font-style: italic;
-  line-height: 1.8;
-  border-top: 1px solid rgba(201,168,76,0.08);
-  padding-top: 1rem;
+.section-title {
+  font-family: 'Amiri', serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  color: var(--text-light);
+  line-height: 1.4;
+  margin-bottom: 2rem;
 }
 
-/* ═══════════════════════════════════════
-   FOOTER / FINAL PAGE
-═══════════════════════════════════════ */
-#final {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: var(--void);
+.section-text {
+  font-family: 'Amiri', serif;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  color: var(--text-dim);
+  line-height: 2.2;
+  margin-bottom: 1.8rem;
+}
+
+.gold-line {
+  width: 60px;
+  height: 1px;
+  background: var(--gold);
+  margin: 2rem 0;
+  opacity: 0.6;
+}
+
+/* ===== INTRO SECTION ===== */
+#intro-section {
+  background: var(--deep);
   position: relative;
   overflow: hidden;
 }
 
-.final-glow {
+#intro-section::before {
+  content: '';
   position: absolute;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation: finalGlow 4s ease-in-out infinite;
-}
-@keyframes finalGlow {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-  50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-}
-
-.final-word {
-  font-family: var(--font-display);
-  font-size: clamp(4rem, 15vw, 10rem);
-  color: var(--gold);
-  text-align: center;
-  position: relative;
-  z-index: 1;
-  text-shadow: 0 0 80px rgba(201,168,76,0.4);
-  animation: fadeInUp 2s ease forwards;
-  opacity: 0;
-}
-
-.final-sub {
-  font-family: var(--font-main);
-  font-size: 1rem;
-  color: rgba(245,240,232,0.3);
-  font-style: italic;
-  position: relative;
-  z-index: 1;
-  margin-top: 1rem;
-  animation: fadeInUp 2s ease 0.5s forwards;
-  opacity: 0;
-}
-
-/* ═══════════════════════════════════════
-   SCROLLBAR & SELECTION
-═══════════════════════════════════════ */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--void); }
-::-webkit-scrollbar-thumb { background: var(--gold-dim); }
-
-::selection {
-  background: rgba(201,168,76,0.25);
-  color: var(--gold-bright);
-}
-
-/* ═══════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════ */
-@media (max-width: 640px) {
-  nav { padding: 0 1rem; }
-  .nav-links { gap: 1rem; }
-  .nav-links li:nth-child(n+3) { display: none; }
-  .section { padding: 4rem 1.2rem; }
-  .marginal-note { display: none; }
-  .shard-container { width: 280px; height: 280px; }
-  .verse-grid { grid-template-columns: 1fr; }
-}
-
-/* ═══════════════════════════════════════
-   READING PROGRESS
-═══════════════════════════════════════ */
-.progress-bar {
-  position: fixed;
   top: 0;
   left: 0;
-  height: 2px;
-  background: var(--gold);
-  z-index: 2000;
-  transition: width 0.1s;
-  box-shadow: 0 0 10px rgba(201,168,76,0.5);
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
 }
 
-/* ═══════════════════════════════════════
-   MODE TOGGLE (dark/darker)
-═══════════════════════════════════════ */
-.mode-toggle {
-  background: transparent;
-  border: 1px solid rgba(201,168,76,0.2);
-  color: var(--gold-dim);
-  padding: 0.4rem 0.8rem;
-  font-family: var(--font-body);
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-.mode-toggle:hover { border-color: var(--gold); color: var(--gold); }
-
-body.dawn-mode {
-  --void: #1a150a;
-  --deep: #22180d;
-  --midnight: #2a1f10;
-  --smoke: #332615;
-  --ash: #3e2e1a;
+.intro-header-note {
+  background: rgba(201,168,76,0.05);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-right: 3px solid var(--gold);
+  padding: 1.2rem 1.8rem;
+  margin-bottom: 3rem;
+  border-radius: 0 4px 4px 0;
 }
 
-/* ═══════════════════════════════════════
-   CHAPTER MARKER DRAWINGS (SVG inline)
-═══════════════════════════════════════ */
-.chapter-art {
-  text-align: center;
-  margin: 2rem 0;
-  opacity: 0.4;
-}
-
-.note-space {
-  border: 1px dashed rgba(201,168,76,0.1);
-  min-height: 80px;
-  margin: 2rem 0;
-  padding: 1rem;
-  font-family: var(--font-main);
-  font-size: 0.85rem;
-  color: rgba(201,168,76,0.2);
+.intro-header-note p {
+  font-family: 'Amiri', serif;
+  font-size: 1.05rem;
+  color: var(--gold-light);
+  line-height: 1.8;
   font-style: italic;
+}
+
+.quran-verse {
   text-align: center;
+  margin: 3rem 0;
+  padding: 2rem;
+  border-top: 1px solid rgba(201,168,76,0.15);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+}
+
+.quran-verse p {
+  font-family: 'Amiri', serif;
+  font-size: 1.3rem;
+  color: var(--gold-light);
+  line-height: 2;
+}
+
+/* ===== CHAPTERS / PARTS ===== */
+
+/* Part 1 - Brown earth tones */
+#part1 {
+  background: linear-gradient(180deg, var(--deep) 0%, #1a120a 100%);
+  position: relative;
+}
+
+.part-header {
+  padding: 4rem 2rem 2rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+}
+
+.part-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.5em;
+  color: var(--gold);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.part-title {
+  font-family: 'Amiri', serif;
+  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.part-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: var(--text-dim);
+  font-style: italic;
+  letter-spacing: 0.1em;
+}
+
+/* Gates / Bawwabat */
+.gates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  padding: 3rem 2rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.gate-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(201,168,76,0.12);
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.gate-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(201,168,76,0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.gate-card:hover {
+  border-color: rgba(201,168,76,0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 20px rgba(201,168,76,0.05);
+}
+
+.gate-card:hover::before { opacity: 1; }
+
+.gate-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.gate-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.gate-name {
+  font-family: 'Amiri', serif;
+  font-size: 1.1rem;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.gate-desc {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+/* Chapter content */
+.chapter-content {
+  display: none;
+  padding: 3rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  animation: chapter-appear 0.5s ease-out;
+}
+
+.chapter-content.active { display: block; }
+
+@keyframes chapter-appear {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.chapter-header {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+}
+
+.back-btn {
+  background: none;
+  border: 1px solid rgba(201,168,76,0.2);
+  color: var(--gold);
+  padding: 8px 20px;
+  font-family: 'Amiri', serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-btn:hover {
+  background: rgba(201,168,76,0.08);
+  border-color: var(--gold);
+}
+
+/* Notes area */
+.notes-area {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: rgba(255,255,255,0.015);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 2px;
+}
+
+.notes-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.notes-input {
+  width: 100%;
+  min-height: 120px;
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  font-family: 'Amiri', serif;
+  font-size: 1rem;
+  resize: vertical;
+  outline: none;
+  line-height: 2;
+}
+
+.notes-input::placeholder { color: rgba(201,168,76,0.2); }
+
+/* Rest page */
+.rest-page {
+  padding: 4rem 2rem;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.rest-page-quote {
+  font-family: 'Amiri', serif;
+  font-size: 1.4rem;
+  color: var(--text-dim);
+  font-style: italic;
+  line-height: 2;
+  margin-bottom: 2rem;
+}
+
+/* ===== PART 2 - Deep green ===== */
+#part2 {
+  background: linear-gradient(180deg, #0d1f1a 0%, #0a1814 100%);
+}
+
+#part2 .gate-card {
+  border-color: rgba(100,180,140,0.12);
+}
+
+#part2 .gate-card:hover {
+  border-color: rgba(100,180,140,0.4);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 20px rgba(100,180,140,0.05);
+}
+
+#part2 .section-label { color: #64b48c; }
+#part2 .gate-number { color: #64b48c; }
+#part2 .part-number { color: #64b48c; }
+
+/* ===== PART 3 - Mirror / Black velvet ===== */
+#part3 {
+  background: #020204;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Mirror Hall */
+.mirror-hall {
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.mirror-hall-intro {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.mirrors-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+.mirror-item {
+  aspect-ratio: 0.7;
+  background: linear-gradient(135deg, rgba(184,188,200,0.06) 0%, rgba(0,0,0,0.8) 100%);
+  border: 1px solid rgba(184,188,200,0.2);
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s ease;
 }
 
-.conclusion-box {
-  background: rgba(201,168,76,0.03);
-  border: 1px solid rgba(201,168,76,0.15);
-  padding: 2.5rem;
-  margin: 3rem 0;
+.mirror-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.mirror-item:hover {
+  border-color: rgba(184,188,200,0.5);
+  box-shadow: 0 0 40px rgba(184,188,200,0.08), inset 0 0 30px rgba(184,188,200,0.03);
+}
+
+.mirror-item:hover::before { opacity: 1; }
+
+.mirror-text {
+  font-family: 'Amiri', serif;
+  font-size: 0.9rem;
+  color: rgba(184,188,200,0.4);
+  text-align: center;
+  padding: 1rem;
+  transition: color 0.4s;
+}
+
+.mirror-item:hover .mirror-text {
+  color: rgba(184,188,200,0.9);
+}
+
+/* Shards puzzle */
+.shards-section {
+  padding: 4rem 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.broken-mirror-frame {
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 1;
+  margin: 2rem auto;
+  background: rgba(10,10,20,0.9);
+  border: 2px solid rgba(184,188,200,0.15);
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 3px;
+  padding: 3px;
+}
+
+.mirror-slot {
+  background: rgba(184,188,200,0.04);
+  border: 1px dashed rgba(184,188,200,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  color: rgba(184,188,200,0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.mirror-slot.has-shard {
+  background: linear-gradient(135deg, rgba(184,188,200,0.15), rgba(100,120,180,0.1));
+  border-color: rgba(184,188,200,0.3);
+  color: rgba(255,255,255,0.6);
+}
+
+.mirror-slot.glowing {
+  background: linear-gradient(135deg, rgba(201,168,76,0.3), rgba(255,220,100,0.15));
+  border-color: rgba(201,168,76,0.6);
+  box-shadow: 0 0 20px rgba(201,168,76,0.3);
+  animation: slot-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes slot-glow {
+  0%, 100% { box-shadow: 0 0 15px rgba(201,168,76,0.3); }
+  50% { box-shadow: 0 0 30px rgba(201,168,76,0.5); }
+}
+
+.shards-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 2rem 0;
+  min-height: 80px;
+  background: rgba(255,255,255,0.01);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 1rem;
+  justify-content: center;
+}
+
+.shard {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, rgba(184,188,200,0.15), rgba(100,120,200,0.08));
+  border: 1px solid rgba(184,188,200,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  color: rgba(200,210,230,0.8);
+  transition: all 0.3s ease;
+  clip-path: polygon(20% 0%, 80% 5%, 100% 25%, 95% 75%, 75% 100%, 25% 95%, 0% 80%, 5% 20%);
+  user-select: none;
+}
+
+.shard:nth-child(2) { clip-path: polygon(0 0, 90% 10%, 100% 70%, 80% 100%, 10% 90%, 0 50%); }
+.shard:nth-child(3) { clip-path: polygon(30% 0%, 100% 0%, 100% 60%, 70% 100%, 0% 100%, 0% 30%); }
+.shard:nth-child(4) { clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); }
+.shard:nth-child(5) { clip-path: polygon(15% 0%, 85% 15%, 100% 85%, 85% 100%, 15% 85%, 0% 15%); }
+
+.shard:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 0 20px rgba(184,188,200,0.2);
+  border-color: rgba(184,188,200,0.5);
+}
+
+.shard.selected {
+  transform: scale(1.15);
+  border-color: var(--gold);
+  box-shadow: 0 0 20px rgba(201,168,76,0.4);
+}
+
+.shard.special {
+  background: linear-gradient(135deg, rgba(201,168,76,0.4), rgba(255,220,80,0.2));
+  border-color: rgba(201,168,76,0.6);
+  color: var(--gold-light);
+  box-shadow: 0 0 25px rgba(201,168,76,0.4);
+  animation: special-pulse 2s ease-in-out infinite;
+}
+
+@keyframes special-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(201,168,76,0.3), 0 0 40px rgba(201,168,76,0.1); }
+  50% { box-shadow: 0 0 35px rgba(201,168,76,0.5), 0 0 60px rgba(201,168,76,0.2); }
+}
+
+/* Infinity reveal */
+.infinity-reveal {
+  display: none;
+  text-align: center;
+  padding: 4rem 2rem;
+  animation: infinity-appear 1.5s ease-out forwards;
+}
+
+.infinity-reveal.active { display: block; }
+
+@keyframes infinity-appear {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.infinity-symbol {
+  font-size: 8rem;
+  color: var(--gold);
+  text-shadow: 0 0 40px var(--gold), 0 0 80px rgba(201,168,76,0.5);
+  animation: infinity-spin 4s ease-in-out infinite;
+  display: block;
+  margin-bottom: 2rem;
+}
+
+@keyframes infinity-spin {
+  0%, 100% { transform: scale(1); text-shadow: 0 0 40px var(--gold); }
+  50% { transform: scale(1.1); text-shadow: 0 0 80px var(--gold), 0 0 120px rgba(201,168,76,0.6); }
+}
+
+.infinity-message {
+  font-family: 'Amiri', serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  color: var(--gold-light);
+  line-height: 2;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+/* ===== APPENDIX ===== */
+#appendix-section {
+  background: var(--deep);
+  padding: 5rem 2rem;
+}
+
+/* ===== FOOTER ===== */
+#footer {
+  background: var(--black);
+  border-top: 1px solid rgba(201,168,76,0.1);
+  padding: 4rem 2rem;
   text-align: center;
 }
 
-.conclusion-box p {
-  font-family: var(--font-main);
+.footer-title {
+  font-family: 'Amiri', serif;
+  font-size: 1.5rem;
+  color: var(--gold-light);
+  margin-bottom: 1rem;
+}
+
+.footer-quote {
+  font-family: 'Cormorant Garamond', serif;
   font-size: 1rem;
-  color: var(--ivory-dim);
-  line-height: 2.2;
+  color: var(--text-dim);
   font-style: italic;
+  letter-spacing: 0.1em;
+  margin-bottom: 3rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.footer-link:hover { color: var(--gold-light); }
+
+.footer-ant {
+  opacity: 0.3;
+  margin: 2rem auto 0;
+  display: block;
+}
+
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 36px;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.4);
+  color: var(--gold-light);
+  font-family: 'Amiri', serif;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  text-decoration: none;
+  margin-top: 2rem;
+}
+
+.download-btn:hover {
+  background: rgba(201,168,76,0.15);
+  border-color: var(--gold);
+  box-shadow: 0 0 30px rgba(201,168,76,0.15);
+  transform: translateY(-2px);
+}
+
+/* Scroll animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Sidebar nav dots */
+#sidebar-dots {
+  position: fixed;
+  left: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 50;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.dot:hover, .dot.active {
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+}
+
+.dot-label {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  font-family: 'Amiri', serif;
+}
+
+.dot:hover .dot-label { opacity: 1; }
+
+/* Floating particles */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0;
+  animation: particle-float 8s ease-in-out infinite;
+}
+
+@keyframes particle-float {
+  0% { opacity: 0; transform: translateY(0) scale(0); }
+  20% { opacity: 0.3; }
+  80% { opacity: 0.1; }
+  100% { opacity: 0; transform: translateY(-200px) scale(1.5); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .mirrors-grid { grid-template-columns: repeat(2, 1fr); }
+  #sidebar-dots { display: none; }
+  .gates-grid { grid-template-columns: 1fr; }
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+}
+
+.modal-overlay.active { display: flex; }
+
+.modal-box {
+  background: var(--deep);
+  border: 1px solid rgba(201,168,76,0.2);
+  padding: 3rem;
+  max-width: 700px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  animation: modal-appear 0.4s ease-out;
+}
+
+@keyframes modal-appear {
+  0% { opacity: 0; transform: scale(0.95) translateY(20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s;
+  line-height: 1;
+}
+
+.modal-close:hover { color: var(--gold); }
+
+.modal-title {
+  font-family: 'Amiri', serif;
+  font-size: 1.5rem;
+  color: var(--gold-light);
+  margin-bottom: 1.5rem;
+}
+
+.modal-body {
+  font-family: 'Amiri', serif;
+  font-size: 1.05rem;
+  color: var(--text-dim);
+  line-height: 2.2;
+}
+
+/* Transition */
+.fade-transition {
+  transition: opacity 0.8s ease;
 }
 </style>
 </head>
 <body>
 
-<!-- Progress Bar -->
-<div class="progress-bar" id="progressBar"></div>
-
-<!-- Navigation -->
-<nav>
-  <a href="#hero" class="nav-brand">تلميذ مبتدئ في مدرسة النمل</a>
-  <ul class="nav-links">
-    <li><a href="#part1">الدهليز</a></li>
-    <li><a href="#part2">البوابات</a></li>
-    <li><a href="#part3">المرآة</a></li>
-    <li><a href="#appendix">الآيات</a></li>
-    <button class="mode-toggle" onclick="toggleMode()">الفجر ☀</button>
-  </ul>
-</nav>
-
-<!-- ═══════════════════════════
-     HERO
-════════════════════════════ -->
-<section id="hero">
-  <div class="tunnel-bg"></div>
+<!-- ===== TUNNEL ENTRANCE ===== -->
+<div id="tunnel-screen">
   <div class="tunnel-rings">
-    <div class="ring"></div><div class="ring"></div><div class="ring"></div>
-    <div class="ring"></div><div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
   </div>
-  <div class="particles" id="particles"></div>
-
-  <div class="ant-path">
-    <svg class="ant-svg" width="40" height="24" viewBox="0 0 40 24" fill="none">
-      <ellipse cx="20" cy="12" rx="6" ry="4" fill="rgba(201,168,76,0.6)"/>
-      <ellipse cx="20" cy="6" rx="4" ry="3" fill="rgba(201,168,76,0.5)"/>
-      <ellipse cx="20" cy="18" rx="5" ry="4" fill="rgba(201,168,76,0.5)"/>
-      <line x1="14" y1="10" x2="6" y2="6" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
-      <line x1="14" y1="12" x2="4" y2="12" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
-      <line x1="14" y1="14" x2="6" y2="18" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
-      <line x1="26" y1="10" x2="34" y2="6" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
-      <line x1="26" y1="12" x2="36" y2="12" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
-      <line x1="26" y1="14" x2="34" y2="18" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
-      <circle cx="20" cy="4" r="1.5" fill="rgba(201,168,76,0.7)"/>
+  <div class="tunnel-walls"></div>
+  <div class="tunnel-light"></div>
+  <div class="tunnel-ant">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="20" cy="28" rx="5" ry="4" fill="#c9a84c" opacity="0.9"/>
+      <ellipse cx="20" cy="20" rx="4" ry="3.5" fill="#c9a84c" opacity="0.9"/>
+      <ellipse cx="20" cy="13" rx="3" ry="3" fill="#c9a84c" opacity="0.9"/>
+      <line x1="16" y1="22" x2="10" y2="18" stroke="#c9a84c" stroke-width="1.2" opacity="0.7"/>
+      <line x1="16" y1="24" x2="9" y2="24" stroke="#c9a84c" stroke-width="1.2" opacity="0.7"/>
+      <line x1="16" y1="26" x2="10" y2="30" stroke="#c9a84c" stroke-width="1.2" opacity="0.7"/>
+      <line x1="24" y1="22" x2="30" y2="18" stroke="#c9a84c" stroke-width="1.2" opacity="0.7"/>
+      <line x1="24" y1="24" x2="31" y2="24" stroke="#c9a84c" stroke-width="1.2" opacity="0.7"/>
+      <line x1="24" y1="26" x2="30" y2="30" stroke="#c9a84c" stroke-width="1.2" opacity="0.7"/>
+      <line x1="20" y1="10" x2="17" y2="6" stroke="#c9a84c" stroke-width="1.2" opacity="0.7"/>
+      <line x1="20" y1="10" x2="23" y2="6" stroke="#c9a84c" stroke-width="1.2" opacity="0.7"/>
+      <circle cx="22" cy="8" r="1.5" fill="#e8c97a" opacity="0.8"/>
     </svg>
   </div>
-
-  <div class="hero-content">
-    <p class="hero-pre">دفتر ملاحظات لا يملكه كاتبه</p>
-    <h1 class="hero-title">تلميذ مبتدئ<br>في مدرسة النمل</h1>
-    <p class="hero-sub">هذا النفق طويل، وفانوسي يخفت...<br>ألا تشاركني ضوءك؟</p>
-    <blockquote class="hero-quote">
-      قبل أن تدخل، اعلم أن هذا النفق ليس جميلاً.<br>
-      فيه جمال يخطف البصر، وقبح يدمي العين.<br>
-      أنا لست مرشدك، أنا رفيقك.
-    </blockquote>
-    <a href="#part1" class="hero-cta">ادخل النفق ←</a>
+  <div class="footprints">
+    <div class="footprint"></div>
+    <div class="footprint"></div>
+    <div class="footprint"></div>
+    <div class="footprint"></div>
+    <div class="footprint"></div>
+    <div class="footprint"></div>
+    <div class="footprint"></div>
   </div>
-</section>
+  
+  <div class="tunnel-text">
+    <div class="tunnel-title-en">STAND AS AN ANT, SAVOR THE HONEY</div>
+    <div class="tunnel-subtitle-en">To Succeed... Let Your Eyes Forgive to See</div>
+    <button class="tunnel-enter-btn" onclick="enterSite()">
+      <span class="enter-arrow">←</span>
+      ادخل النفق
+      <span style="font-family:'Cormorant Garamond',serif;font-size:0.85rem;opacity:0.7;letter-spacing:0.2em;">Enter the Tunnel</span>
+    </button>
+  </div>
+</div>
 
-<div class="section-divider"></div>
+<!-- ===== MAIN SITE ===== -->
+<div id="main-site">
 
-<!-- ═══════════════════════════
-     PART I — CORRIDOR
-════════════════════════════ -->
-<section id="part1">
-<div class="section">
-  <div class="content-block">
+  <!-- Nav -->
+  <nav id="nav">
+    <div class="nav-logo" onclick="scrollToSection('hero')">تلميذ مبتدئ في مدرسة النمل</div>
+    <ul class="nav-links">
+      <li><a onclick="scrollToSection('intro-section')">المقدمة</a></li>
+      <li><a onclick="scrollToSection('part1')">الجزء الأول</a></li>
+      <li><a onclick="scrollToSection('part2')">الجزء الثاني</a></li>
+      <li><a onclick="scrollToSection('part3')">المرآة</a></li>
+      <li><a onclick="scrollToSection('appendix-section')">الملحق</a></li>
+    </ul>
+  </nav>
 
-    <p class="section-label">الجزء الأول</p>
-    <h2 class="section-title">دهليز التساؤلات<br><span style="font-size:0.65em; color: var(--ivory-dim)">من أنا؟ حكاية نسيان</span></h2>
+  <div id="progress-bar"><div id="progress-fill"></div></div>
 
-    <!-- بسملة / مقدمة -->
-    <div class="chapter">
-      <div class="page-header-note"><span>أنا؟</span><span>لا أدري</span></div>
+  <!-- Sidebar dots -->
+  <div id="sidebar-dots">
+    <div class="dot active" onclick="scrollToSection('hero')"><span class="dot-label">البداية</span></div>
+    <div class="dot" onclick="scrollToSection('intro-section')"><span class="dot-label">المقدمة</span></div>
+    <div class="dot" onclick="scrollToSection('part1')"><span class="dot-label">النفق الأول</span></div>
+    <div class="dot" onclick="scrollToSection('part2')"><span class="dot-label">النفق الثاني</span></div>
+    <div class="dot" onclick="scrollToSection('part3')"><span class="dot-label">المرآة</span></div>
+    <div class="dot" onclick="scrollToSection('appendix-section')"><span class="dot-label">الخاتمة</span></div>
+  </div>
 
-      <p class="chapter-num">المقدمة</p>
-      <div class="prose drop-cap">
-        <p>الحمد لله الذي أوجد الخلق من العدم، وأظهرهم على مسرح الوجود بقدرته، وجعل لكل موجود موجدًا، ولكل مفعول فاعلًا، فهو الأوّل الذي لا ابتداء لوجوده، والآخر الذي لا انتهاء لبقائه، والظاهر في كل شيء، والباطن عن كل وصف وإدراك. والصلاة والسلام على من تجلّت به معاني الهداية، وانكشفت بسنّته أسرار السير إلى الله، محمد بن عبد الله، وعلى آله وصحبه ومن تبعهم بإحسان.</p>
-        <p>أما بعد—</p>
-        <p>عزيزي القارئ،</p>
-        <p>أكتب إليك اليوم لا كمعلم يدّعي الحكمة، بل كتلميذٍ مبتدئ فَتحَت عيناه على مدرسةٍ لم يكن يَعرفها. لسنواتٍ طويلة، حَمَلتُ أسئلةً بداخلي، أسئلةً تبحث عن نور في عتمة اليقين، وعن بداية في نهاية كل طريق.</p>
-      </div>
-    </div>
-
-    <div class="separator">· · ·</div>
-
-    <!-- الفصل الأول -->
-    <div class="chapter">
-      <div class="page-header-note"><span>أنا؟</span><span>لا أدري</span></div>
-      <p class="chapter-num">الفصل الأول</p>
-      <h3 class="chapter-title">أسئلة تلميذ مبتدئ</h3>
-
-      <div class="prose">
-        <p><span class="highlight">ما السِّر الذي يَملِكه غيري ولا أَملِكه أنا؟</span></p>
-        <p>هل هو سرُّ التذكُّر الذي غاب عني، بينما النملة تعرف طريقها إلى بيتها دون خريطة، والغراب يعلم كيف يُواري سوءة أخيه بلا مُعلِّم، والطير يحمل رزقه ولا يدَّخر؟ هم يمضون في دروب الفطرة مطمئنين، لا تتعبهم أسئلة الهوية ولا تحيرهم مفارقات الوجود.</p>
-        <p>أما أنا، فأحملُ عقلي كشعلة تضيء وتُحرق، أبحث عن الدليل خارجي، وفي فطرتي ما لو تأملتها لاهتديت. ترى، هل أنا من ضلَّ الطريق، أم أن هذا الضلال هو امتحاني الوحيد؟</p>
-      </div>
-
-      <div class="ayah">
-        <div class="ayah-text">وَلَقَدْ عَلِمْتُمُ النَّشْأَةَ الْأُولَىٰ فَلَوْلَا تَذَكَّرُونَ</div>
-        <div class="ayah-ref">سورة الواقعة - الآية ٦٢</div>
-      </div>
-
-      <div class="prose">
-        <p><span class="highlight">من أكون؟</span> أنا الذي يجهلُ الحقيقة، هل هو الجسدُ الذي أحمله؟ أم ذلك التناقض الذي يسكن داخلي؟ أنا السائل والمجيب في آن، أنا الحائر بين ما أرى وما يرىني.</p>
-        <p><span class="highlight">لماذا أنا هنا؟</span> هل جئتُ إلى هذه "المدرسة" بملء إرادتي، أم أن هناك يداً خفية وضعتني على هذا الدرب دون أن أدري؟</p>
-        <p>ربما لهذا تاه البشر: لأنهم يبحثون عن إجابات تُريحهم، بينما النمل لا يبحث إلا عن خطوة تالية. هم لا يسألون "لماذا؟"، بل يمضون. وأنا أسأل، فأتوقف. أسأل، فأتعثر. أسأل، فأتذكر أنني نسيت.</p>
-        <p>تلك هي لعبتي العجيبة: أنا التلميذ المبتدئ في مدرسة النمل، أتعلم منهم كيف أمشي، وهم يتعلمون مني كيف يتعثرون بالأسئلة.</p>
-        <p>فهل كان اليقينُ حظَّ من لا عقل له، وكان الشكُّ عقابَ من عقل؟</p>
-      </div>
-
-      <div class="chapter-art">
-        <svg width="200" height="60" viewBox="0 0 200 60">
-          <path d="M10,30 Q50,10 100,30 Q150,50 190,30" stroke="rgba(201,168,76,0.3)" fill="none" stroke-width="1"/>
-          <!-- ant dots along path -->
-          <circle cx="30" cy="24" r="2" fill="rgba(201,168,76,0.4)"/>
-          <circle cx="70" cy="20" r="2" fill="rgba(201,168,76,0.35)"/>
-          <circle cx="110" cy="28" r="2" fill="rgba(201,168,76,0.4)"/>
-          <circle cx="150" cy="42" r="2" fill="rgba(201,168,76,0.35)"/>
+  <!-- ===== HERO ===== -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-noise"></div>
+    <div class="hero-content">
+      <div class="hero-ant-svg">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="40" cy="58" rx="10" ry="8" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.8"/>
+          <ellipse cx="40" cy="40" rx="8" ry="7" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.8"/>
+          <ellipse cx="40" cy="25" rx="6" ry="6" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.8"/>
+          <line x1="32" y1="43" x2="18" y2="36" stroke="#c9a84c" stroke-width="1.2" opacity="0.6"/>
+          <line x1="32" y1="47" x2="17" y2="47" stroke="#c9a84c" stroke-width="1.2" opacity="0.6"/>
+          <line x1="32" y1="51" x2="18" y2="58" stroke="#c9a84c" stroke-width="1.2" opacity="0.6"/>
+          <line x1="48" y1="43" x2="62" y2="36" stroke="#c9a84c" stroke-width="1.2" opacity="0.6"/>
+          <line x1="48" y1="47" x2="63" y2="47" stroke="#c9a84c" stroke-width="1.2" opacity="0.6"/>
+          <line x1="48" y1="51" x2="62" y2="58" stroke="#c9a84c" stroke-width="1.2" opacity="0.6"/>
+          <line x1="40" y1="19" x2="34" y2="10" stroke="#c9a84c" stroke-width="1.2" opacity="0.6"/>
+          <line x1="40" y1="19" x2="46" y2="10" stroke="#c9a84c" stroke-width="1.2" opacity="0.6"/>
+          <circle cx="44" cy="8" r="3" fill="#e8c97a" opacity="0.9"/>
+          <circle cx="40" cy="25" r="1.5" fill="#c9a84c" opacity="0.5"/>
         </svg>
       </div>
+      <div class="hero-eyebrow">Beginner Student · مدرسة النمل</div>
+      <h1 class="hero-title-ar">تلميذ مبتدئ<br>في مدرسة النمل</h1>
+      <p class="hero-subtitle">دفتر ملاحظات لا يملكه كاتبه</p>
+      <div class="hero-divider"></div>
+      <p class="hero-quote">
+        هذا النفق طويل، وفانوسي يخفت...<br>
+        ألا تشاركني ضوءك؟
+      </p>
+      <a class="hero-cta" onclick="scrollToSection('intro-section')">
+        <span>ابدأ الرحلة</span>
+        <span style="opacity:0.5;font-size:0.9rem;letter-spacing:0.3em;font-family:'Cormorant Garamond',serif;">BEGIN</span>
+      </a>
     </div>
+  </section>
 
-    <div class="separator">· · ·</div>
-
-    <!-- الفصل الثاني -->
-    <div class="chapter">
-      <div class="page-header-note"><span>أنا؟</span><span>لا أدري</span></div>
-      <p class="chapter-num">الفصل الثاني</p>
-      <h3 class="chapter-title">الفتيل الذي أشعل السؤال</h3>
-      <h4 style="color: var(--ivory-dim); font-family: var(--font-main); font-size:1rem; margin-bottom: 1.5rem; font-weight: normal; font-style: italic;">معلمي الأول: أبي</h4>
-
-      <div class="prose">
-        <p>لكن الذي أَدخلني إلى هذه المدرسة — مدرسة النمل — لم يكن كتابًا، ولا مُحاضرًا، بل كان مُعلِّمًا صامتًا عَلَّمني دون كَلِمة. كان ذلك المُعلّم أَبي.</p>
-        <p>كان أبي عالَمًا قائماً بذاته، حَبيسًا بين جُدران غُرفته ومَكتبته التي لا تَنتهي، أَسيرًا لفِكره وأوراقه، وَرِعًا حَذِرًا من عَدواء العِلم والأيادي الخَفِية التي تُريد لِلحقيقة أن تَخنَق. كان رَجُلاً إذا تَكَلَّم، وَقَف الزمن من حَوله.</p>
-        <p>كُنتُ أَعود إليه كالتائِه الذي يَبحَث عن مَنارة. كان يُضيء قَلبي لِفَترة، ثمّ يَنطَفِئ نُوره في داخلي عندما أَبتَعِد عنه، مُنشَغِلًا بِتَفاهات الدُنيا ومَلذّاتها.</p>
-        <p><span class="highlight">الابتسامة والنملة: الباب الذي لم أكن أَعرفه</span></p>
-        <p>ذات يَوم، كُنتُ جالِسًا معه فَوَجَدته صامِتًا — وليس الصَّمتَ مِن عاداته. نَظَرتُ إليه، فإذا هُو يَنظُر إلى الأرض ويَبتَسِم. فأَشار بِإصبَعه إلى مجموعةٍ مِن النَّمل تَسير في خَطٍّ مُنتَظِم.</p>
-        <p>وسأَلَني سُؤالًا بَسيطًا يَحمِل في طيّاته الكَونَ كُلَّهُ: "اُنظُر إليها... ما فائدة هذا المَخلوق في هذا الكَون الفَسيح؟"</p>
-        <p>ثمّ قال: "هذه النَّملة... لَو اِنقَرَضَت، لَحَدَث اِنهِيار في هذا العالَم. هذا المَخلوق الصَّغير هو مِن رَكائِز وقَوائم توازُن البِيئة."</p>
-        <p>فَمَرَّت أَربَع ساعاتٍ وأَنا أَعيش في تَشابُكٍ كَمِّي عَجيب: بَين نَملةٍ وكَوكَب، كِتابٍ وتُربة، مَجرَّةٍ وقَمَر، دِينٍ وعِلم، رَقَمٍ وقانون، ذَرَّةٍ وهَواء.</p>
-      </div>
-
-      <div class="marginal-note">
-        أربع ساعات كانت كافية لتغيير مسار حياة. ربما دقيقة واحدة من الصمت الحقيقي تكفي لتغيير مسارك أنت.
-      </div>
-
-      <div class="prose">
-        <p><span class="highlight">الانكسار والانفتاح</span> — أَدرَكتُ أَنَّني طَوال عُمري كُنتُ أَبحَث عَن الإجابات في الأَماكِن الخاطِئة: في الجَداوِل المُعَقَّدة، نَصائح "الخُبَراء"، الكُتُب المَليئة بالمُصطَلحات الغَريبة. بَينما كانت الإجابة الأَساسية تُعرَض أَمامي مُجانًا، بِلُغةٍ بَصَرية بَسيطة: لُغة التَّعاوُن، لُغة الصَّبر، لُغة النِّظام.</p>
-        <p>أَدرَكتُ أَنَّ الكَونَ كُلَّهُ مُوسوعَة حَيَّة مَفتوحة، وأَنَّ دَوْرِي لَم يَعُد أَن أَكون "المُدير التَّنفيذي" لِحَياتي، بل التِّلميذ الأَكثَر فَضولًا فيها.</p>
-      </div>
-
-      <div class="ayah">
-        <div class="ayah-text">هُوَ الْأَوَّلُ وَالْآخِرُ وَالظَّاهِرُ وَالْبَاطِنُ ۖ وَهُوَ بِكُلِّ شَيْءٍ عَلِيمٌ</div>
-        <div class="ayah-ref">سورة الحديد - الآية ٣</div>
-      </div>
-    </div>
-
-    <div class="separator">· · ·</div>
-
-    <!-- الفصل الثالث -->
-    <div class="chapter">
-      <div class="page-header-note"><span>أنا؟</span><span>لا أدري</span></div>
-      <p class="chapter-num">الفصل الثالث</p>
-      <h3 class="chapter-title">هذا الكتاب — دفتر الملاحظات الذي لا يملكه كاتبه</h3>
-      <div class="prose">
-        <p>ولهذا، أَيُّها القارئ، أَقولها بِكُل صِدق: لَستُ أَنا مَن يَكتُب هذا الكِتاب.</p>
-        <p>هل هي النَّملةُ الَّتي تَخطُّ على التُّرابِ أَسرَارَها، فَأَقرَأُها بِعَينَي قَلبي ثُمَّ أَنقُلُها إِلَى هَذِهِ الصَّفَحَات؟ أَم هُوَ أَبي الَّذي عَلَّمَني أَنَّ الصَّمتَ أَبلَغُ مِن كُلِّ كَلِمَة؟ أَم أَنتَ أَيُّهَا القَارئ، الَّذي تَحمِلُ بَينَ يَدَيكَ هَذِهِ السُّطُور، فَتَمْنَحُها رُوحًا وَحَيَاةً بِقِراءَتِكَ؟</p>
-        <p>فَأَنا لَستُ سِوى وِعاءٌ فارِغٌ يَتَقَبَّلُ، وَقَلَمٌ مُتَّضِعٌ يَكتُبُ. أَمَّا المِدادُ فَهُوَ مِن عُيونِ النَّملِ وَقُلُوبِ العَارِفِينَ وَأَروَاحِ السَّائِلِينَ.</p>
-        <p>فَأَنا لَستُ "أَنا". أَنا والعَدَمُ واحِدٌ. مَن أَنا؟ ومَن أَكون؟ ومَن تكون أَنتَ؟</p>
-        <p>هَل أَنتَ هُوَ أَنا؟ دَعني أُخبِرُك: نَعم، نَعرِفُ بَعضَنا. لأَنَّ الحُروفَ الَّتي بَينَ يَدَيكَ الآنَ هِي مِرآةٌ كَمِّيَّةٌ مُتَّصِلَةٌ بَينَ ذَرّاتي وذَرّاتِك.</p>
-      </div>
-    </div>
-
-    <div class="separator">· · ·</div>
-
-    <!-- الفصل الرابع -->
-    <div class="chapter">
-      <div class="page-header-note"><span>أنا؟</span><span>لا أدري</span></div>
-      <p class="chapter-num">الفصل الرابع</p>
-      <h3 class="chapter-title">دعوة من تائه إلى تائه</h3>
-      <div class="prose">
-        <p>هَذِهِ الدَّعوَةُ هِي نِداءٌ شَخصِيٌّ، مِن تائِهٍ فَقَدَ فانوسَهُ، إِلَى تائِهٍ قَد يَملِكُ شَمعَةً:</p>
-        <p>إِن وَجَدتَ في هَذا الكِتابِ أَشيَاءَ جَميلَةً، فَاعلَم أَنَّ هذا جَمالُكَ أَنتَ الَّذي يَنعَكِسُ على صَفَحاتِهِ. وَإِن وَجَدتَ أَشيَاءَ في قِمَّةِ القُبحِ، فَلا تُغادِر بَحثًا عَنِ الجَمالِ في مَكانٍ آخَرَ. بَل أَحسِن إِلَيَّ. أَمدِدني بِجَمالِ ما عِندَكَ.</p>
-        <p>أَنا الآنَ داخِلَ دائِرَةِ الفَناءِ، أَبْحَثُ عَن مِرآتي لِأَتَعَرَّفَ على وَجهي الحَقيقِيِّ. هَل لَكَ أَن تُعيرَني فانوسَكَ لَحظَةً؟ بَل الأَجمَلُ: هَل نَسيرُ مَعًا تَحتَ فانوسٍ واحِدٍ؟</p>
-      </div>
-    </div>
-
-    <div class="separator">· · ·</div>
-
-    <!-- الفصل الخامس -->
-    <div class="chapter">
-      <div class="page-header-note"><span>أنا؟</span><span>لا أدري</span></div>
-      <p class="chapter-num">الفصل الخامس</p>
-      <h3 class="chapter-title">رحلة التلميذين — دفتر الملاحظات المشترك</h3>
-      <div class="prose">
-        <p>هَذا الكِتابُ دَفتَرُ مُلاحَظاتٍ لا أَملِكُهُ في هَذِهِ المَدرَسَةِ الكَونِيَّةِ. نَحنُ في هَذا الكِتابِ تِلميذانِ. أَنتَ تَقرَأُ تَجرِبَتي، وأَنا أَتَعَلَّمُ مِن أَسئِلَتِكَ الَّتي سَتُولَدُ في داخِلِكَ.</p>
-        <p>مَدرَسَتُنا لَيسَت بِناءً. إِنَّها البَحثُ عَن مَخرَجِ النَّفَقِ وَالوصُولِ إِلَى النُّورِ، كُلُّ ضَوءٍ فيهِ هُوَ سُؤالٌ جَديدٌ، وكُلُّ ظِلٍّ هُوَ إِجابَةٌ تَنتَظِرُ اكتِشافَكَ.</p>
-        <p>المُعَلِّمونَ هُنا صامِتونَ: أَنتَ أَيُّهَا القَارئ أَحَدُ هَؤُلاءِ المُعَلِّمِينَ، مَعَ النَّملَةِ، النَّحلَةِ، الغُرَابِ، الشَّجَرَةِ، الرِّيحِ، وَالمَطَرِ. كُلُّ مَن حَولَكَ يَحمِلُ دَرسًا، وَكُلُّ صَمتٍ يَروِي حِكمَةً.</p>
-      </div>
-
-      <div class="conclusion-box">
-        <p>الجَرَس يَدُقّ.<br>المُعلِّم الكامِل ينتَظِرُنا في كُلِّ قَلْبٍ يَفتَحُ، وَكُلِّ عَينٍ تُبْصِرُ.<br>والمُعلِّم الأَوَّل يَنتَظِرُنا عِندَ الحَبَّةِ.<br><strong>هَيَّا بنا.</strong></p>
-      </div>
-    </div>
-
-  </div><!-- end content-block -->
-</div><!-- end section -->
-</section>
-
-<div class="section-divider"></div>
-
-<!-- ═══════════════════════════
-     PART II — THE TUNNEL
-════════════════════════════ -->
-<section id="part2" style="padding: 5rem 2rem;">
-  <div style="max-width:900px; margin: 0 auto;">
-    <p class="section-label">الجزء الثاني</p>
-    <h2 class="section-title" style="text-align:center;">النفق — البوابات السبع</h2>
-
-    <!-- Gates Navigation -->
-    <div class="gates-nav" id="gatesNav">
-      <button class="gate-btn active" onclick="showGate(1)">البوابة الأولى</button>
-      <button class="gate-btn" onclick="showGate(2)">البوابة الثانية</button>
-      <button class="gate-btn" onclick="showGate(3)">البوابة الثالثة</button>
-      <button class="gate-btn" onclick="showGate(4)">البوابة الرابعة</button>
-      <button class="gate-btn" onclick="showGate(5)">البوابة الخامسة</button>
-      <button class="gate-btn" onclick="showGate(6)">البوابة السادسة</button>
-      <button class="gate-btn" onclick="showGate(7)">البوابة السابعة</button>
-    </div>
-
-    <!-- GATE 1 -->
-    <div class="gate-panel active" id="gate1">
-      <div class="gate-header">
-        <p class="gate-number">البوابة الأولى · ص ٥٩–٩١</p>
-        <h3 class="gate-title">باب الأسرار الكونية</h3>
-        <p class="gate-motto">"قبل أن تبحث عن السر، تعلّم كيف ترى"</p>
-      </div>
-
-      <div class="prose" style="margin-bottom:2rem;">
-        <p>"السر ليس شيئاً تجده، بل عيناً تفتحها. والعين التي تفتح على سرٍ واحد، تبدأ فجأة في رؤية الأسرار كلها."</p>
-        <p>في هذا الباب، سنفتح ثلاث عيون. لكن تذكر: أنت لست في محاضرة. أنت في مختبر ذاتي. كل سر سنكشفه هو مرآة ستظهر لك جانباً من فكرك لم تكن تراه.</p>
-      </div>
-
-      <div class="secret-card">
-        <span class="secret-num">١</span>
-        <h4 class="secret-title">السر الأول: عين التشابك الكمي الخفي</h4>
-        <div class="prose">
-          <p>هناك شيء يحدث في هذا الكون لا يخبرك به أحد: كل شيء متصل بكل شيء، في كل لحظة، عبر رابط لا يقطعه مسافة ولا يفصله زمن.</p>
-          <p>الفيزياء الكمومية تسمي هذا "التشابك الكمي" — حين يتشابك جسيمان، يصبحان كياناً واحداً بمعنى حقيقي: ما يحدث لأحدهما يؤثر في الآخر فورياً، بصرف النظر عن البعد بينهما. اينشتاين رأى هذا مستحيلاً وسماه "الفعل الشبحي عن بُعد". لكنه حقيقي.</p>
-          <p>والقرآن الكريم يصف هذا التشابك الكوني بصورة أكثر شمولاً وعمقاً:</p>
+  <!-- ===== INTRO / PREFACE ===== -->
+  <section id="intro-section">
+    <div class="section-container">
+      <div class="reveal">
+        <span class="section-label">الجزء التمهيدي · Prelude</span>
+        <h2 class="section-title">دهليز التساؤلات</h2>
+        
+        <div class="intro-header-note">
+          <p>الحمد لله الذي أوجد الخلق من العدم، وأظهرهم على مسرح الوجود بقدرته، وجعل لكل موجود موجدًا، ولكل مفعول فاعلًا، فهو الأوّل الذي لا ابتداء لوجوده، والآخر الذي لا انتهاء لبقائه، والظاهر في كل شيء، والباطن عن كل وصف وإدراك.</p>
         </div>
-        <div class="ayah">
-          <div class="ayah-text">قَالَ الَّذِي عِندَهُ عِلْمٌ مِّنَ الْكِتَابِ أَنَا آتِيكَ بِهِ قَبْلَ أَن يَرْتَدَّ إِلَيْكَ طَرْفُكَ</div>
-          <div class="ayah-ref">سورة النمل - الآية ٤٠</div>
+
+        <p class="section-text">
+          عزيزي القارئ، أكتب إليك اليوم لا كمعلم يدّعي الحكمة، بل كتلميذٍ مبتدئ فَتحَت عيناه على مدرسةٍ لم يكن يَعرفها. لسنواتٍ طويلة، حَمَلتُ أسئلةً بداخلي، أسئلةً تبحث عن نور في عتمة اليقين، وعن بداية في نهاية كل طريق.
+        </p>
+      </div>
+
+      <!-- Chapter cards -->
+      <div class="gates-grid reveal" style="padding: 2rem 0;">
+        <div class="gate-card" onclick="openModal('ch1')">
+          <span class="gate-icon">❓</span>
+          <span class="gate-number">الفصل الأول</span>
+          <div class="gate-name">أسئلة تلميذ مبتدئ</div>
+          <div class="gate-desc">ما السِّر الذي يَملِكه غيري ولا أَملِكه أنا؟</div>
         </div>
-        <div class="prose">
-          <p>عرش بلقيس انتقل في أقل من رمشة عين. ليس هذا خيالاً ولا استعارة — إنها إشارة إلى أن العلم الحقيقي يسبق القيود المادية كلها. وما الفيزياء الكمومية إلا بداية فهم ما أشارت إليه الآية.</p>
-          <p>في حياتك: هل لاحظت يوماً أنك فكرت في شخص فاتصل بك؟ أو أحسست بخطر قبل حدوثه؟ هذا ليس مصادفة. هذا أثر من آثار التشابك الكمي في المستوى الإنساني.</p>
-          <p><span class="highlight">التطبيق:</span> لمدة أسبوع، راقب "التزامنات" في حياتك — اللحظات التي يبدو فيها الكون يردّ على أفكارك. دونها. ستدهش مما تجد.</p>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:1rem;">
-            <span class="quantum-symbol">ψ = |↑⟩|↓⟩ + |↓⟩|↑⟩</span>
-            <span class="quantum-symbol">تشابك كمي</span>
-            <span class="quantum-symbol">فعل آني عبر المسافة</span>
+        <div class="gate-card" onclick="openModal('ch2')">
+          <span class="gate-icon">🕯️</span>
+          <span class="gate-number">الفصل الثاني</span>
+          <div class="gate-name">الفتيل الذي أشعل السؤال</div>
+          <div class="gate-desc">قصة الأب والنملة — لقاء غيّر مسار الرحلة</div>
+        </div>
+        <div class="gate-card" onclick="openModal('ch3')">
+          <span class="gate-icon">📒</span>
+          <span class="gate-number">الفصل الثالث</span>
+          <div class="gate-name">دفتر ملاحظات لا يملكه كاتبه</div>
+          <div class="gate-desc">لستُ أنا من يكتب هذا الكتاب...</div>
+        </div>
+        <div class="gate-card" onclick="openModal('ch4')">
+          <span class="gate-icon">🔦</span>
+          <span class="gate-number">الفصل الرابع</span>
+          <div class="gate-name">دعوة من تائه إلى تائه</div>
+          <div class="gate-desc">هل لك أن تُعيرني فانوسك لحظةً؟</div>
+        </div>
+        <div class="gate-card" onclick="openModal('ch5')">
+          <span class="gate-icon">🐜</span>
+          <span class="gate-number">الفصل الخامس</span>
+          <div class="gate-name">رحلة التلميذين</div>
+          <div class="gate-desc">نحن في هذا الكتاب تلميذان...</div>
+        </div>
+      </div>
+
+      <div class="quran-verse reveal">
+        <p>﴿ وَلَقَدْ عَلِمْتُمُ النَّشْأَةَ الْأُولَىٰ فَلَوْلَا تَذَكَّرُونَ ﴾</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 1 ===== -->
+  <section id="part1">
+    <div class="part-header reveal">
+      <span class="part-number">الجزء الأول · Part One</span>
+      <h2 class="part-title">النفق الأول — بوابات التأسيس الداخلي</h2>
+      <p class="part-subtitle">Seven Gates of Inner Foundation</p>
+    </div>
+
+    <div class="gates-grid reveal">
+      <div class="gate-card" onclick="openModal('g1_1')">
+        <span class="gate-icon">🌌</span>
+        <span class="gate-number">الباب الأول</span>
+        <div class="gate-name">بوابة الأسرار الكونية</div>
+        <div class="gate-desc">ثلاثة أسرار تحمل مفاتيح الكون</div>
+      </div>
+      <div class="gate-card" onclick="openModal('g1_2')">
+        <span class="gate-icon">🗝️</span>
+        <span class="gate-number">الباب الثاني</span>
+        <div class="gate-name">بوابة المفاتيح الذهبية</div>
+        <div class="gate-desc">مفتاحان يفتحان الأبواب الموصدة</div>
+      </div>
+      <div class="gate-card" onclick="openModal('g1_3')">
+        <span class="gate-icon">⚙️</span>
+        <span class="gate-number">الباب الثالث</span>
+        <div class="gate-name">بوابة الاستعداد الذاتي</div>
+        <div class="gate-desc">ثلاثة أسنان وطقس الدخول</div>
+      </div>
+      <div class="gate-card" onclick="openModal('g1_4')">
+        <span class="gate-icon">🌾</span>
+        <span class="gate-number">الباب الرابع</span>
+        <div class="gate-name">بوابة الرزق</div>
+        <div class="gate-desc">أربعة فصول من حكمة العطاء</div>
+      </div>
+      <div class="gate-card" onclick="openModal('g1_5')">
+        <span class="gate-icon">⭐</span>
+        <span class="gate-number">الباب الخامس</span>
+        <div class="gate-name">بوابة النجاح</div>
+        <div class="gate-desc">من هندسة خلية النحل إلى قوانين النجاح</div>
+      </div>
+      <div class="gate-card" onclick="openModal('g1_6')">
+        <span class="gate-icon">📚</span>
+        <span class="gate-number">الباب السادس</span>
+        <div class="gate-name">بوابة المعرفة</div>
+        <div class="gate-desc">العلم الذي يُحيي والعلم الذي يُميت</div>
+      </div>
+      <div class="gate-card" onclick="openModal('g1_7')">
+        <span class="gate-icon">🦅</span>
+        <span class="gate-number">الباب السابع</span>
+        <div class="gate-name">بوابة الحكمة</div>
+        <div class="gate-desc">حين يصبح العلم حكمة والحكمة نوراً</div>
+      </div>
+    </div>
+
+    <div class="rest-page reveal">
+      <div class="gold-line" style="margin:0 auto 2rem;"></div>
+      <p class="rest-page-quote">
+        "توقّف هنا قليلاً.<br>
+        استرح من القراءة.<br>
+        النملة أيضاً تستريح... لكنها تعرف لماذا تعود."
+      </p>
+      <div class="gold-line" style="margin:2rem auto 0;"></div>
+    </div>
+  </section>
+
+  <!-- ===== PART 2 ===== -->
+  <section id="part2">
+    <div class="part-header reveal">
+      <span class="part-number" style="color:#64b48c;">الجزء الثاني · Part Two</span>
+      <h2 class="part-title">النفق الثاني — بوابات المخلوقات والمرايا</h2>
+      <p class="part-subtitle">The Mirrors of Creation</p>
+    </div>
+
+    <div class="gates-grid reveal">
+      <div class="gate-card" onclick="openModal('g2_1')">
+        <span class="gate-icon">🌿</span>
+        <span class="gate-number" style="color:#64b48c;">الباب الأول</span>
+        <div class="gate-name">دستور الطبيعة</div>
+        <div class="gate-desc">ثلاثة قوانين تحكم كل ما خُلق</div>
+      </div>
+      <div class="gate-card" onclick="openModal('g2_2')">
+        <span class="gate-icon">🐜</span>
+        <span class="gate-number" style="color:#64b48c;">الباب الثاني</span>
+        <div class="gate-name">مملكة النمل</div>
+        <div class="gate-desc">هندسة التعاون — حين تُصبح الوحدة قوة</div>
+      </div>
+      <div class="gate-card" onclick="openModal('g2_3')">
+        <span class="gate-icon">🐝</span>
+        <span class="gate-number" style="color:#64b48c;">الباب الثالث</span>
+        <div class="gate-name">مملكة النحل</div>
+        <div class="gate-desc">اقتصاد الدقة — السداسية التي تحكم الكون</div>
+      </div>
+      <div class="gate-card" onclick="openModal('g2_4')">
+        <span class="gate-icon">🦅</span>
+        <span class="gate-number" style="color:#64b48c;">الباب الرابع</span>
+        <div class="gate-name">عالم الغراب</div>
+        <div class="gate-desc">ذكاء حل المشكلات — من علّم ابن آدم؟</div>
+      </div>
+      <div class="gate-card" onclick="openModal('g2_5')">
+        <span class="gate-icon">🕸️</span>
+        <span class="gate-number" style="color:#64b48c;">الباب الخامس</span>
+        <div class="gate-name">عالم العنكبوت</div>
+        <div class="gate-desc">هندسة الشبكات — البناء في الفراغ</div>
+      </div>
+      <div class="gate-card" onclick="openModal('g2_6')">
+        <span class="gate-icon">⚗️</span>
+        <span class="gate-number" style="color:#64b48c;">الباب السادس</span>
+        <div class="gate-name">معادن البشر</div>
+        <div class="gate-desc">الذهب والفضة والحديد والنحاس</div>
+      </div>
+      <div class="gate-card" onclick="openModal('g2_7')">
+        <span class="gate-icon">🪞</span>
+        <span class="gate-number" style="color:#64b48c;">الباب السابع</span>
+        <div class="gate-name">صالة المرايا</div>
+        <div class="gate-desc">الاستعداد للقاء الذات</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 3 - MIRROR ===== -->
+  <section id="part3">
+    <div class="part-header reveal" style="border-bottom-color:rgba(184,188,200,0.1);">
+      <span class="part-number" style="color:#b8bcc8;">الجزء الثالث · Part Three</span>
+      <h2 class="part-title">النفق الثالث — المرآة واكتمال الذات</h2>
+      <p class="part-subtitle">The Mirror and the Infinite</p>
+    </div>
+
+    <!-- Mirror Hall -->
+    <div class="mirror-hall reveal">
+      <div class="mirror-hall-intro">
+        <span class="section-label" style="color:#b8bcc8;">الباب الأول</span>
+        <h3 class="section-title">صالة المرايا — المواجهة الأولى</h3>
+        <p class="section-text">
+          لقد وصلت. انظر حولك. ماذا ترى؟<br>
+          كل مرآة تحمل وجهاً من وجوهك التي لم تعرفها بعد.
+        </p>
+      </div>
+      
+      <div class="mirrors-grid">
+        <div class="mirror-item" onclick="showMirrorMsg(0)">
+          <div class="mirror-text">من أنت<br>حين لا ينظر إليك أحد؟</div>
+        </div>
+        <div class="mirror-item" onclick="showMirrorMsg(1)">
+          <div class="mirror-text">ما الذي<br>تخاف أن تراه؟</div>
+        </div>
+        <div class="mirror-item" onclick="showMirrorMsg(2)">
+          <div class="mirror-text">هل الحقيقة<br>التي تراها حقيقية؟</div>
+        </div>
+        <div class="mirror-item" onclick="showMirrorMsg(3)">
+          <div class="mirror-text">من كنت<br>قبل أن تُسمَّى؟</div>
+        </div>
+        <div class="mirror-item" onclick="showMirrorMsg(4)">
+          <div class="mirror-text">ما الذي<br>لم تقله بعد؟</div>
+        </div>
+        <div class="mirror-item" onclick="showMirrorMsg(5)">
+          <div class="mirror-text">إلى أين<br>تسير حين تتوقف؟</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shards Puzzle -->
+    <div class="shards-section reveal">
+      <div style="text-align:center;margin-bottom:2rem;">
+        <span class="section-label" style="color:#b8bcc8;">الباب الثاني والثالث</span>
+        <h3 class="section-title">جمع الشظايا</h3>
+        <p class="section-text">المرآة المكسورة أمامك. كل شظية تحمل رقماً. رتّبها في الإطار... وستكتشف السر.</p>
+        <p style="font-size:0.85rem;color:var(--text-dim);margin-bottom:1rem;">انقر على شظية ثم انقر على موقعها في الإطار</p>
+      </div>
+
+      <div class="shards-pool" id="shards-pool">
+        <div class="shard" data-num="2" onclick="selectShard(this)">٢</div>
+        <div class="shard" data-num="3" onclick="selectShard(this)">٣</div>
+        <div class="shard" data-num="4" onclick="selectShard(this)">٤</div>
+        <div class="shard" data-num="5" onclick="selectShard(this)">٥</div>
+        <div class="shard" data-num="6" onclick="selectShard(this)">٦</div>
+        <div class="shard" data-num="7" onclick="selectShard(this)">٧</div>
+        <div class="shard" data-num="8" onclick="selectShard(this)">٨</div>
+        <div class="shard" data-num="9" onclick="selectShard(this)">٩</div>
+        <div class="shard" data-num="10" onclick="selectShard(this)">١٠</div>
+        <div class="shard" data-num="11" onclick="selectShard(this)">١١</div>
+        <div class="shard" data-num="12" onclick="selectShard(this)">١٢</div>
+        <div class="shard" data-num="13" onclick="selectShard(this)">١٣</div>
+        <div class="shard" data-num="14" onclick="selectShard(this)">١٤</div>
+        <div class="shard" data-num="15" onclick="selectShard(this)">١٥</div>
+        <div class="shard" data-num="special" style="display:none;" onclick="selectShard(this)" class="shard special">١✦</div>
+      </div>
+
+      <div class="broken-mirror-frame" id="mirror-frame">
+        <!-- 16 slots: first is shard 1 (locked), rest are empty -->
+        <div class="mirror-slot has-shard" data-slot="1" style="color:rgba(200,210,255,0.7);cursor:default;" title="الشظية الأولى — لا يمكن استبدالها">١</div>
+        <div class="mirror-slot" data-slot="2" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="3" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="4" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="5" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="6" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="7" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="8" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="9" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="10" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="11" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="12" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="13" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="14" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="15" onclick="placeSelectedShard(this)"></div>
+        <div class="mirror-slot" data-slot="16" id="last-slot" onclick="placeSelectedShard(this)">؟</div>
+      </div>
+
+      <div style="text-align:center;margin-top:1.5rem;">
+        <p id="puzzle-hint" style="color:var(--text-dim);font-size:0.9rem;font-family:'Amiri',serif;"></p>
+      </div>
+    </div>
+
+    <!-- Infinity reveal -->
+    <div class="infinity-reveal" id="infinity-reveal">
+      <span class="infinity-symbol">∞</span>
+      <p class="infinity-message">
+        سر اللانهاية:<br>
+        أنت والكون في رقصة أبدية
+      </p>
+      <p class="section-text" style="text-align:center;max-width:600px;margin:0 auto 2rem;">
+        الشظية الأولى لم تُستبدَل — لأنها الأصل.<br>
+        والشظية المضيئة في النهاية — لأنها المعنى.<br>
+        والمرآة المكتملة بينهما — لأنك أنت الذي جمعتها.
+      </p>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:0.2em;color:var(--gold-light);text-align:center;">
+        THE TRUTH IS INFINITE
+      </p>
+    </div>
+
+    <!-- Notes -->
+    <div class="section-container reveal">
+      <div class="notes-area">
+        <span class="notes-label">تأملاتك في هذه المرحلة · YOUR REFLECTIONS</span>
+        <textarea class="notes-input" id="part3-notes" placeholder="ماذا رأيت حين اكتملت المرآة؟ اكتب هنا..." onchange="saveNote('part3')"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== APPENDIX ===== -->
+  <section id="appendix-section">
+    <div class="section-container">
+      <div class="reveal">
+        <span class="section-label">الخاتمة والملحق · Epilogue</span>
+        <h2 class="section-title">الخروج من النفق إلى العالم</h2>
+        <p class="section-text">
+          حين تخرج من النفق، لن تكون الشخص ذاته الذي دخله.<br>
+          ليس لأن النفق غيّرك — بل لأنك رأيت نفسك لأول مرة.
+        </p>
+        <div class="gold-line"></div>
+        <p class="section-text">
+          النملة لا تعرف أنها تُعلِّم. الغراب لا يعرف أنه يُلهم. والشجرة لا تعرف أنها تُشهد. لكنك أنت — الإنسان الوحيد الذي نسي — قادر أن تتذكر.
+        </p>
+        <p class="section-text">
+          هذا الكتاب لم ينتهِ. إنه يبدأ الآن في يديك، في أسئلتك، في الهوامش التي ستملؤها بتأملاتك.
+        </p>
+      </div>
+
+      <!-- Practical guide -->
+      <div class="reveal" style="margin-top:3rem;">
+        <h3 class="section-title" style="font-size:1.6rem;">دليل التطبيق العملي السريع</h3>
+        <div class="gates-grid" style="padding:0;margin-top:2rem;">
+          <div class="gate-card">
+            <span class="gate-icon">👁️</span>
+            <div class="gate-name">لاحظ</div>
+            <div class="gate-desc">اجلس يوماً واحداً دون رأي. راقب النملة، راقب الناس، راقب نفسك. لا تحكم.</div>
+          </div>
+          <div class="gate-card">
+            <span class="gate-icon">❓</span>
+            <div class="gate-name">اسأل</div>
+            <div class="gate-desc">لكل مشكلة تواجهها: "ماذا كانت النملة ستفعل؟" السؤال نفسه هو نصف الإجابة.</div>
+          </div>
+          <div class="gate-card">
+            <span class="gate-icon">🤝</span>
+            <div class="gate-name">تعاون</div>
+            <div class="gate-desc">مدرسة النمل تُعلّم أن الوحدة الحقيقية تكمن في التعاون، لا في الانعزال.</div>
+          </div>
+          <div class="gate-card">
+            <span class="gate-icon">🔄</span>
+            <div class="gate-name">أعد</div>
+            <div class="gate-desc">كل فصل، ارجع إلى بوابة واحدة وأعد قراءتها. المعنى يتغير حين تتغير أنت.</div>
           </div>
         </div>
       </div>
 
-      <div class="secret-card">
-        <span class="secret-num">٢</span>
-        <h4 class="secret-title">السر الثاني: عين التوازن الكمي</h4>
-        <div class="prose">
-          <p>الكون لا يحب الفوضى. هو يحب التوازن. لكن توازنه ليس جموداً — إنه توازن ديناميكي، حي، يتذبذب دائماً لكنه لا يسقط.</p>
-          <p>في عالم الكم، الجسيم لا يكون في موضع واحد محدد قبل أن تقيسه — إنه في حالة تراكب من الاحتمالات كلها في آن واحد. عندما تقيس، يختار موضعاً. الكون يبقى في حالة توازن ديناميكي، حاملاً كل الاحتمالات حتى لحظة القياس.</p>
-        </div>
-        <div class="ayah">
-          <div class="ayah-text">أَلَا إِنَّهُمْ فِي مِرْيَةٍ مِّن لِّقَاءِ رَبِّهِمْ ۗ أَلَا إِنَّهُ بِكُلِّ شَيْءٍ مُّحِيطٌ</div>
-          <div class="ayah-ref">سورة فصلت - الآية ٥٤</div>
-        </div>
-        <div class="prose">
-          <p>الإحاطة الإلهية تعني أن كل شيء — كل احتمال، كل حالة، كل موضع ممكن — محاط بعلم الله ورعايته. الكون لا يسقط في الفوضى لأنه محاط.</p>
-          <p>في حياتك: التوازن لا يعني غياب التوتر، بل القدرة على حمله دون الانهيار. الشجرة التي تتمايل في الريح أقوى من تلك التي تقاومها بصلابة.</p>
-        </div>
+      <!-- Download PDF button -->
+      <div class="reveal" style="text-align:center;margin-top:4rem;">
+        <p class="section-text" style="font-size:1rem;margin-bottom:1.5rem;">احتفظ برفيق رحلتك الورقي</p>
+        <a href="ant_school_book.pdf" download class="download-btn" id="pdf-download">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          تحميل الكتاب — PDF كامل
+        </a>
       </div>
 
-      <div class="secret-card">
-        <span class="secret-num">٣</span>
-        <h4 class="secret-title">السر الثالث: عين التحول والاستبدال</h4>
-        <div class="prose">
-          <p>الكون ليس مصنوعاً من أشياء ثابتة، بل من أحداث متحولة. لا شيء يبقى على ما هو عليه. حتى الصخرة الصماء تتبدل ذراتها كل لحظة.</p>
-        </div>
-        <div class="ayah">
-          <div class="ayah-text">عَلَىٰ أَن نُّبَدِّلَ أَمْثَالَكُمْ وَنُنشِئَكُمْ فِي مَا لَا تَعْلَمُونَ</div>
-          <div class="ayah-ref">سورة الواقعة - الآية ٦١</div>
-        </div>
-        <div class="prose">
-          <p>"نُنشِئَكُمْ فِي مَا لَا تَعْلَمُونَ" — نشأة في عوالم لا ندري عنها شيئاً. وهذا بالضبط ما يصفه علماء الكم حين يتحدثون عن التفسيرات المتعددة للميكانيكا الكمومية: عوالم موازية، أبعاد مخفية، مستويات وجود تتجاوز إدراكنا.</p>
-          <p>التحول ليس موتاً — هو ولادة. كل نهاية هي بداية في عالم لا تعلمه. هذا السر يغير علاقتك بالخسارة، بالتغيير، بكل ما تظنه "نهاية".</p>
-          <p><span class="highlight">تطبيق:</span> اكتب ثلاثة تحولات مررت بها ظننتها نهايات، ثم اكتب ما ولد منها. ستكتشف نمطاً.</p>
-        </div>
-      </div>
-
-      <div class="exercise-box">
-        <p class="chapter-num" style="margin-bottom:1rem;">تمرين البوابة: العدسة الأولى</p>
-        <div class="prose">
-          <p>اخرج الآن — أو غداً صباحاً مبكراً — وابحث عن نملة. نملة واحدة كافية. راقبها لمدة خمس دقائق كاملة. لا تحكم. لا تسأل. فقط راقب.</p>
-          <p>ثم ارجع هنا واكتب ثلاثة أسطر فقط: ماذا رأيت؟</p>
-        </div>
-        <div class="note-space">[ مساحة لملاحظاتك — دوّن ما رأيته هنا ]</div>
-        <div class="prose">
-          <p>هل انتهيت؟ مبروك. لقد استخدمتَ العدسة الأولى: عدسة الملاحظة بدون حكم. هذه هي الأداة التي رآها أبي في النملة، وأنا أراها الآن فيك.</p>
-        </div>
-      </div>
-
-      <div class="pause-page">
-        <p class="pause-text">قف هنا.<br>تنفس.<br>ما الذي تعلمته؟<br>دونه قبل أن تمضي.</p>
-      </div>
-    </div><!-- end gate1 -->
-
-    <!-- GATE 2 -->
-    <div class="gate-panel" id="gate2">
-      <div class="gate-header">
-        <p class="gate-number">البوابة الثانية · ص ٩٣–١١٧</p>
-        <h3 class="gate-title">باب المفاتيح الذهبية</h3>
-        <p class="gate-motto">"لا تصطاد السمكة — علّم نفسك أين تجري الأنهار"</p>
-      </div>
-
-      <div class="prose">
-        <p>كل باب يحتاج مفتاحاً. لكن المفاتيح التي يحملها معظم الناس مصنوعة من يقين مستعار — من أفكار الآباء، توقعات المجتمع، وعود لم تُكتمل. هذه المفاتيح تفتح أبواباً، لكنها ليست أبوابك.</p>
-        <p>في هذه البوابة، نصنع مفاتيحك أنت.</p>
-      </div>
-
-      <div class="secret-card">
-        <span class="secret-num">١</span>
-        <h4 class="secret-title">المفتاح الأول: من الفرد إلى النظام</h4>
-        <div class="prose">
-          <p>النملة الواحدة لا تبني المملكة. عشرة نمل لا تبنيها. لكن مستعمرة نمل منظمة بنظام محدد تبني ما يعجز عنه أذكى البشر فرادى.</p>
-          <p>الدرس: قوتك لا تكمن فيما تستطيع وحدك، بل في النظام الذي تنتمي إليه وتُسهم فيه. الإنسان الذي يفهم كيف يعمل ضمن نظام — أسرة، فريق، مجتمع، كون — يُضاعف طاقته بلا حدود.</p>
-          <p>النملة لا "تعمل من أجل المملكة". هي تفعل ما تفعله لأنه في طبيعتها. لكن طبيعتها مُصممة لتخدم النظام الأكبر. هل طبيعتك الحقيقية — ليس ما تُؤديه للناس، بل ما تفعله حين لا يراك أحد — هل تخدم شيئاً أكبر منك؟</p>
-        </div>
-      </div>
-
-      <div class="secret-card">
-        <span class="secret-num">٢</span>
-        <h4 class="secret-title">المفتاح الثاني: من الصيد إلى الزراعة</h4>
-        <div class="prose">
-          <p>الصياد يخرج كل يوم، وقد يعود بلا شيء. الزارع ينتظر أشهراً، لكن عندما يحصد، يجمع ما يكفيه وزيادة.</p>
-          <p>معظمنا يعيش في عقلية الصياد: يبحث عن النتائج الفورية، يقيس النجاح يومياً، يعود خالياً في الأيام الصعبة. وقلة منا تعلّمت عقلية الزارع: تزرع يومياً حتى في الجفاف، تثق في الموسم، وتعرف أن التربة الخفية تعمل حتى وهي صامتة.</p>
-          <p>النملة زارعة بامتياز. هي تجمع في الصيف لشتاء لم يأت بعد. لا تنتظر البرد لتبدأ العمل.</p>
-          <p><span class="highlight">سؤال للتأمل:</span> في أي مجالات حياتك أنت صياد يحتاج أن يتحول إلى زارع؟</p>
-        </div>
-      </div>
-
-      <div class="secret-card">
-        <span class="secret-num">★</span>
-        <h4 class="secret-title">كيف تصنع مفاتيحك الخاصة</h4>
-        <div class="prose">
-          <p>المفتاح الحقيقي يُصنع من ثلاثة معادن: معدن المعرفة الذاتية (ماذا تريد حقاً؟)، معدن الصدق مع الواقع (ما الذي هو فعلاً؟)، ومعدن الإرادة المدربة (ما الذي تستطيع فعله يومياً بلا انتظار لـ"الوقت المناسب"؟).</p>
-          <p>الأقفال الخاطئة تُكسِر المفاتيح الصحيحة. لهذا، قبل أن تصنع مفتاحك، تأكد أنك تطرق الباب المناسب لك — لا الباب الذي قال الآخرون إنه "الأفضل".</p>
-        </div>
-      </div>
-
-      <div class="pause-page">
-        <p class="pause-text">قف هنا.<br>تنفس.<br>أي مفتاح تحتاجه الآن بالفعل؟</p>
-      </div>
-    </div><!-- end gate2 -->
-
-    <!-- GATE 3 -->
-    <div class="gate-panel" id="gate3">
-      <div class="gate-header">
-        <p class="gate-number">البوابة الثالثة · ص ١١٩–١٣٩</p>
-        <h3 class="gate-title">مفتاح الاستعداد الذاتي</h3>
-        <p class="gate-motto">"الكوب الممتلئ لا يتقبّل شيئاً — افرغ أولاً"</p>
-      </div>
-
-      <div class="prose">
-        <p>قبل أن تُفتح لك الأبواب، لا بد أن تكون مستعداً لما خلفها. كثيرون يطرقون الأبواب الصحيحة، لكنهم ممتلئون بما لا يسمح لهم بالاستيعاب. وكثيرون آخرون يتعلمون لكنهم لا يُجرّبون، أو يُجرّبون لكنهم لا يُراجعون.</p>
-        <p>الاستعداد الذاتي مفتاح ذو ثلاثة أسنان، وكل سنّ ضرورية.</p>
-      </div>
-
-      <div class="secret-card">
-        <span class="secret-num">١</span>
-        <h4 class="secret-title">السنّ الأولى: نية التلقّي</h4>
-        <div class="prose">
-          <p>النية ليست مجرد قرار ذهني — هي توجيه طاقتك الكاملة نحو الاستقبال. عندما تقرأ هذا الكتاب، هل أنت هنا فعلاً؟ أم جسدك هنا وعقلك في مكان آخر؟</p>
-          <p>النملة حين تخرج للعمل، تخرج بكامل وجودها. لا يوجد نملة "تمشي وتفكر في أمور أخرى". هي في المهمة بالكامل.</p>
-          <p>التمرين: قبل أن تبدأ أي تعلّم جديد، خصص ثلاث دقائق للصمت الكامل. اسأل نفسك: "لماذا أتعلم هذا؟ ماذا سأفعل به؟"</p>
-        </div>
-      </div>
-
-      <div class="secret-card">
-        <span class="secret-num">٢</span>
-        <h4 class="secret-title">السنّ الثانية: عزم التجريب</h4>
-        <div class="prose">
-          <p>المعرفة بلا تجربة كالبذرة في جيب المزارع — لن تُنبت شيئاً. التجريب هو الجسر بين فهم الفكرة وامتلاكها.</p>
-          <p>لا تنتظر الظروف المثالية للتجريب. النملة لا تنتظر الطقس المثالي — تُجرّب في الحر والبرد، في الجفاف والمطر.</p>
-        </div>
-      </div>
-
-      <div class="secret-card">
-        <span class="secret-num">٣</span>
-        <h4 class="secret-title">السنّ الثالثة: صدق المراجعة</h4>
-        <div class="prose">
-          <p>الحلقة لا تكتمل بلا مراجعة. ليس المراجعة الناقدة التي تقتل الدافعية، بل المراجعة الصادقة التي تسأل: "ما الذي نجح؟ ما الذي لم ينجح؟ ما الذي سأغيّر؟"</p>
-          <p>النملة التي تضرب جداراً لا تستمر في الضرب — تجد مساراً آخر. هذا ليس استسلاماً، هو ذكاء التكيف.</p>
-        </div>
-      </div>
-
-      <div class="exercise-box">
-        <p class="chapter-num" style="margin-bottom:1rem;">طقس الدخول</p>
-        <div class="prose">
-          <p>قبل أن تدخل أي باب جديد في هذا النفق، قل بصوت مسموع أو بداخلك: "أنا مستعد أن أتغير. أنا مستعد أن أخطئ. أنا مستعد أن أعود."</p>
-          <p>هذا الطقس البسيط يُشعل السنون الثلاث في آن واحد.</p>
-        </div>
-      </div>
-
-      <div class="pause-page">
-        <p class="pause-text">قف هنا.<br>تنفس.<br>أيّ سنٍّ تحتاج أن تُحدّدها في نفسك؟</p>
-      </div>
-    </div><!-- end gate3 -->
-
-    <!-- GATE 4 -->
-    <div class="gate-panel" id="gate4">
-      <div class="gate-header">
-        <p class="gate-number">البوابة الرابعة · ص ١٤١–١٦١</p>
-        <h3 class="gate-title">بوابة الرزق</h3>
-        <p class="gate-motto">"الرزق لا يُطلب — يُستقطب"</p>
-      </div>
-
-      <div class="prose">
-        <p>للرزق مفهوم أوسع بكثير مما يتخيله معظمنا. نحن نُضيّق كلمة "رزق" حتى تعني مالاً فقط، بينما الرزق في حقيقته هو: كل سعة تُضاف إلى حياتك. الصحة رزق. الوقت رزق. العلاقة الطيبة رزق. الهدوء الداخلي رزق. حتى السؤال الجيد الذي يطرحه عقلك — هذا رزق.</p>
-      </div>
-
-      <div class="secret-card">
-        <span class="secret-num">١</span>
-        <h4 class="secret-title">قوانين الجريان</h4>
-        <div class="prose">
-          <p>الماء يجري من الأعلى إلى الأسفل — لا يُقرّر، يتبع طبيعته. الرزق يجري نحو من يتبع طبيعته الحقيقية ويُعطي قبل أن يأخذ.</p>
-          <p>النهر الذي يُنظّف نفسه ويُروي الأرض يجذب المزيد من المياه. النهر الراكد يتلوث ويجف. أنت نهر. كيف تتصرف نهرك؟</p>
-          <p>القانون الأول: الرزق يتبع العطاء، لا طلب العطاء. القانون الثاني: الرزق يُقاس بالأثر، لا بالرقم. القانون الثالث: الرزق يتضاعف عند المشاركة.</p>
-        </div>
-      </div>
-
-      <div class="secret-card">
-        <span class="secret-num">٢</span>
-        <h4 class="secret-title">اختبار الوعاء والسد</h4>
-        <div class="prose">
-          <p>هناك أناس يجمعون كثيراً ويشعرون بالفقر. وهناك أناس عندهم القليل ويشعرون بالغنى. الفرق ليس في الكمية — في نوعية الوعاء.</p>
-          <p>الوعاء المُثقّب لا يحتفظ بالماء مهما أضفت فيه. والسد الذي لا يُفرّج يتحول إلى بحيرة راكدة.</p>
-          <p>سؤال: ما السدود التي بنيتها بداخلك تمنع الرزق من الجريان؟ الخوف من الإعطاء؟ الشعور بعدم الاستحقاق؟ الإمساك الذي تسميه "حكمة"؟</p>
-        </div>
-      </div>
-
-      <div class="secret-card">
-        <span class="secret-num">٣</span>
-        <h4 class="secret-title">مشروع القناة الناقلة</h4>
-        <div class="prose">
-          <p>لا تكن بئراً — كن قناة. البئر تحتوي ما عندها. القناة تنقل وتُعطي وتتجدد باستمرار.</p>
-          <p>أسأل نفسك يومياً: "ما الذي أنقله من الخير للآخرين اليوم؟" هذا السؤال، إذا صار عادة، يُحوّل حياتك كلها إلى قناة رزق متجددة.</p>
-        </div>
-      </div>
-
-      <div class="pause-page">
-        <p class="pause-text">قف هنا.<br>تنفس.<br>أين سدودك؟</p>
-      </div>
-    </div><!-- end gate4 -->
-
-    <!-- GATE 5 -->
-    <div class="gate-panel" id="gate5">
-      <div class="gate-header">
-        <p class="gate-number">البوابة الخامسة · ص ١٦٣–١٧٩</p>
-        <h3 class="gate-title">بوابة النجاح</h3>
-        <p class="gate-motto">"النجاح ليس وجهةً — هو اتجاه"</p>
-      </div>
-
-      <div class="prose">
-        <p>أكثر كلمة استُهلكت في القرن العشرين هي "النجاح". صارت تعني: المال، الشهرة، القوة. وصار الفاشل من لا يملكها. ولهذا صار معظمنا يشعر بالفشل، حتى وهم يحققون ما يريدون.</p>
-        <p>لأن النجاح الذي يُقاس بما تمتلك سيظل دائماً ناقصاً. هناك دائماً من يمتلك أكثر. والمقارنة ذئب يأكل الرضا.</p>
-      </div>
-
-      <div class="secret-card">
-        <h4 class="secret-title">النجاح كاتجاه لا وجهة</h4>
-        <div class="prose">
-          <p>النملة لا تعرف كيف تبدو المملكة المكتملة. ومع ذلك هي "ناجحة" في كل لحظة لأنها تمشي في اتجاهها الصحيح. الاتجاه الصحيح يعني: أن تنمو بمقدار واحد كل يوم في الشيء الذي خُلقت له.</p>
-          <p>النجاح الحقيقي هو الشعور في نهاية كل يوم بأنك كنت أكثر صدقاً مع ما أنت عليه، وأكثر خدمة لما حولك من أمس.</p>
-        </div>
-      </div>
-
-      <div class="secret-card">
-        <h4 class="secret-title">خريطة الحلقات السنوية</h4>
-        <div class="prose">
-          <p>قطّع شجرة عجوزة وانظر إلى داخلها. ستجد حلقات — كل حلقة سنة. بعض الحلقات عريضة (سنوات الخصب)، بعضها ضيقة (سنوات الجفاف). لكنها كلها موجودة، وكلها ساهمت في صنع الشجرة.</p>
-          <p>حياتك كذلك. سنوات الجفاف فيك ليست فشلاً — هي حلقات ضيقة تُقوّي الخشب. المهم أن تستمر في الحلقات، لا أن تتخلى عن الشجرة.</p>
-          <p>قانون التوازن: الشجرة التي تنمو بسرعة في التربة الفضفاضة تسقط في أول عاصفة. الشجرة التي تنمو ببطء في صخر تعيش قروناً.</p>
-        </div>
-      </div>
-
-      <div class="pause-page">
-        <p class="pause-text">قف هنا.<br>تنفس.<br>في أي اتجاه أنت سائر الآن؟</p>
-      </div>
-    </div><!-- end gate5 -->
-
-    <!-- GATE 6 -->
-    <div class="gate-panel" id="gate6">
-      <div class="gate-header">
-        <p class="gate-number">البوابة السادسة · ص ١٨١–١٩٧</p>
-        <h3 class="gate-title">بوابة المعرفة</h3>
-        <p class="gate-motto">"المعرفة ليست معلومات — هي روابط"</p>
-      </div>
-
-      <div class="prose">
-        <p>نعيش في أكثر عصر معلوماتي في تاريخ البشرية. ومع ذلك، ربما نعيش أيضاً في أكثر عصر ارتباكاً. لأن المعلومات وحدها لا تُنتج معرفة — الروابط بين المعلومات هي التي تُنتجها.</p>
-        <p>شبكة العنكبوت ليست مجموعة خيوط منفصلة — هي نظام روابط. الخيط المنفرد يكسر بلا مقاومة. الشبكة تمتص الصدمة وتوزعها.</p>
-      </div>
-
-      <div class="secret-card">
-        <h4 class="secret-title">مشبك الربط اليومي</h4>
-        <div class="prose">
-          <p>اعتدت أن تقرأ كتاباً وتنساه. تسمع محاضرة وتنساها. ليس لأن ذاكرتك ضعيفة، بل لأن الدماغ يحتفظ فقط بما يربطه بشيء يعرفه بالفعل.</p>
-          <p>التمرين اليومي: في نهاية كل يوم، اربط شيئاً جديداً تعلمته بشيء قديم تعرفه. جملة واحدة كافية: "هذا يشبه..." أو "هذا يختلف عن... لأن..."</p>
-          <p>هذا المشبك البسيط يُضاعف قدرتك على التعلم بشكل لن تصدقه إلا بعد شهر من التجريب.</p>
-        </div>
-      </div>
-
-      <div class="secret-card">
-        <h4 class="secret-title">قراءة كتاب الكون</h4>
-        <div class="prose">
-          <p>أعظم كتاب لم يُطبع بعد هو الكون نفسه. كل ظاهرة طبيعية هي صفحة. كل كائن حي هو فصل. كل علاقة بين الكائنات هي جملة.</p>
-          <p>أبي كان يقرأ النملة كما يقرأ كتاباً. وقد علّمني أن كل ما ينظر إليه الإنسان ببصيرة، يتحول من "شيء" إلى "آية".</p>
-        </div>
-        <div class="ayah">
-          <div class="ayah-text">وَمَا تَسْقُطُ مِن وَرَقَةٍ إِلَّا يَعْلَمُهَا وَلَا حَبَّةٍ فِي ظُلُمَاتِ الْأَرْضِ وَلَا رَطْبٍ وَلَا يَابِسٍ إِلَّا فِي كِتَابٍ مُّبِينٍ</div>
-          <div class="ayah-ref">سورة الأنعام - الآية ٥٩</div>
-        </div>
-      </div>
-
-      <div class="pause-page">
-        <p class="pause-text">قف هنا.<br>تنفس.<br>ما الآية التي رأيتها اليوم ولم تنتبه إليها؟</p>
-      </div>
-    </div><!-- end gate6 -->
-
-    <!-- GATE 7 -->
-    <div class="gate-panel" id="gate7">
-      <div class="gate-header">
-        <p class="gate-number">البوابة السابعة · ص ١٩٩–٢١٥</p>
-        <h3 class="gate-title">بوابة الحكمة</h3>
-        <p class="gate-motto">"الحكمة ليست ما تعرفه — بل ما تبقى بعد النسيان"</p>
-      </div>
-
-      <div class="prose">
-        <p>وصلنا إلى آخر البوابات السبع. وللمفارقة، الحكمة — هذه الكلمة التي يسعى إليها الجميع — هي الشيء الوحيد الذي لا يمكن طلبه مباشرة. يمكنك أن تطلب المعرفة، يمكنك أن تطلب النجاح، يمكنك أن تطلب الرزق. لكن الحكمة تأتي بلا طلب، أو لا تأتي.</p>
-        <p>لأن الحكمة ليست ما تجمعه — هي ما يبقى بعد أن يُصفّيك الزمن والتجربة.</p>
-      </div>
-
-      <div class="secret-card">
-        <h4 class="secret-title">الحكمة بعد التجربة</h4>
-        <div class="prose">
-          <p>كل إنسان عمّر خمسين سنة يملك حكمة هائلة — لكن معظمهم لا يعرفون ذلك. لأن الحكمة المكتسبة من التجارب لا تصرخ بصوت عالٍ. هي تهمس. وكثيرون يعيشون بجانبها ولا يسمعونها.</p>
-          <p>السؤال ليس "كيف أكتسب الحكمة؟" بل "كيف أسمع الحكمة التي اكتسبتها بالفعل؟"</p>
-        </div>
-      </div>
-
-      <div class="secret-card">
-        <h4 class="secret-title">صمت العشرة أيام</h4>
-        <div class="prose">
-          <p>اقتراح أخير: مرة واحدة كل عام، خذ عشرة أيام من الصمت الداخلي. ليس بالضرورة صمتاً خارجياً — بل صمتاً عن الآراء، عن الحكم على الأشياء، عن التسمية والتصنيف.</p>
-          <p>فقط راقب. فقط عِش. فقط كن.</p>
-          <p>وبعد العشرة أيام، انظر كيف تغيّر ما كنت تعتقده يقيناً راسخاً.</p>
-        </div>
-      </div>
-
-      <div class="secret-card">
-        <h4 class="secret-title">حضانة القرارات</h4>
-        <div class="prose">
-          <p>القرار الكبير لا يُتخذ في لحظة الانفعال — لا في ذروة الفرح ولا في قاع الحزن. القرار الحكيم يُحتضن.</p>
-          <p>عندما يُراودك قرار مهم، اكتبه وضعه جانباً سبعة أيام. ثم عُد إليه. كثيراً ما ستجد أنك تغيّرت. وأحياناً ستجد أن القرار اتخذ نفسه في غيابك.</p>
-        </div>
-      </div>
-
-      <div class="ayah">
-        <div class="ayah-text">هُوَ اللَّهُ الَّذِي لَا إِلَٰهَ إِلَّا هُوَ ۖ عَالِمُ الْغَيْبِ وَالشَّهَادَةِ ۖ هُوَ الرَّحْمَٰنُ الرَّحِيمُ</div>
-        <div class="ayah-ref">سورة الحشر - الآية ٢٢</div>
-      </div>
-
-      <div class="conclusion-box">
-        <p>وصلت إلى نهاية البوابات السبع.<br>
-        لكن النهاية هنا هي البداية الحقيقية.<br>
-        الآن — وقد فتحت هذه الأبواب — ستبدأ في رؤية أبواب أخرى لم تكن تراها.<br>
-        هذا هو الأثر الحقيقي للمعرفة الحية: لا تُغلق الأسئلة، تفتح أبواباً لم تكن تعرف بوجودها.</p>
-      </div>
-
-      <div class="pause-page">
-        <p class="pause-text">هنا تنتهي البوابات.<br>وهنا تبدأ الرحلة.<br>أَلَا إِنَّهُ بِكُلِّ شَيْءٍ مُّحِيطٌ</p>
-      </div>
-    </div><!-- end gate7 -->
-
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- ═══════════════════════════
-     PART III — THE MIRROR
-════════════════════════════ -->
-<section id="part3" style="padding: 5rem 2rem;">
-  <div style="max-width:900px; margin: 0 auto;">
-
-    <p class="section-label">الجزء الثالث</p>
-    <h2 class="section-title" style="text-align:center;">المرآة — ورشة التكوين الأصلي</h2>
-
-    <!-- Hall of Mirrors -->
-    <div class="chapter">
-      <h3 class="chapter-title">صالة المرايا</h3>
-      <div class="prose">
-        <p>وصلنا أخيراً إلى قلب النفق. جدرانه هنا من مرايا — بعضها مصقول يعكس صورة واضحة، بعضها مشقّق يُشتّت الانعكاس، وبعضها مُغبرّ بالزمن يُبهم ملامحك حتى لا تعرف من تكون.</p>
-        <p>هذه الصالة هي المكان الذي يصل إليه كل من سار في هذا النفق إلى آخره. معظم من يصلون هنا يتوقفون عند أول مرآة مصقولة، يرون صورة تُريحهم، ويعودون. لكن من يُكمل — من يمشي حتى آخر الصالة — يجد شيئاً لم يتوقعه.</p>
-        <p>يجد المرآة المكسورة.</p>
-      </div>
-      <div class="ayah">
-        <div class="ayah-text">وَلَقَدْ عَلِمْتُمُ النَّشْأَةَ الْأُولَىٰ فَلَوْلَا تَذَكَّرُونَ</div>
-        <div class="ayah-ref">سورة الواقعة - الآية ٦٢</div>
-      </div>
-    </div>
-
-    <!-- Broken Mirror Puzzle -->
-    <div class="mirror-scene">
-      <h3 class="chapter-title" style="text-align:center;">المرآة المكسورة</h3>
-      <p class="mirror-instructions">انقر على الشظايا بالترتيب لتجمع المرآة...</p>
-      <p class="shard-counter" id="shardCounter">الشظايا: ٠ / ٩</p>
-
-      <div class="shard-container" id="mirrorContainer">
-        <div class="mirror-frame"></div>
-
-        <!-- Shards - arranged in 3x3 grid -->
-        <div class="shard" id="s1" style="--clip: 0% 0%, 33% 0%, 33% 33%, 0% 33%; top:0; left:0; width:33%; height:33%;" onclick="collectShard(1)">١</div>
-        <div class="shard" id="s2" style="--clip: 0% 0%, 100% 0%, 100% 100%, 0% 100%; top:0; left:33%; width:34%; height:33%;" onclick="collectShard(2)">٢</div>
-        <div class="shard" id="s3" style="--clip: 0% 0%, 100% 0%, 100% 100%, 0% 100%; top:0; right:0; width:33%; height:33%;" onclick="collectShard(3)">٣</div>
-        <div class="shard" id="s4" style="--clip: 0% 0%, 100% 0%, 100% 100%, 0% 100%; top:33%; left:0; width:33%; height:34%;" onclick="collectShard(4)">٤</div>
-        <div class="shard" id="s5" style="--clip: 0% 0%, 100% 0%, 100% 100%, 0% 100%; top:33%; left:33%; width:34%; height:34%;" onclick="collectShard(5)">٥</div>
-        <div class="shard" id="s6" style="--clip: 0% 0%, 100% 0%, 100% 100%, 0% 100%; top:33%; right:0; width:33%; height:34%;" onclick="collectShard(6)">٦</div>
-        <div class="shard" id="s7" style="--clip: 0% 0%, 100% 0%, 100% 100%, 0% 100%; bottom:0; left:0; width:33%; height:33%;" onclick="collectShard(7)">٧</div>
-        <div class="shard" id="s8" style="--clip: 0% 0%, 100% 0%, 100% 100%, 0% 100%; bottom:0; left:33%; width:34%; height:33%;" onclick="collectShard(8)">٨</div>
-        <!-- Shard 9 = glowing shard with number 1 -->
-        <div class="shard glowing" id="s9" style="--clip: 0% 0%, 100% 0%, 100% 100%, 0% 100%; bottom:0; right:0; width:33%; height:33%;" onclick="collectShard(9)">١</div>
-
-        <div class="mirror-complete" id="mirrorComplete">
-          <div class="infinity-symbol">∞</div>
-          <p class="mirror-message">صورتك الحقيقية... لا نهائية</p>
-        </div>
-      </div>
-
-      <div id="shardMessage" style="display:none; padding: 2rem; text-align:center;">
-        <div class="prose" style="text-align:center;">
-          <p><span class="highlight">الشظية المضيئة!</span></p>
-          <p>عثرنا على شظية تحمل الرقم "١" — وهو نفس رقم الشظية الأولى. لا يمكن استبدال الأولى... فأين نضع هذه؟</p>
-          <p>نضعها في النهاية. بعد كل شيء. فتكتمل المرآة وتتحول إلى مرآة لا نهائية.</p>
-          <p style="font-style:italic; color: var(--gold-dim);">لأن الحقيقة الأولى والأخيرة واحدة.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- After Mirror Discovery -->
-    <div class="chapter" id="afterMirror" style="display:none; animation: fadeInUp 1s ease forwards; opacity:0;">
-      <h3 class="chapter-title">ما تراه في المرآة الآن</h3>
-      <div class="prose">
-        <p>ها هي المرآة مكتملة. لكنها ليست مرآة عادية بعد الآن.</p>
-        <p>انظر جيداً: ترى صورتك. لكن حولها ترى أيضاً كل رموز الرحلة — النملة التي بدأت معها، وأبوك الذي أشار، وأسئلتك التي لم تُجَب، وشظايا المرآة المكسورة التي جمعتها.</p>
-        <p>أنت لست فقط "أنت". أنت محصلة كل ما مررت به، وكل من التقيت بهم، وكل سؤال طرحته، حتى الأسئلة التي لم تجد لها إجابة.</p>
-        <p>وهذا التعقيد الجميل — هو الصورة الحقيقية. ليست الصورة المبسطة التي تضعها في تعريفك لنفسك. بل هذه — الكاملة، المتناقضة، المشعة، اللانهائية.</p>
-      </div>
-
-      <div class="ayah">
-        <div class="ayah-text">هُوَ الْأَوَّلُ وَالْآخِرُ وَالظَّاهِرُ وَالْبَاطِنُ ۖ وَهُوَ بِكُلِّ شَيْءٍ عَلِيمٌ</div>
-        <div class="ayah-ref">سورة الحديد - الآية ٣</div>
-      </div>
-
-      <div class="prose">
-        <p>الرقم ١ الأول هو بدايتك. الرقم ١ الأخير — الشظية المضيئة — هو رجوعك. وبينهما كل الأرقام التي عشتها. لكن عندما وضعنا الشظية الأخيرة، اختفت الحدود بين الأرقام، وتحولت إلى ∞.</p>
-        <p>لأن من يبدأ بـ"١" ويعود إلى "١" قد عاش اللانهاية في رحلته.</p>
-      </div>
-    </div>
-
-    <!-- Conclusion -->
-    <div class="chapter" id="conclusionChapter">
-      <h3 class="chapter-title">الخاتمة — الخروج من النفق إلى العالم</h3>
-      <div class="prose">
-        <p>النفق انتهى.</p>
-        <p>أو ربما لم ينتهِ. ربما ما حدث هو أن النفق أصبح جزءاً منك، فلم يعد مظلماً. ليس لأن الظلام اختفى، بل لأنك تعلّمت كيف تحمل فانوسك وتمشي.</p>
-        <p>خرجنا معاً من هذا النفق الطويل. لكن الخروج ليس نهاية الرحلة — هو بداية جديدة. لأن العالم الذي ستعود إليه الآن هو نفسه الذي تركته، لكنك لست نفسك.</p>
-        <p>الشجرة التي رأيتها لن تكون مجرد شجرة بعد اليوم — ستكون حلقات سنوية تحكي قصة صمود. والنملة لن تكون مجرد حشرة — ستكون معلمة تسير في الخط المستقيم الذي فقدناه. والمرآة المكسورة في أي مكان ستذكّرك أن الصورة الكاملة تحتاج كل الشظايا.</p>
-        <p>لكن اعلم: ستعود إلى أنفاق أخرى. ستتكسر مرايا أخرى. وستحتاج إلى جمع شظايا جديدة. هذا ليس فشلاً — هذا هو دوام التعلم. وهذا ما تعلّمناه من النمل: لا نهاية للمملكة في بنائها.</p>
-        <p>أما أنا — التلميذ المبتدئ — فأعترف: لا أزال مبتدئاً. لكني الآن مبتدئ يعرف أنه مبتدئ، وهذا أوّل خطوة في أي تعلّم حقيقي.</p>
-        <p>شكراً لأنك مددت فانوسك. شكراً لأنك جمعت شظاياك معي. صورتك — كما قلنا في البداية — لا نهائية. لا تتناساها.</p>
-      </div>
-
-      <div class="conclusion-box">
-        <p style="font-size:1.2rem; color: var(--gold);">
-          "تلميذ مبتدئ"<br>
-          <span style="font-size:0.85rem; color: var(--ivory-dim);">رفيق لا معلم</span>
+      <!-- Blank start page -->
+      <div class="reveal" style="text-align:center;margin-top:5rem;padding:4rem 2rem;border:1px solid rgba(201,168,76,0.1);">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:0.8rem;letter-spacing:0.5em;color:var(--text-dim);margin-bottom:2rem;">YOUR JOURNEY BEGINS HERE</p>
+        <h3 style="font-family:'Amiri',serif;font-size:3rem;color:var(--gold-light);margin-bottom:2rem;">ابدأ</h3>
+        <p style="font-family:'Amiri',serif;color:var(--text-dim);font-size:1.1rem;line-height:2;">
+          هذه الصفحة لك.<br>
+          اكتب ما بدأت تتذكره.
         </p>
+        <textarea class="notes-input" id="start-notes" style="margin-top:2rem;border-top:1px solid rgba(201,168,76,0.1);padding-top:1rem;" placeholder="البداية..." onchange="saveNote('start')"></textarea>
       </div>
     </div>
+  </section>
 
-    <!-- Quick Reference Guide -->
-    <div class="chapter">
-      <h3 class="chapter-title">دليل التطبيق العملي السريع</h3>
-      <div class="prose">
-        <p><strong style="color:var(--gold);">البوابة الأولى — الأسرار الكونية:</strong> تمرين الملاحظة بلا حكم (خمس دقائق مع أي كائن حي يومياً لأسبوع).</p>
-        <p><strong style="color:var(--gold);">البوابة الثانية — المفاتيح الذهبية:</strong> حدّد مجالاً واحداً تعمل فيه كـ"صياد" وابدأ تحويله إلى "زارع" بعادة يومية صغيرة.</p>
-        <p><strong style="color:var(--gold);">البوابة الثالثة — الاستعداد:</strong> قبل كل تعلّم: ثلاث دقائق صمت + نية واضحة.</p>
-        <p><strong style="color:var(--gold);">البوابة الرابعة — الرزق:</strong> سؤال يومي: "ماذا أعطيت اليوم بلا انتظار مقابل؟"</p>
-        <p><strong style="color:var(--gold);">البوابة الخامسة — النجاح:</strong> قيّم يومك بـ"اتجاه" لا بـ"إنجاز". هل كنت أصدق مع نفسك اليوم من أمس؟</p>
-        <p><strong style="color:var(--gold);">البوابة السادسة — المعرفة:</strong> مشبك الربط: كل يوم، جملة واحدة تربط شيئاً جديداً بشيء قديم.</p>
-        <p><strong style="color:var(--gold);">البوابة السابعة — الحكمة:</strong> احتضن القرارات الكبيرة سبعة أيام قبل اتخاذها.</p>
-      </div>
+  <!-- ===== FOOTER ===== -->
+  <footer id="footer">
+    <div class="footer-title">تلميذ مبتدئ في مدرسة النمل</div>
+    <p class="footer-quote">النملة تنتظر. النفق مفتوح. والفانوس في يدك.</p>
+    <div class="footer-links">
+      <span class="footer-link" onclick="scrollToSection('hero')">البداية</span>
+      <span class="footer-link" onclick="scrollToSection('intro-section')">المقدمة</span>
+      <span class="footer-link" onclick="scrollToSection('part1')">الجزء الأول</span>
+      <span class="footer-link" onclick="scrollToSection('part2')">الجزء الثاني</span>
+      <span class="footer-link" onclick="scrollToSection('part3')">المرآة</span>
     </div>
-
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- ═══════════════════════════
-     APPENDIX — QUANTUM VERSES
-════════════════════════════ -->
-<section id="appendix">
-  <div style="max-width:900px; margin: 0 auto;">
-    <p class="section-label">الملحق الروحي</p>
-    <h2 class="section-title">آيات كونية للتأمل في التشابك الكمي</h2>
-    <p class="prose" style="text-align:center; max-width:600px; margin: 0 auto 3rem;">
-      حيث تلتقي الحقيقة العلمية بالحقيقة الإيمانية — ليس تعارضاً، بل تكاملاً. كل آية هنا هي بوابة مزدوجة: تفتح على آفاق العلم وعلى أعماق اليقين في آن واحد.
+    <p style="font-family:'Cormorant Garamond',serif;font-size:0.75rem;letter-spacing:0.3em;color:rgba(255,255,255,0.1);">
+      STAND AS AN ANT, SAVOR THE HONEY
     </p>
+  </footer>
 
-    <div class="verse-grid">
-      <div class="verse-card">
-        <div class="verse-card-text">قَالَ الَّذِي عِندَهُ عِلْمٌ مِّنَ الْكِتَابِ أَنَا آتِيكَ بِهِ قَبْلَ أَن يَرْتَدَّ إِلَيْكَ طَرْفُكَ</div>
-        <div class="verse-card-ref">سورة النمل — الآية ٤٠</div>
-        <div class="verse-card-analogy">وجه الإضاءة: نقل آني لعرش بلقيس عبر الزمكان — يوازي ما يصفه العلم في نقل الحالات الكمومية عبر "قنوات التشابك" بصرف النظر عن المسافة.</div>
-      </div>
+</div><!-- end main-site -->
 
-      <div class="verse-card">
-        <div class="verse-card-text">أَلَا إِنَّهُ بِكُلِّ شَيْءٍ مُّحِيطٌ</div>
-        <div class="verse-card-ref">سورة فصلت — الآية ٥٤</div>
-        <div class="verse-card-analogy">وجه الإضاءة: الإحاطة الإلهية الشاملة — كل احتمال، كل حالة، كل موضع ممكن. في عالم الكم، الجسيمات المتشابكة تظل محاطة برابط غير مرئي يتجاوز المسافة.</div>
-      </div>
-
-      <div class="verse-card">
-        <div class="verse-card-text">وَمَا تَسْقُطُ مِن وَرَقَةٍ إِلَّا يَعْلَمُهَا وَلَا حَبَّةٍ فِي ظُلُمَاتِ الْأَرْضِ إِلَّا فِي كِتَابٍ مُّبِينٍ</div>
-        <div class="verse-card-ref">سورة الأنعام — الآية ٥٩</div>
-        <div class="verse-card-analogy">وجه الإضاءة: الكون "كتاب مبين" مترابط الأجزاء. كل حدث مرصود في علم إلهي شامل — وكأن الكون كله نظام معلومات مترابط، لا يسقط فيه شيء خارج الإحاطة.</div>
-      </div>
-
-      <div class="verse-card">
-        <div class="verse-card-text">عَلَىٰ أَن نُّبَدِّلَ أَمْثَالَكُمْ وَنُنشِئَكُمْ فِي مَا لَا تَعْلَمُونَ</div>
-        <div class="verse-card-ref">سورة الواقعة — الآية ٦١</div>
-        <div class="verse-card-analogy">وجه الإضاءة: نشأة في عوالم لا ندري عنها. تشير إلى احتمال الوجود في مستويات أو أبعاد تتجاوز إدراكنا — وهو ما تتكلم عنه نظريات الأوتار والفيزياء الكمومية اليوم.</div>
-      </div>
-
-      <div class="verse-card">
-        <div class="verse-card-text">هُوَ اللَّهُ الَّذِي لَا إِلَٰهَ إِلَّا هُوَ ۖ عَالِمُ الْغَيْبِ وَالشَّهَادَةِ</div>
-        <div class="verse-card-ref">سورة الحشر — الآية ٢٢</div>
-        <div class="verse-card-analogy">وجه الإضاءة: عالم الغيب = الاحتمالات الكمومية قبل القياس. عالم الشهادة = الواقع المحدد بعد القياس. العلم الإلهي يحيط بالعالمين معاً في آن واحد.</div>
-      </div>
-
-      <div class="verse-card">
-        <div class="verse-card-text">أَوَلَمْ يَرَوْا إِلَىٰ مَا خَلَقَ اللَّهُ مِن شَيْءٍ يَتَفَيَّأُ ظِلَالُهُ عَنِ الْيَمِينِ وَالشَّمَائِلِ سُجَّدًا لِّلَّهِ</div>
-        <div class="verse-card-ref">سورة النحل — الآية ٤٨</div>
-        <div class="verse-card-analogy">وجه الإضاءة: تعدد الظلال في اتجاهات مختلفة يضرب مثلاً لتجربة الشق المزدوج — حيث يُبدي الجسيم الكمي تداخلاً يُنتج أنماطاً متعددة كظلال متعددة لجسم واحد.</div>
-      </div>
+<!-- ===== MODAL ===== -->
+<div class="modal-overlay" id="modal" onclick="closeModalOnBg(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2 class="modal-title" id="modal-title"></h2>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="notes-area" style="margin-top:2rem;">
+      <span class="notes-label">ملاحظاتك · YOUR NOTES</span>
+      <textarea class="notes-input" id="modal-notes" style="min-height:80px;" placeholder="دوّن تأملاتك هنا..."></textarea>
     </div>
   </div>
-</section>
+</div>
 
-<div class="section-divider"></div>
+<!-- Floating particles -->
+<div id="particles-container"></div>
 
-<!-- FINAL PAGE -->
-<section id="final">
-  <div class="final-glow"></div>
-  <p class="final-word">ابدأ</p>
-  <p class="final-sub">الصفحة الأخيرة هي أول خطوة</p>
-</section>
-
-<!-- ═══════════════════════════
-     JAVASCRIPT
-════════════════════════════ -->
 <script>
-// --- Particles ---
-const pc = document.getElementById('particles');
-for (let i = 0; i < 30; i++) {
-  const p = document.createElement('div');
-  p.className = 'particle';
-  p.style.cssText = `
-    left: ${Math.random()*100}%;
-    width: ${Math.random()*3+1}px;
-    height: ${Math.random()*3+1}px;
-    animation-duration: ${Math.random()*15+10}s;
-    animation-delay: ${Math.random()*10}s;
-    opacity: ${Math.random()*0.6};
-  `;
-  pc.appendChild(p);
+// ===== MODAL CONTENT =====
+const modalContent = {
+  ch1: {
+    title: 'الفصل الأول: أسئلة تلميذ مبتدئ',
+    body: `<p>ما السِّر الذي يَملِكه غيري ولا أَملِكه أنا؟</p>
+<br>
+<p>هل هو سرُّ التذكُّر الذي غاب عني، بينما النملة تعرف طريقها إلى بيتها دون خريطة، والغراب يعلم كيف يُواري سوءة أخيه بلا مُعلِّم، والطير يحمل رزقه ولا يدَّخر؟ هم يمضون في دروب الفطرة مطمئنين، لا تتعبهم أسئلة الهوية ولا تحيرهم مفارقات الوجود.</p>
+<br>
+<p>أما أنا، فأحملُ عقلي كشعلة تضيء وتُحرق، أبحث عن الدليل خارجي، وفي فطرتي ما لو تأملتها لاهتديت. ترى، هل أنا من ضلَّ الطريق، أم أن هذا الضلال هو امتحاني الوحيد؟</p>
+<br>
+<p><strong style="color:var(--gold-light);">من أكون؟</strong><br>
+أنا الذي يجهلُ الحقيقة، هل هو الجسدُ الذي أحمله؟ أم ذلك التناقض الذي يسكن داخلي؟ أنا السائل والمجيب في آن، أنا الحائر بين ما أرى وما يرىني.</p>
+<br>
+<p><strong style="color:var(--gold-light);">لماذا أنا هنا؟</strong><br>
+هل جئتُ إلى هذه "المدرسة" بملء إرادتي، أم أن هناك يداً خفية وضعتني على هذا الدرب دون أن أدري؟</p>
+<br>
+<p>تلك هي لعبتي العجيبة: أنا التلميذ المبتدئ في مدرسة النمل، أتعلم منهم كيف أمشي، وهم يتعلمون مني كيف يتعثرون بالأسئلة.</p>
+<br>
+<p>فيا قارئي، لعلك مثلي. ولعل ما يربطنا هو أننا الاثنان لا نعرف. وربما كانت هذه هي البداية الوحيدة: أن تعترف أنك لا تعرف، ثم تنظر إلى نملة لعلها تهديك.</p>
+<br>
+<p style="color:var(--gold-light);font-style:italic;">هكذا أبدأ رحلتي:<br>تلميذ مبتدئ في مدرسة النمل<br>لا أدري إن كنت سأنجح، لكني أعرف أنني حضرتُ أول يوم دراسي.</p>`
+  },
+  ch2: {
+    title: 'الفصل الثاني: الفتيل الذي أشعل السؤال',
+    body: `<p><strong style="color:var(--gold-light);">معلمي الأول: أبي</strong></p>
+<br>
+<p>الذي أَدخلني إلى هذه المدرسة — مدرسة النمل — لم يكن كتابًا، ولا مُحاضرًا، بل كان مُعلِّمًا صامتًا عَلَّمني دون كَلِمة. كان ذلك المُعلّم أَبي.</p>
+<br>
+<p>كان أبي عالَمًا قائماً بذاته، حَبيسًا بين جُدران غُرفته ومَكتبته التي لا تَنتهي، وَرِعًا حَذِرًا من عَدواء العِلم والأيادي الخَفِية. كان رَجُلاً إذا تَكَلَّم، وَقَف الزمن من حَوله.</p>
+<br>
+<p><strong style="color:var(--gold-light);">الابتسامة والنملة: الباب الذي لم أكن أَعرفه</strong></p>
+<p>ذات يَوم، كُنتُ جالِسًا معه فَوَجَدته صامِتًا — وليس الصَّمتَ مِن عاداته. نَظَرتُ إليه، فإذا هُو يَنظُر إلى الأرض ويَبتَسِم.</p>
+<br>
+<p>فأَشار بِإصبَعه إلى مجموعةٍ مِن النَّمل تَسير في خَطٍّ مُنتَظِم، وسأَلَني سُؤالًا بَسيطًا يَحمِل في طيّاته الكَونَ كُلَّهُ:</p>
+<br>
+<p style="padding:1rem;background:rgba(201,168,76,0.05);border-right:3px solid var(--gold);font-size:1.15rem;color:var(--text-light);">"اُنظُر إليها... ما فائدة هذا المَخلوق في هذا الكَون الفَسيح؟"</p>
+<br>
+<p>لَم أَعرِف الإجابة. فقام هُوَ بِالإجابة:<br>
+"هذه النَّملة... لَو اِنقَرَضَت، لَحَدَث اِنهِيار في هذا العالَم. هذا المَخلوق الصَّغير هو مِن رَكائِز وقَوائم توازُن البِيئة."</p>
+<br>
+<p>ثمّ بَدَأ يُشَرِّح... فَمَرَّت أَربَع ساعاتٍ وأَنا أَعيش في تَشابُكٍ كَمِّي عَجيب: بَين نَملةٍ وكَوكَب، كِتابٍ وتُربة، مَجرَّةٍ وقَمَر، دِينٍ وعِلم.</p>
+<br>
+<p><strong style="color:var(--gold-light);">الانكسار والانفتاح</strong><br>
+لَقَد كانت لَحظة اِنكِسار واِنفِتاح. أَدرَكتُ أَنَّني طَوال عُمري كُنتُ أَبحَث عَن الإجابات في الأَماكِن الخاطِئة. مِن ذلك اليوم، اِلتَحَقتُ بِمَدرَسة النَّمل رَسميًّا.</p>`
+  },
+  ch3: {
+    title: 'الفصل الثالث: دفتر ملاحظات لا يملكه كاتبه',
+    body: `<p>ولهذا، أَيُّها القارئ، أَقولها بِكُل صِدق: لَستُ أَنا مَن يَكتُب هذا الكِتاب.</p>
+<br>
+<p>هل هي النَّملةُ الَّتي تَخطُّ على التُّرابِ أَسرَارَها، فَأَقرَأُها بِعَينَي قَلبي ثُمَّ أَنقُلُها إِلَى هَذِهِ الصَّفَحَات؟ أَم هُوَ أَبي الَّذي عَلَّمني أَنَّ الصَّمتَ أَبلَغُ مِن كُلِّ كَلِمَة؟ أَم أَنتَ أَيُّهَا القَارئ، الَّذي تَحمِلُ بَينَ يَدَيكَ هَذِهِ السُّطُور، فَتَمْنَحُها رُوحًا وَحَيَاةً بِقِراءَتِكَ؟</p>
+<br>
+<p style="padding:1rem;background:rgba(201,168,76,0.05);border-right:3px solid var(--gold);">فَمَن أَنا؟ لَعَلَّنِي لَستُ سِوى نُقطَةِ التِقاء بَينَ النَّملَةِ وَأَبِي وَالقَارئ. بَينَ الصَّمتِ وَالكَلِمَةِ وَالمَعنَى. بَينَ مَن يُلهِمُ وَمَن يَنقُلُ وَمَن يُحيِي.</p>
+<br>
+<p>فَأَنا لَستُ سِوى وِعاءٌ فارِغٌ يَتَقَبَّلُ، وَقَلَمٌ مُتَّضِعٌ يَكتُبُ. أَمَّا المِدادُ فَهُوَ مِن عُيونِ النَّملِ وَقُلُوبِ العَارِفِينَ وَأَروَاحِ السَّائِلِينَ.</p>
+<br>
+<p>فَأَنا لَستُ "أَنا". أَنا والعَدَمُ واحِدٌ. مَن أَنا؟ ومَن أَكون؟ ومَن تكون أَنتَ؟</p>
+<br>
+<p>هَل أَنتَ هُوَ أَنا؟ دَعني أُخبِرُك: نَعم، نَعرِفُ بَعضَنا. لأَنَّ الحُروفَ الَّتي بَينَ يَدَيكَ الآنَ هِي مِرآةٌ كَمِّيَّةٌ مُتَّصِلَةٌ بَينَ ذَرّاتي وذَرّاتِك.</p>`
+  },
+  ch4: {
+    title: 'الفصل الرابع: دعوة من تائه إلى تائه',
+    body: `<p>هَذِهِ الدَّعوَةُ هِي نِداءٌ شَخصِيٌّ، مِن تائِهٍ فَقَدَ فانوسَهُ، إِلَى تائِهٍ قَد يَملِكُ شَمعَةً:</p>
+<br>
+<p>• إِن وَجَدتَ في هَذا الكِتابِ أَشيَاءَ جَميلَةً، فَاعلَم أَنَّ هذا جَمالُكَ أَنتَ الَّذي يَنعَكِسُ على صَفَحاتِهِ.</p>
+<br>
+<p>• وَإِن وَجَدتَ أَشيَاءَ في قِمَّةِ القُبحِ، فَلا تُغادِر بَحثًا عَنِ الجَمالِ في مَكانٍ آخَرَ. بَل أَحسِن إِلَيَّ. أَمدِدني بِجَمالِ ما عِندَكَ.</p>
+<br>
+<p style="padding:1.5rem;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.15);text-align:center;font-size:1.1rem;color:var(--text-light);">أَنا الآنَ داخِلَ دائِرَةِ الفَناءِ، أَبْحَثُ عَن مِرآتي لِأَتَعَرَّفَ على وَجهي الحَقيقِيِّ.</p>
+<br>
+<p>هَل لَكَ أَن تُعيرَني فانوسَكَ لَحظَةً؟<br>
+بَل الأَجمَلُ: هَل نَسيرُ مَعًا تَحتَ فانوسٍ واحِدٍ، حَتَّى نَصِلَ إِلَى تِلكَ المِرآةِ مَعًا؟</p>`
+  },
+  ch5: {
+    title: 'الفصل الخامس: رحلة التلميذين',
+    body: `<p>هَذا الكِتابُ دَفتَرُ مُلاحَظاتٍ لا أَملِكُهُ في هَذِهِ المَدرَسَةِ الكَونِيَّةِ.</p>
+<br>
+<p>سَأُشارِكُكَ بِتَساؤُلاتٍ قَد تَصِلُ بنا إِلَى "قَوانِينِ النَّجاحِ" مِن هَندَسَةِ خَلِيَّةِ النَّحلِ، وَكيفَ فَهِمتُ "التَّوقيتَ" مِن دَورَةِ الشَّجَرَةِ، وكيفَ استَوعَبتُ "فَنَّ المُرَاقَبَةِ" مِن تِلكَ التَّجرِبَةِ الفيزيَائِيَّةِ الغَرِيبَةِ المُسَمَّاةِ "تَجرِبَةِ الشَّقَّينِ".</p>
+<br>
+<p>نَحنُ في هَذا الكِتابِ تِلميذانِ. أَنتَ تَقرَأُ تَجرِبَتي، وأَنا أَتَعَلَّمُ مِن أَسئِلَتِكَ الَّتي سَتُولَدُ في داخِلِكَ. هَذِهِ الرِّحلَةُ لَيسَت لِي وَحدي، وَلا لَكَ وَحدَكَ. إِنَّها رِحلَةُ "نَحنُ".</p>
+<br>
+<p style="padding:1rem;background:rgba(201,168,76,0.04);border-right:3px solid var(--gold);">مَدرَسَتُنا لَيسَت بِناءً. إِنَّها البَحثُ عَن مَخرَجِ النَّفَقِ وَالوصُولِ إِلَى النُّورِ، كُلُّ ضَوءٍ فيهِ هُوَ سُؤالٌ جَديدٌ، وكُلُّ ظِلٍّ هُوَ إِجابَةٌ تَنتَظِرُ اكتِشافَكَ.</p>
+<br>
+<p>المُعَلِّمونَ هُنا صامِتونَ: أَنتَ أَيُّهَا القَارئ أَحَدُ هَؤُلاءِ المُعَلِّمِينَ، مَعَ النَّملَةِ، النَّحلَةِ، الغُرَابِ، الشَّجَرَةِ، الرِّيحِ، وَالمَطَرِ.</p>
+<br>
+<p style="text-align:center;font-size:1.3rem;color:var(--gold-light);font-style:italic;">هَيَّا بنا. تابع....</p>`
+  },
+  g1_1: {
+    title: 'الباب الأول: بوابة الأسرار الكونية',
+    body: `<p>في هذا الباب الأول من النفق، نقف أمام ثلاثة أسرار يحملها الكون في طياته:</p>
+<br>
+<p><strong style="color:var(--gold-light);">السر الأول: الوحدة في التعدد</strong><br>
+كل شيء في هذا الكون — من الذرة إلى المجرة — يسير وفق قانون واحد: الوحدة في التعدد. النملة وحدها ضعيفة، لكن مملكة النمل قوة لا تُقهر. القطرة وحدها لا تعني شيئاً، لكن البحر يحرك القارات.</p>
+<br>
+<p><strong style="color:var(--gold-light);">السر الثاني: التوازن الدقيق</strong><br>
+لو تغير ميزان الجاذبية ذرة واحدة، لانهار الكون. ولو تغيرت دورة النمل في حمل الغذاء، لتغير توازن البيئة. في كل شيء توازن خفي يحرسه من لا يُرى.</p>
+<br>
+<p><strong style="color:var(--gold-light);">السر الثالث: الغاية في كل موجود</strong><br>
+لم يُخلق شيء عبثاً. حتى الفطر الذي يتحلل على الأرض — هو من يُعيد دورة الحياة. وحتى سؤالك الذي يبدو بلا إجابة — هو من يُبقيك على الطريق.</p>
+<br>
+<p style="padding:1.5rem;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.1);">
+<strong style="color:var(--gold-light);">تمرين الباب الأول:</strong><br>
+اجلس في مكانٍ فيه طبيعة. انظر إلى شيء واحد — شجرة، نملة، سحابة — وتساءل: ما الغاية منه في منظومة الكون؟ ثم دوّن ما وصلت إليه.
+</p>`
+  },
+  g1_2: {
+    title: 'الباب الثاني: بوابة المفاتيح الذهبية',
+    body: `<p>لكل باب موصد مفتاح. وفي هذه البوابة، نتعلم مفتاحين لا غنى عنهما:</p>
+<br>
+<p><strong style="color:var(--gold-light);">المفتاح الأول: الصمت المتأمل</strong><br>
+أبي لم يُعلّمني بالكلام. علّمني بالصمت والإشارة. الصمت ليس فراغاً — هو امتلاء من نوع آخر. حين تصمت، تبدأ المخلوقات بالكلام: النملة، الريح، دقات قلبك.</p>
+<br>
+<p><strong style="color:var(--gold-light);">المفتاح الثاني: السؤال الصحيح</strong><br>
+ليس كل سؤال يُفتح بجواب. بعض الأسئلة مفاتيح بذاتها. حين تسأل "لماذا؟" بصدق — لا للجدال — فأنت قد فتحت باباً للعبور. السؤال الصحيح يُضيء الطريق قبل أن تصل الإجابة.</p>
+<br>
+<p style="padding:1rem;background:rgba(201,168,76,0.04);border-right:3px solid var(--gold);">كيف تصنع مفتاحك الذهبي؟<br>
+• خصص عشر دقائق يومياً للصمت المتأمل — بلا هاتف، بلا ضوضاء.<br>
+• احمل معك سؤالاً واحداً لمدة أسبوع. لا تبحث عن إجابته. فقط اصطحبه.
+</p>`
+  },
+  g1_3: {
+    title: 'الباب الثالث: بوابة الاستعداد الذاتي',
+    body: `<p>قبل أن تدخل أي ميدان، لا بد من الاستعداد. وهذا الاستعداد له ثلاثة أسنان:</p>
+<br>
+<p><strong style="color:var(--gold-light);">السن الأولى: معرفة نقاط قوتك</strong><br>
+النملة تعرف أنها قادرة على حمل أضعاف وزنها. لا تحاول أن تطير. تعرف ما تستطيعه فتُحسنه. اسأل نفسك: ما الذي أعمله بسهولة بينما يجد فيه غيري صعوبة؟</p>
+<br>
+<p><strong style="color:var(--gold-light);">السن الثانية: قبول نقاط ضعفك</strong><br>
+المرآة المكسورة تعكس الصورة بشكل مختلف. لكنها لا تزال مرآة. ضعفك ليس نهايتك — هو الشظية التي تنتظر أن تجدها وتضعها في مكانها الصحيح.</p>
+<br>
+<p><strong style="color:var(--gold-light);">السن الثالثة: طقس الدخول اليومي</strong><br>
+كل صباح، قبل أن تبدأ يومك، خذ نفساً عميقاً وقل: "أنا تلميذ مبتدئ. الكون معلمي. وكل ما سيحدث اليوم هو درس."</p>
+<br>
+<p style="padding:1rem;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.1);">طقس الدخول: ابدأ كل يوم بسؤال واحد، واختم كل يوم بشكر على درس واحد تعلمته.</p>`
+  },
+  g1_4: {
+    title: 'الباب الرابع: بوابة الرزق',
+    body: `<p>النملة لا تطلب الرزق — تسعى إليه. والطير لا يدّخر — يثق أنه سيجد. هنا أسرار بوابة الرزق في أربعة فصول:</p>
+<br>
+<p><strong style="color:var(--gold-light);">الفصل الأول: الرزق المكتوب والرزق المكسوب</strong><br>
+ما كُتب لك سيصلك حتماً. لكن الكسب أمانة — لا يأخذها الكسول ولا يضيّعها الحريص. السعي هو العبادة، والتوكل هو الوقود.</p>
+<br>
+<p><strong style="color:var(--gold-light);">الفصل الثاني: الرزق الخفي</strong><br>
+الصحة رزق. الابتسامة التي تلقاها رزق. الدرس الذي تعلمته من ألمك رزق. توسّع مفهوم الرزق ليشمل كل نعمة.</p>
+<br>
+<p><strong style="color:var(--gold-light);">الفصل الثالث: قانون الإعطاء</strong><br>
+النملة لا تأكل وحدها ما تحمل. تضعه في المخزن لأفراد المملكة. كلما أعطيت أكثر، كلما اتسع مجالك. الكف المفتوحة تستقبل أكثر من الكف المغلوقة.</p>
+<br>
+<p><strong style="color:var(--gold-light);">الفصل الرابع: صبر الشجرة</strong><br>
+الشجرة لا تعطي ثمارها في اليوم الأول. لكنها لا تتوقف عن النمو. الرزق الحقيقي يأتي في موسمه، لمن لم يتوقف عن الزرع.</p>`
+  },
+  g1_5: {
+    title: 'الباب الخامس: بوابة النجاح',
+    body: `<p>درسنا النجاح من أعمق مصادره — من هندسة خلية النحل:</p>
+<br>
+<p><strong style="color:var(--gold-light);">الفصل الأول: هندسة السداسية</strong><br>
+خلية النحل سداسية لأنها أكفأ شكل هندسي يستوعب أكبر قدر بأقل مساحة. النجاح الحقيقي هو الكفاءة — ليس الإنجاز الأضخم، بل الإنجاز الأذكى.</p>
+<br>
+<p><strong style="color:var(--gold-light);">الفصل الثاني: قانون التخصص</strong><br>
+في خلية النحل، لكل نحلة دورها: البناء، الجمع، الحماية، التلقيح. لا أحد يحاول أن يفعل كل شيء. النجاح في التعمق، لا في التشتت.</p>
+<br>
+<p><strong style="color:var(--gold-light);">الفصل الثالث: قانون الملكة والمجتمع</strong><br>
+قوة الملكة من قوة المجتمع. وقوة المجتمع من وضوح دور كل فرد فيه. النجاح الفردي وهم إن لم يُبنَ على خدمة أكبر منه.</p>`
+  },
+  g1_6: {
+    title: 'الباب السادس: بوابة المعرفة',
+    body: `<p><strong style="color:var(--gold-light);">الفصل الأول: العلم الذي يُحيي</strong><br>
+ليس كل ما تعلمته يُضيء. بعض المعرفة تُثقل ولا تُرفع. العلم الذي يُحيي هو الذي يجعلك أكثر تواضعاً، أكثر رحمةً، وأقل يقيناً بالأجوبة النهائية.</p>
+<br>
+<p><strong style="color:var(--gold-light);">الفصل الثاني: تجربة الشقَّين</strong><br>
+في الفيزياء الكمومية، حين نراقب الجسيم يتصرف كجسيم. وحين لا نراقبه يتصرف كموجة. أنت أيضاً — أنت من يُحدد شكل ما تراه. المعرفة ليست اكتشاف الواقع، بل خلقه.</p>
+<br>
+<p><strong style="color:var(--gold-light);">الفصل الثالث: حدود المعرفة</strong><br>
+قمة المعرفة أن تعرف حدودها. سقراط عرف أنه لا يعرف. والتلميذ المبتدئ يعرف أنه لم يبدأ بعد. هذا الاعتراف هو أول درجة في السلّم.</p>`
+  },
+  g1_7: {
+    title: 'الباب السابع: بوابة الحكمة',
+    body: `<p><strong style="color:var(--gold-light);">الفصل الأول: الفرق بين العلم والحكمة</strong><br>
+العلم يعرف أن السكين تقطع. الحكمة تعرف متى تقطع ومتى تضع السكين جانباً. العلم يملأ الوعاء. الحكمة تعرف أي وعاء يستحق أن يُملأ.</p>
+<br>
+<p><strong style="color:var(--gold-light);">الفصل الثاني: الحكمة في الصمت</strong><br>
+أكثر الحكمة في العالم تأتي من صمت المتأملين. النملة لا تُعلن عن طريقها — تمشيه. الغراب لم يشرح كيف ستُواري سوءة أخيك — أظهره. الحكمة تُظهر ولا تشرح.</p>
+<br>
+<p><strong style="color:var(--gold-light);">الفصل الثالث: الحكمة والخضوع</strong><br>
+أحكم الحكماء من عرف أنه خاضع لحكمة أكبر. حين تعرف أن "وُجُودُ فَنَائِكَ هو فَنَاءُ وُجُودِكَ" — هنا تبدأ رحلة الحكمة الحقيقية.</p>
+<br>
+<p style="padding:1.5rem;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.1);text-align:center;font-style:italic;">
+"وُجُودُ فَنَائِكَ هو فَنَاءُ وُجُودِكَ"<br>
+<span style="font-size:0.85rem;color:var(--text-dim);">فأدركت أن البَقَاءَ لا يَكُونُ إلَّا بِالذَّوَبان في الحَضْرَةِ التِي لَا تَفْنَى.</span>
+</p>`
+  },
+  g2_1: {
+    title: 'الباب الأول: دستور الطبيعة',
+    body: `<p>الطبيعة لا تشرع قوانينها — تعيشها. في دستورها ثلاثة قوانين لا تتبدل:</p>
+<br>
+<p><strong style="color:#64b48c;">القانون الأول: التوازن المقدس</strong><br>
+لكل فعل رد فعل مساوٍ ومعاكس. ليس في الفيزياء فقط — في كل شيء. كل انتهاك لتوازن تعود عليه عاقبة. وكل احترام للتوازن يُعيد للكون نظامه.</p>
+<br>
+<p><strong style="color:#64b48c;">القانون الثاني: التنوع كقوة</strong><br>
+الغابة التي فيها أنواع لا تحصى من الأشجار أقوى من الغابة المتجانسة. الإنسان الذي تتنوع خبراته أحكم من ذاك الذي لم يعش إلا مساراً واحداً.</p>
+<br>
+<p><strong style="color:#64b48c;">القانون الثالث: الدورة الكاملة</strong><br>
+الشجرة تنمو، تُثمر، تذبل، تموت، تتحلل، وتُغذّي شجرة جديدة. لا شيء ينتهي في الطبيعة — كل نهاية بداية في ثوب آخر. هكذا أنت أيضاً.</p>`
+  },
+  g2_2: {
+    title: 'الباب الثاني: مملكة النمل — هندسة التعاون',
+    body: `<p>النملة تحمل أضعاف وزنها. ليس لأنها قوية وحدها — بل لأنها تعرف لماذا تحمل.</p>
+<br>
+<p><strong style="color:#64b48c;">الدرس الأول: الهدف المشترك</strong><br>
+لا نملة في المملكة تعمل لنفسها. كل حبة قمح تُحمل هي لمملكة بأكملها. حين يكون هدفك أكبر منك، تجد قوة لم تعرفها.</p>
+<br>
+<p><strong style="color:#64b48c;">الدرس الثاني: التواصل بلا كلام</strong><br>
+النمل يتواصل بالفيرومونات — رسائل كيميائية تُخبر بالطريق والخطر والفرص. نحن أيضاً نتواصل بما لا نقوله: بالنظرة، بالحضور، بالاهتمام الحقيقي.</p>
+<br>
+<p><strong style="color:#64b48c;">الدرس الثالث: لا قائد وحيد</strong><br>
+الملكة لا تُصدر أوامر. هي رمز التنظيم، لكن كل نملة تعرف دورها. القيادة الحقيقية تُنشئ قادة، لا تابعين.</p>
+<br>
+<p><strong style="color:#64b48c;">الدرس الرابع: الاستعداد للشتاء في الصيف</strong><br>
+النمل يجمع في الصيف لأجل الشتاء. التخطيط ليس عدم توكل — هو التوكل الناضج، الذي يعمل اليوم لأجل غد لا يعرفه.</p>`
+  },
+  g2_3: {
+    title: 'الباب الثالث: مملكة النحل — اقتصاد الدقة',
+    body: `<p>النحلة تطير مئات الكيلومترات لتجمع رحيقاً يكفي لملعقة عسل صغيرة. هذا ليس هدراً — هذا اقتصاد الدقة.</p>
+<br>
+<p><strong style="color:#64b48c;">درس الهندسة السداسية</strong><br>
+الخلية السداسية: أكبر مساحة بأقل مادة بأقوى هيكل. هذا درس في كل قرار تتخذه — ابحث عن الحل الذي يُعطيك أكبر نتيجة بأقل تعقيد.</p>
+<br>
+<p><strong style="color:#64b48c;">درس الرقصة</strong><br>
+النحلة التي تجد الرحيق ترجع وترقص — رقصتها خريطة دقيقة تُخبر الأخريات بالاتجاه والمسافة والجودة. التواصل الفعّال فن وعلم معاً.</p>
+<br>
+<p><strong style="color:#64b48c;">درس العسل</strong><br>
+العسل لا يفسد. المعرفة الحقيقية كذلك — لا تفسد بمرور الزمن. اعمل على ما يبقى، لا على ما يزول.</p>`
+  },
+  g2_4: {
+    title: 'الباب الرابع: عالم الغراب — ذكاء حل المشكلات',
+    body: `<p>﴿ فَبَعَثَ اللَّهُ غُرَابًا يَبْحَثُ فِي الْأَرْضِ لِيُرِيَهُ كَيْفَ يُوَارِي سَوْأَةَ أَخِيهِ ﴾</p>
+<br>
+<p>الغراب لم يقرأ كتاباً. لكنه فعل ما احتاج الإنسان أن يراه. هذا هو الذكاء الفطري — ذكاء الحل المباشر.</p>
+<br>
+<p><strong style="color:#64b48c;">الدرس الأول: انظر إلى المشكلة، لا إلى المشكلة في المشكلة</strong><br>
+الغراب لم يفكر في فلسفة الموت. حفر وواري. البساطة أحياناً هي الحكمة العليا.</p>
+<br>
+<p><strong style="color:#64b48c;">الدرس الثاني: الذكاء التكيفي</strong><br>
+الغراب يستخدم الأدوات. يخطط. يتذكر الوجوه. في البيئات الصعبة، الأكثر تكيفاً هو الأكثر بقاءً — ليس الأقوى.</p>
+<br>
+<p><strong style="color:#64b48c;">الدرس الثالث: التعلم بالمراقبة</strong><br>
+ابن آدم تعلم من الغراب بالمراقبة. أكثر دروسنا العميقة لا تأتي من الكتب — تأتي من الانتباه.</p>`
+  },
+  g2_5: {
+    title: 'الباب الخامس: عالم العنكبوت — هندسة الشبكات',
+    body: `<p>العنكبوت يبني بيته في الفراغ. لا أساس تحته، لا جدار يستند إليه. يبني من داخله — من خيوط ينسجها هو.</p>
+<br>
+<p><strong style="color:#64b48c;">درس الشبكة الحية</strong><br>
+شبكة العنكبوت أقوى بوزنها من الصلب. السر في الهندسة، لا في المادة. كذلك علاقاتك — قوتها في تصميمها، لا في عددها.</p>
+<br>
+<p><strong style="color:#64b48c;">درس المرونة</strong><br>
+الشبكة لا تكسر عند الضربة — تمتصها وتعود. الصمود الحقيقي ليس في الصلابة بل في المرونة.</p>
+<br>
+<p><strong style="color:#64b48c;">درس إعادة البناء</strong><br>
+حين تُكسر الشبكة، العنكبوت يبدأ من جديد — دون شكوى، دون مقارنة بالشبكة القديمة. كل بداية جديدة تجربة تُضاف، لا وقت يُضاع.</p>
+<br>
+<p style="padding:1rem;background:rgba(100,180,140,0.04);border-right:3px solid #64b48c;">﴿ وَإِنَّ أَوْهَنَ الْبُيُوتِ لَبَيْتُ الْعَنكَبُوتِ ﴾<br>
+<span style="font-size:0.9rem;color:var(--text-dim);">الضعف في مادته — لكن في هندسته حكمة لا تُقهر.</span></p>`
+  },
+  g2_6: {
+    title: 'الباب السادس: معادن البشر',
+    body: `<p>كما في الأرض معادن تختلف في قيمتها وطبيعتها، في البشر كذلك:</p>
+<br>
+<p><strong style="color:#64b48c;">🥇 الذهب</strong><br>
+نادر. لا يصدأ. يُزين ولا يُخفي. إنسان الذهب نادر في كل جيل — صادق حتى حين يُكلفه الصدق. يبقى نقياً في أقذر البيئات.</p>
+<br>
+<p><strong style="color:#64b48c;">🥈 الفضة</strong><br>
+قيّمة ومرنة. إنسان الفضة يُكيّف دون أن يُفقد قيمته. يُصنع منه الكثير — الطب، الفن، العلم. لكنه يتأثر بالهواء — يحتاج إلى تلميع دوري.</p>
+<br>
+<p><strong style="color:#64b48c;">⚙️ الحديد</strong><br>
+الأكثر شيوعاً والأشد قوةً. إنسان الحديد يبني ويحمي. لكنه يصدأ حين يُهمل. القوة دون صيانة — تُفسدها الأيام.</p>
+<br>
+<p><strong style="color:#64b48c;">🔩 النحاس</strong><br>
+يتغير لونه مع الزمن. يُصبح أجمل بالاستخدام. إنسان النحاس يتعلم من كل تجربة ويزداد عمقاً.</p>
+<br>
+<p>فأنت: أيّ معدن تحمل في داخلك اليوم؟ وأيّ معدن تريد أن تصبح؟</p>`
+  },
+  g2_7: {
+    title: 'الباب السابع: صالة المرايا — الاستعداد للقاء الذات',
+    body: `<p>قبل أن تدخل صالة المرايا في الجزء الثالث، هناك استعداد لا بد منه:</p>
+<br>
+<p><strong style="color:#b8bcc8;">الاستعداد الأول: التخلص من التوقعات</strong><br>
+المرآة لا تُعطيك ما تريد رؤيته. تُعطيك ما هو موجود. ادخل الصالة بلا توقع. دع المرآة تُريك.</p>
+<br>
+<p><strong style="color:#b8bcc8;">الاستعداد الثاني: قبول الكسر</strong><br>
+المرآة المكسورة لا تعني فشلاً — تعني تعدداً. كل شظية تعكس زاوية مختلفة من الحقيقة. الكمال ليس في مرآة واحدة كاملة، بل في جمع كل الشظايا.</p>
+<br>
+<p><strong style="color:#b8bcc8;">الاستعداد الثالث: الشجاعة</strong><br>
+لقاء الذات يحتاج شجاعة أكثر من أي ميدان آخر. لأن المواجهة الوحيدة التي لا يمكنك الهروب منها هي مواجهة نفسك.</p>
+<br>
+<p style="text-align:center;font-size:1.3rem;color:#b8bcc8;margin-top:2rem;">
+الباب مفتوح.<br>
+المرآة تنتظر.
+</p>`
+  }
+};
+
+const mirrorMessages = [
+  "حين لا ينظر إليك أحد، أنت الأقرب إلى حقيقتك. ذاك الذي يبقى في الغرفة الفارغة — هو الأنت الحقيقي.",
+  "ما تخاف رؤيته في المرآة هو غالباً الشيء الذي يحتاج أكثر ما يحتاج إلى نور.",
+  "الحقيقة التي تراها مصفاة بخوفك وأملك وذكرياتك. المرآة لا تكذب — لكن العيون تُفسّر.",
+  "قبل الاسم كنت وجوداً. بعد الاسم صرت فكرة. الحقيقة في ما كنته قبل أن تُسمّى.",
+  "ما لم تقله بعد هو الأثقل في الروح والأكثر حاجة إلى أن يُقال — ولو لنفسك.",
+  "حين تتوقف الجسد يستمر. الروح تمشي في كل لحظة توقف — تلك الرحلة الصامتة هي الأعمق."
+];
+
+// ===== STATE =====
+let selectedShard = null;
+let placedShards = 0;
+let specialRevealed = false;
+let mirrorComplete = false;
+const totalSlots = 15; // slots 2-16
+
+// ===== FUNCTIONS =====
+function enterSite() {
+  const tunnel = document.getElementById('tunnel-screen');
+  const site = document.getElementById('main-site');
+  
+  tunnel.style.transition = 'opacity 1.2s ease';
+  tunnel.style.opacity = '0';
+  
+  setTimeout(() => {
+    tunnel.style.display = 'none';
+    site.style.display = 'block';
+    setTimeout(() => {
+      site.style.opacity = '1';
+      initParticles();
+      initScrollObserver();
+      loadSavedNotes();
+    }, 100);
+  }, 1200);
 }
 
-// --- Progress Bar ---
-window.addEventListener('scroll', () => {
-  const scrolled = window.scrollY;
-  const maxScroll = document.body.scrollHeight - window.innerHeight;
-  document.getElementById('progressBar').style.width = `${(scrolled/maxScroll)*100}%`;
-});
-
-// --- Gate Switching ---
-function showGate(n) {
-  document.querySelectorAll('.gate-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.gate-btn').forEach((b,i) => {
-    b.classList.toggle('active', i === n-1);
-  });
-  document.getElementById('gate'+n).classList.add('active');
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    const offset = 70;
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
 }
 
-// --- Mirror Puzzle ---
-let collected = 0;
-let order = [1,2,3,4,5,6,7,8,9];
-let foundGlowing = false;
+function openModal(key) {
+  const content = modalContent[key];
+  if (!content) return;
+  document.getElementById('modal-title').innerHTML = content.title;
+  document.getElementById('modal-body').innerHTML = content.body;
+  
+  const saved = localStorage.getItem('note_' + key);
+  document.getElementById('modal-notes').value = saved || '';
+  document.getElementById('modal-notes').onchange = () => {
+    localStorage.setItem('note_' + key, document.getElementById('modal-notes').value);
+  };
+  
+  document.getElementById('modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
 
-function collectShard(n) {
-  const el = document.getElementById('s'+n);
-  if (el.classList.contains('collected')) return;
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
 
-  // Must collect in order
-  if (n !== order[collected]) {
-    el.style.transform = 'scale(1.1)';
-    setTimeout(() => el.style.transform = '', 300);
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('modal')) closeModal();
+}
+
+function showMirrorMsg(idx) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;display:flex;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(15px);cursor:pointer;`;
+  overlay.innerHTML = `<div style="max-width:500px;text-align:center;animation:modal-appear 0.5s ease-out;">
+    <div style="font-size:3rem;margin-bottom:1.5rem;opacity:0.4;">🪞</div>
+    <p style="font-family:'Amiri',serif;font-size:1.2rem;color:#b8bcc8;line-height:2.2;">${mirrorMessages[idx]}</p>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:0.8rem;letter-spacing:0.3em;color:rgba(255,255,255,0.2);margin-top:2rem;">CLICK TO CONTINUE</p>
+  </div>`;
+  overlay.onclick = () => document.body.removeChild(overlay);
+  document.body.appendChild(overlay);
+}
+
+function selectShard(el) {
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    selectedShard = null;
     return;
   }
-
-  el.classList.add('collected');
-  collected++;
-
-  // Update Arabic numerals counter
-  const arabicNums = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-  document.getElementById('shardCounter').textContent = `الشظايا: ${arabicNums[collected]} / ٩`;
-
-  // When we reach shard 9 (the glowing one)
-  if (n === 9) {
-    foundGlowing = true;
-    document.getElementById('shardMessage').style.display = 'block';
-    document.getElementById('shardMessage').style.animation = 'fadeInUp 0.8s ease forwards';
-
-    setTimeout(() => {
-      document.getElementById('mirrorComplete').classList.add('show');
-      document.getElementById('afterMirror').style.display = 'block';
-      setTimeout(() => {
-        document.getElementById('afterMirror').style.opacity = '1';
-      }, 100);
-    }, 2000);
+  document.querySelectorAll('.shard.selected').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedShard = el;
+  
+  if (el.dataset.num === 'special' && placedShards < totalSlots) {
+    showHint("هذه الشظية المضيئة تحمل الرقم ١ — لكن لا يمكنك وضعها مكان الأولى. ستجد مكانها في النهاية.");
   }
 }
 
-// --- Dawn Mode Toggle ---
-function toggleMode() {
-  document.body.classList.toggle('dawn-mode');
-  const btn = document.querySelector('.mode-toggle');
-  btn.textContent = document.body.classList.contains('dawn-mode') ? 'الليل 🌙' : 'الفجر ☀';
+function placeSelectedShard(slot) {
+  if (!selectedShard) {
+    showHint("اختر شظية أولاً، ثم انقر على الموقع المناسب.");
+    return;
+  }
+  
+  const slotNum = parseInt(slot.dataset.slot);
+  const isLastSlot = slot.id === 'last-slot';
+  const isSpecial = selectedShard.dataset.num === 'special';
+  
+  // Special shard goes to last slot only
+  if (isSpecial && !isLastSlot) {
+    showHint("الشظية المضيئة لا يمكن وضعها هنا. ابحث عن موضعها الصحيح...");
+    return;
+  }
+  
+  if (!isSpecial && isLastSlot && !specialRevealed) {
+    showHint("هذا الموضع محجوز... لشيء ما لم تجده بعد.");
+    return;
+  }
+  
+  if (slot.classList.contains('has-shard')) {
+    showHint("هذا الموضع ممتلئ.");
+    return;
+  }
+  
+  // Place shard
+  const num = selectedShard.dataset.num;
+  const numMap = {'2':'٢','3':'٣','4':'٤','5':'٥','6':'٦','7':'٧','8':'٨','9':'٩','10':'١٠','11':'١١','12':'١٢','13':'١٣','14':'١٤','15':'١٥','special':'١✦'};
+  
+  slot.classList.add('has-shard');
+  slot.textContent = numMap[num] || num;
+  if (isSpecial) {
+    slot.classList.add('glowing');
+    slot.style.color = 'var(--gold-light)';
+  } else {
+    slot.style.color = 'rgba(200,210,255,0.7)';
+  }
+  
+  selectedShard.remove();
+  selectedShard = null;
+  
+  if (!isSpecial) placedShards++;
+  
+  // After placing 5 shards, reveal special
+  if (placedShards >= 5 && !specialRevealed) {
+    specialRevealed = true;
+    const sp = document.querySelector('.shard[data-num="special"]');
+    if (sp) {
+      sp.style.display = 'flex';
+      sp.classList.add('special');
+      showHint("✨ ظهرت شظية مضيئة غريبة تحمل الرقم ١ أيضاً... لا يمكن استبدال الشظية الأولى. أين ستضعها؟");
+    }
+  }
+  
+  // Check completion
+  if (isSpecial) {
+    setTimeout(completeMirror, 800);
+  } else if (placedShards >= totalSlots - 1 && specialRevealed) {
+    showHint("الآن ضع الشظية المضيئة في الموضع الأخير...");
+  } else {
+    showHint(`تقدّم جيد. تحتاج ${totalSlots - placedShards} شظايا أخرى.`);
+  }
 }
 
-// --- Scroll Reveal ---
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
-    }
-  });
-}, { threshold: 0.1 });
+function completeMirror() {
+  mirrorComplete = true;
+  
+  // Flash effect
+  const frame = document.getElementById('mirror-frame');
+  frame.style.transition = 'all 1.5s ease';
+  frame.style.boxShadow = '0 0 80px rgba(201,168,76,0.6), 0 0 150px rgba(201,168,76,0.3)';
+  frame.style.borderColor = 'rgba(201,168,76,0.8)';
+  
+  // Transform numbers to infinity
+  setTimeout(() => {
+    document.querySelectorAll('.mirror-slot').forEach(s => {
+      s.style.transition = 'all 0.5s ease';
+      s.style.color = 'var(--gold-light)';
+    });
+    
+    setTimeout(() => {
+      document.querySelectorAll('.mirror-slot').forEach((s, i) => {
+        setTimeout(() => { s.textContent = '∞'; }, i * 50);
+      });
+      
+      setTimeout(() => {
+        const reveal = document.getElementById('infinity-reveal');
+        reveal.classList.add('active');
+        reveal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 1000);
+    }, 600);
+  }, 800);
+}
 
-document.querySelectorAll('.secret-card, .verse-card, .chapter').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(20px)';
-  el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
-  observer.observe(el);
+function showHint(text) {
+  const hint = document.getElementById('puzzle-hint');
+  hint.textContent = text;
+  hint.style.opacity = '1';
+  clearTimeout(hint._timeout);
+  hint._timeout = setTimeout(() => { hint.style.opacity = '0.5'; }, 4000);
+}
+
+function saveNote(key) {
+  const el = document.getElementById(key + '-notes') || document.getElementById('start-notes');
+  if (el) localStorage.setItem('note_' + key, el.value);
+}
+
+function loadSavedNotes() {
+  const keys = ['part3', 'start'];
+  keys.forEach(k => {
+    const el = document.getElementById(k + '-notes');
+    if (el) el.value = localStorage.getItem('note_' + k) || '';
+  });
+}
+
+function initScrollObserver() {
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const winH = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (window.scrollY / winH) * 100;
+    document.getElementById('progress-fill').style.width = progress + '%';
+    
+    // Update dots
+    const sections = ['hero', 'intro-section', 'part1', 'part2', 'part3', 'appendix-section'];
+    const dots = document.querySelectorAll('.dot');
+    sections.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= 200 && rect.bottom > 200) {
+          dots.forEach(d => d.classList.remove('active'));
+          if (dots[i]) dots[i].classList.add('active');
+        }
+      }
+    });
+  });
+  
+  // Reveal animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+function initParticles() {
+  const container = document.getElementById('particles-container');
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random() * 100}vw;
+      bottom: ${Math.random() * 20}vh;
+      width: ${Math.random() * 3 + 1}px;
+      height: ${Math.random() * 3 + 1}px;
+      animation-delay: ${Math.random() * 8}s;
+      animation-duration: ${6 + Math.random() * 6}s;
+    `;
+    container.appendChild(p);
+  }
+}
+
+// Auto-start tunnel after delay
+setTimeout(() => {
+  // Add auto-enter hint
+}, 5000);
+
+// Keyboard escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
 });
 </script>
 </body>

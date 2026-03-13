@@ -1837,6 +1837,28 @@ function buildPrintContent() {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeModal(); closeEditorPassword(); }
 });
+  // ===== عناصر الصوت والتحكم =====
+const bgAudio = document.getElementById('bgAudio');
+const muteBtn = document.createElement('button');
+muteBtn.className = 'tbtn';
+muteBtn.id = 'muteBtn';
+muteBtn.innerHTML = '🔊 تشغيل الصوت';
+document.getElementById('toolbar').appendChild(muteBtn);
+
+let audioMuted = false;
+
+muteBtn.addEventListener('click', () => {
+    audioMuted = !audioMuted;
+    bgAudio.muted = audioMuted;
+    muteBtn.innerHTML = audioMuted ? '🔇 كتم' : '🔊 تشغيل الصوت';
+});
+
+// بدء التشغيل بعد تفاعل المستخدم (لتجنب منع التشغيل التلقائي من المتصفح)
+document.addEventListener('click', function initAudio() {
+    bgAudio.play().catch(() => {});
+    document.removeEventListener('click', initAudio);
+}, { once: true 
+   });
 </script>
 </body>
 </html>

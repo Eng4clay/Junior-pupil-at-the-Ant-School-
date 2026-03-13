@@ -1940,7 +1940,119 @@ window.addEventListener('load', function() {
   loadCustomChapters();
   addNewChapterButton();
 });
+  // ===== حذف الأقسام المخصصة =====
+
+// دالة لحذف قسم مخصص
+function deleteChapter(key) {
+  if (!key.startsWith('custom_')) return; // نحمي الأقسام الأصلية من الحذف
   
+  // تأكيد الحذف
+  if (!confirm('هل أنت متأكد من حذف هذا القسم؟')) return;
+  
+  // حذف البطاقة من DOM
+  const card = document.querySelector(`.gate-card[onclick*="'${key}'"]`);
+  if (card) card.remove();
+  
+  // حذف البيانات من localStorage
+  localStorage.removeItem('modal_title_' + key);
+  localStorage.removeItem('modal_body_' + key);
+  localStorage.removeItem('note_' + key);
+  
+  // حذف أي edits مرتبطة بهذا القسم (مثل عناوين البطاقة)
+  const prefix = 'edit_';
+  for (let i = localStorage.length - 1; i >= 0; i--) {
+    const storageKey = localStorage.key(i);
+    if (storageKey && storageKey.startsWith(prefix)) {
+      const id = storageKey.substring(prefix.length);
+      if (id.startsWith(key)) {
+        localStorage.removeItem(storageKey);
+      }
+    }
+  }
+  
+  // حذف من مصفوفة customChapters
+  customChapters = customChapters.filter(ch => ch.key !== key);
+  saveCustomChapters();
+  
+  // حذف من modalContent
+  delete modalContent[key];
+  
+  playSoundEffect('modalClose'); // صوت للإشارة للحذف
+  showEditorStatus('تم حذف القسم ✓');
+}
+
+// تعديل دالة createChapterCard لإضافة زر الحذف
+const originalCreateChapterCard = createChapterCard;
+createChapterCard = function(key, name, icon = '📘') {
+  // استدعاء الدالة الأصلية أولاً
+  originalCreateChapterCard(key, name, icon);
+  
+  // الآن نجد البطاقة التي تم إنشاؤها ونضيف زر الحذف
+  const gatesGrid = document.querySelector('#part1 .gates-grid');
+  if (!gatesGrid) return;
+  
+  // البطاقة الجديدة هي آخر بطاقة في grid
+  const newCard = gatesGrid.lastElementChild;
+  if (!newCard) return;
+  
+  // إضافة زر الحذف إذا كان القسم مخصصاً
+  if (key.startsWith('custom_')) {
+    const deleteBtn = document.createElement('span');
+    deleteBtn.className = 'gate-delete-btn';
+    deleteBtn.innerHTML = '🗑️';
+    deleteBtn.title = 'حذف القسم';
+    deleteBtn.style.cssText = `
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      color: rgba(255,100,100,0.8);
+      z-index: 10;
+    `;
+    
+    // منع فتح modal عند النقر على زر الحذف
+    deleteBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      deleteChapter(key);
+    });
+    
+    newCard.style.position = 'relative'; // تأكد أن البطاقة position relative
+    newCard.appendChild(deleteBtn);
+    
+    // إظهار زر الحذف عند التحويم على البطاقة في وضع التحرير
+    newCard.addEventListener('mouseenter', () => {
+      if (isEditMode) deleteBtn.style.opacity = '1';
+    });
+    newCard.addEventListener('mouseleave', () => {
+      deleteBtn.style.opacity = '0';
+    });
+  }
+};
+
+// تعديل دوال وضع التحرير لإظهار/إخفاء أزرار الحذف
+const originalEnterEditModeForDelete = enterEditMode;
+enterEditMode = function() {
+  originalEnterEditModeForDelete();
+  // إظهار أزرار الحذف للبطاقات المخصصة (اختياري: يمكن التحكم عبر CSS)
+  document.querySelectorAll('.gate-delete-btn').forEach(btn => {
+    btn.style.display = 'inline-block'; // أو أي إظهار
+  });
+};
+
+const originalExitEditModeForDelete = exitEditMode;
+exitEditMode = function() {
+  originalExitEditModeForDelete();
+  // إخفاء أزرار الحذف
+  document.querySelectorAll('.gate-delete-btn').forEach(btn => {
+    btn.style.opacity = '0'; // نخفيها
+  });
+};
+
+// إعادة تعريف الدوال الأصلية إذا كانت قد عُرّفت سابقاً (للتأكد من عدم التعارض)
+// يمكننا ببساطة وضع الكود الجديد بعد التعريفات السابقة.
 </script>
 </body>
 </html>

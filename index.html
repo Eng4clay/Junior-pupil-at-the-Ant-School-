@@ -131,6 +131,22 @@ body {
 .nav-btn:hover { border-color:var(--gold); color:var(--gold-light); }
 #mute-btn { padding:5px 10px; font-size:1rem; }
 
+/* ── زر إضافة فصل جديد ── */
+#add-chapter-btn {
+  background:none;
+  border:1px solid rgba(100,180,140,0.25);
+  color:rgba(100,180,140,0.6);
+  padding:5px 12px;
+  font-family:'Amiri',serif;
+  font-size:0.8rem;
+  cursor:pointer;
+  transition:all 0.3s;
+  border-radius:2px;
+  display:none; /* يظهر فقط في وضع التحرير */
+}
+#add-chapter-btn:hover { border-color:rgba(100,180,140,0.7); color:#64b48c; box-shadow:0 0 12px rgba(100,180,140,0.15); }
+body.edit-mode #add-chapter-btn { display:inline-flex; align-items:center; gap:6px; }
+
 /* Progress bar */
 #progress-bar { position:fixed; top:60px; left:0; right:0; height:2px; z-index:99; background:rgba(201,168,76,0.08); }
 #progress-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-light)); width:0%; transition:width 0.3s ease; box-shadow:0 0 8px var(--gold); }
@@ -183,6 +199,21 @@ body {
 .gate-number { font-family:'Cormorant Garamond',serif; font-size:0.75rem; letter-spacing:0.3em; color:var(--gold); display:block; margin-bottom:0.5rem; }
 .gate-name { font-family:'Amiri',serif; font-size:1.1rem; color:var(--text-light); margin-bottom:0.5rem; }
 .gate-desc { font-size:0.85rem; color:var(--text-dim); line-height:1.8; }
+
+/* بطاقة الفصل المخصص */
+.gate-card.custom-chapter { border-color:rgba(100,180,140,0.15); }
+.gate-card.custom-chapter:hover { border-color:rgba(100,180,140,0.4); box-shadow:0 12px 40px rgba(0,0,0,0.4),0 0 20px rgba(100,180,140,0.05); }
+.gate-card.custom-chapter .gate-number { color:#64b48c; }
+/* زر حذف الفصل المخصص يظهر فقط في وضع التحرير */
+.gate-card.custom-chapter .delete-chapter-btn {
+  display:none; position:absolute; top:0.5rem; left:0.5rem;
+  background:rgba(255,80,80,0.1); border:1px solid rgba(255,80,80,0.2);
+  color:rgba(255,120,120,0.6); width:24px; height:24px; border-radius:50%;
+  font-size:0.8rem; cursor:pointer; align-items:center; justify-content:center;
+  transition:all 0.2s; padding:0; line-height:1;
+}
+body.edit-mode .gate-card.custom-chapter .delete-chapter-btn { display:flex; }
+.gate-card.custom-chapter .delete-chapter-btn:hover { background:rgba(255,80,80,0.2); border-color:rgba(255,80,80,0.5); color:rgba(255,120,120,1); }
 
 /* Rest page */
 .rest-page { padding:4rem 2rem; text-align:center; max-width:600px; margin:0 auto; }
@@ -342,6 +373,18 @@ body.edit-mode [data-editable][contenteditable="true"]:empty::before {
   font-style:italic;
 }
 
+/* تأثير التحرير على عناصر الـ modal في وضع التحرير */
+body.edit-mode #modal-title[contenteditable="true"] {
+  outline:1px dashed rgba(201,168,76,0.4) !important;
+  cursor:text !important;
+  min-height:1.5rem;
+}
+body.edit-mode #modal-body[contenteditable="true"] {
+  outline:1px dashed rgba(201,168,76,0.2) !important;
+  cursor:text !important;
+  min-height:3rem;
+}
+
 .editor-toolbar {
   position:fixed; top:70px; right:1.5rem; z-index:149;
   display:none; flex-direction:column; gap:0.5rem; background:rgba(5,5,5,0.95);
@@ -393,47 +436,92 @@ body.edit-mode .edit-mode-bar { display:block; }
 .sound-bar:nth-child(5){height:6px;animation-delay:0.6s}
 @keyframes sound-bar-anim { 0%,100%{transform:scaleY(0.4)} 50%{transform:scaleY(1)} }
 
+/* ===== نافذة إضافة فصل جديد ===== */
+.add-chapter-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:600;
+  display:none; align-items:center; justify-content:center;
+  backdrop-filter:blur(20px); padding:2rem;
+}
+.add-chapter-overlay.active { display:flex; }
+.add-chapter-box {
+  background:var(--deep); border:1px solid rgba(100,180,140,0.3);
+  padding:3rem; max-width:520px; width:100%;
+  animation:modal-appear 0.35s ease-out;
+}
+.add-chapter-box h3 { font-family:'Amiri',serif; font-size:1.4rem; color:#64b48c; margin-bottom:0.5rem; }
+.add-chapter-box p { font-family:'Amiri',serif; font-size:0.9rem; color:var(--text-dim); margin-bottom:2rem; line-height:1.8; }
+.add-chapter-field {
+  width:100%; padding:12px 16px; background:rgba(255,255,255,0.03);
+  border:1px solid rgba(100,180,140,0.2); color:var(--text-light);
+  font-family:'Amiri',serif; font-size:1rem;
+  outline:none; margin-bottom:1rem; direction:rtl;
+}
+.add-chapter-field:focus { border-color:rgba(100,180,140,0.5); box-shadow:0 0 12px rgba(100,180,140,0.1); }
+.add-chapter-field::placeholder { color:rgba(100,180,140,0.25); }
+.add-chapter-section-select {
+  width:100%; padding:12px 16px; background:rgba(255,255,255,0.03);
+  border:1px solid rgba(100,180,140,0.2); color:var(--text-light);
+  font-family:'Amiri',serif; font-size:1rem;
+  outline:none; margin-bottom:1.5rem; direction:rtl;
+  cursor:pointer;
+}
+.add-chapter-section-select option { background:var(--deep); color:var(--text-light); }
+.add-chapter-section-select:focus { border-color:rgba(100,180,140,0.5); }
+.add-chapter-textarea {
+  width:100%; padding:12px 16px; background:rgba(255,255,255,0.03);
+  border:1px solid rgba(100,180,140,0.2); color:var(--text-light);
+  font-family:'Amiri',serif; font-size:0.95rem;
+  outline:none; margin-bottom:1.5rem; direction:rtl;
+  min-height:100px; resize:vertical; line-height:2;
+}
+.add-chapter-textarea:focus { border-color:rgba(100,180,140,0.5); }
+.add-chapter-textarea::placeholder { color:rgba(100,180,140,0.2); }
+.add-chapter-confirm {
+  padding:12px 32px; background:rgba(100,180,140,0.12);
+  border:1px solid rgba(100,180,140,0.4); color:#64b48c;
+  font-family:'Amiri',serif; font-size:1rem; cursor:pointer;
+  transition:all 0.3s; margin-left:1rem;
+}
+.add-chapter-confirm:hover { background:rgba(100,180,140,0.22); border-color:#64b48c; }
+.add-chapter-cancel {
+  padding:12px 32px; background:none;
+  border:1px solid rgba(255,255,255,0.1); color:var(--text-dim);
+  font-family:'Amiri',serif; font-size:1rem; cursor:pointer; transition:all 0.3s;
+}
+.add-chapter-cancel:hover { border-color:rgba(255,255,255,0.3); color:var(--text-light); }
+.add-chapter-error { color:#e87a7a; font-size:0.85rem; margin-bottom:1rem; min-height:1.2rem; font-family:'Amiri',serif; }
+
 /* ===== PRINT STYLES ===== */
 @media print {
   #tunnel-screen, #nav, #progress-bar, #sidebar-dots, #editor-btn,
   .editor-toolbar, .edit-mode-bar, #particles-container, #ambient-indicator,
   #mute-btn, .nav-btn, .hero-cta, .download-btn, .print-btn,
   .notes-area, .shards-section, .mirror-hall, .infinity-reveal,
-  .editor-password-overlay { display:none !important; }
+  .editor-password-overlay, .add-chapter-overlay, #add-chapter-btn,
+  .delete-chapter-btn { display:none !important; }
   
   body { background:#fff !important; color:#111 !important; font-size:12pt; }
-  
   #main-site { display:block !important; }
-  
   .section-title, .part-title, .hero-title-ar { color:#111 !important; }
   .section-text, .gate-desc, .modal-body { color:#333 !important; }
   .section-label, .gate-number, .part-number { color:#8b6914 !important; }
   .gold-line { background:#8b6914 !important; }
   .hero-quote, .footer-quote { color:#555 !important; }
   .gate-name, .footer-title { color:#111 !important; }
-  
   #hero, #intro-section, #part1, #part2, #part3, #appendix-section, #footer {
     background:#fff !important; page-break-inside:avoid;
   }
-  
   .gate-card { border:1px solid #ccc !important; background:#f9f9f9 !important; break-inside:avoid; }
   .intro-header-note { border-right:3px solid #8b6914 !important; background:#fdfaf3 !important; }
   .quran-verse { border-color:#ccc !important; }
   .quran-verse p { color:#8b6914 !important; }
-  
   .reveal { opacity:1 !important; transform:none !important; }
-  
   .part-header { border-bottom:1px solid #ddd !important; }
-  
   #footer { border-top:1px solid #ddd !important; }
-  
   @page { margin:2cm; size:A4; }
-  
   h1,h2,h3 { page-break-after:avoid; }
   p { orphans:3; widows:3; }
-  
   .hero-ant-svg, .hero-eyebrow { display:block !important; opacity:1 !important; }
-  
   .print-page-break { page-break-before:always; }
 }
 </style>
@@ -493,6 +581,10 @@ body.edit-mode .edit-mode-bar { display:block; }
       <li><a onclick="scrollToSection('appendix-section')">الملحق</a></li>
     </ul>
     <div class="nav-actions">
+      <!-- ✅ زر إضافة فصل جديد — يظهر فقط في وضع التحرير -->
+      <button id="add-chapter-btn" onclick="openAddChapterDialog()" title="إضافة فصل جديد">
+        ＋ فصل جديد
+      </button>
       <button class="nav-btn" onclick="printBook()" title="طباعة الكتاب">🖨️ طباعة</button>
       <button class="nav-btn" id="mute-btn" onclick="toggleMute()" title="كتم الصوت">🔊</button>
     </div>
@@ -561,7 +653,8 @@ body.edit-mode .edit-mode-bar { display:block; }
         </p>
       </div>
 
-      <div class="gates-grid reveal" style="padding:2rem 0;">
+      <!-- شبكة بطاقات المقدمة (الفصول الثابتة + المضافة) -->
+      <div class="gates-grid reveal" id="intro-gates-grid" style="padding:2rem 0;">
         <div class="gate-card" onclick="openModal('ch1');playSoundEffect('gate')">
           <span class="gate-icon">❓</span>
           <span class="gate-number" data-editable data-edit-id="ch1-num">الفصل الأول</span>
@@ -608,7 +701,7 @@ body.edit-mode .edit-mode-bar { display:block; }
       <p class="part-subtitle" data-editable data-edit-id="p1-sub">Seven Gates of Inner Foundation</p>
     </div>
 
-    <div class="gates-grid reveal">
+    <div class="gates-grid reveal" id="part1-gates-grid">
       <div class="gate-card" onclick="openModal('g1_1');playSoundEffect('gate1')">
         <span class="gate-icon">🌌</span>
         <span class="gate-number" data-editable data-edit-id="g1-1-num">الباب الأول</span>
@@ -670,7 +763,7 @@ body.edit-mode .edit-mode-bar { display:block; }
       <p class="part-subtitle" data-editable data-edit-id="p2-sub">The Mirrors of Creation</p>
     </div>
 
-    <div class="gates-grid reveal">
+    <div class="gates-grid reveal" id="part2-gates-grid">
       <div class="gate-card" onclick="openModal('g2_1');playSoundEffect('gate2')">
         <span class="gate-icon">🌿</span>
         <span class="gate-number" style="color:#64b48c;" data-editable data-edit-id="g2-1-num">الباب الأول</span>
@@ -901,8 +994,12 @@ body.edit-mode .edit-mode-bar { display:block; }
 </div><!-- end main-site -->
 
 <!-- ===== MODAL ===== -->
+<!--
+  ✅ الإصلاح الجوهري: أضفنا data-modal-key="" على modal-box
+  بحيث نعرف دائماً أي فصل مفتوح حالياً عند الحفظ.
+-->
 <div class="modal-overlay" id="modal" onclick="closeModalOnBg(event)">
-  <div class="modal-box">
+  <div class="modal-box" id="modal-box" data-modal-key="">
     <button class="modal-close" onclick="closeModal()">×</button>
     <h2 class="modal-title" id="modal-title"></h2>
     <div class="modal-body" id="modal-body"></div>
@@ -951,11 +1048,36 @@ body.edit-mode .edit-mode-bar { display:block; }
   <span id="ambient-label">موسيقى النفق</span>
 </div>
 
+<!-- ===== نافذة إضافة فصل جديد ===== -->
+<div class="add-chapter-overlay" id="add-chapter-overlay">
+  <div class="add-chapter-box">
+    <div style="font-size:2rem;margin-bottom:1rem;">📖</div>
+    <h3>إضافة فصل جديد</h3>
+    <p>أضف فصلاً جديداً إلى أي قسم من أقسام الكتاب. سيُحفظ تلقائياً ويبقى بعد إعادة التحميل.</p>
+    <input type="text" class="add-chapter-field" id="new-chapter-title" placeholder="عنوان الفصل الجديد..." maxlength="80">
+    <input type="text" class="add-chapter-field" id="new-chapter-desc" placeholder="وصف مختصر (يظهر في البطاقة)..." maxlength="120">
+    <select class="add-chapter-section-select" id="new-chapter-section">
+      <option value="intro">المقدمة — دهليز التساؤلات</option>
+      <option value="part1">الجزء الأول — النفق الأول</option>
+      <option value="part2">الجزء الثاني — النفق الثاني</option>
+    </select>
+    <input type="text" class="add-chapter-field" id="new-chapter-icon" placeholder="رمز تعبيري (إيموجي) مثل: 🌟" maxlength="4">
+    <textarea class="add-chapter-textarea" id="new-chapter-body" placeholder="محتوى الفصل الكامل (اختياري — يمكنك تعديله لاحقاً في وضع التحرير)..."></textarea>
+    <div class="add-chapter-error" id="add-chapter-error"></div>
+    <div style="display:flex;gap:1rem;justify-content:center;">
+      <button class="add-chapter-cancel" onclick="closeAddChapterDialog()">إلغاء</button>
+      <button class="add-chapter-confirm" onclick="confirmAddChapter()">➕ إضافة الفصل</button>
+    </div>
+  </div>
+</div>
+
 <!-- Particles -->
 <div id="particles-container"></div>
 
 <script>
-// ===== MODAL CONTENT =====
+// ============================================================
+// ✅ MODAL CONTENT — محتوى النوافذ الثابتة
+// ============================================================
 const modalContent = {
   ch1: {
     title: 'الفصل الأول: أسئلة تلميذ مبتدئ',
@@ -1004,124 +1126,34 @@ const modalContent = {
 <p style="padding:1rem;background:rgba(201,168,76,0.04);border-right:3px solid var(--gold);">مَدرَسَتُنا لَيسَت بِناءً. إِنَّها البَحثُ عَن مَخرَجِ النَّفَقِ وَالوصُولِ إِلَى النُّورِ، كُلُّ ضَوءٍ فيهِ هُوَ سُؤالٌ جَديدٌ، وكُلُّ ظِلٍّ هُوَ إِجابَةٌ تَنتَظِرُ اكتِشافَكَ.</p><br>
 <p style="text-align:center;font-size:1.3rem;color:var(--gold-light);font-style:italic;">هَيَّا بنا. تابع....</p>`
   },
-  g1_1: {
-    title: 'الباب الأول: بوابة الأسرار الكونية',
-    body: `<p>في هذا الباب الأول من النفق، نقف أمام ثلاثة أسرار يحملها الكون في طياته:</p><br>
-<p><strong style="color:var(--gold-light);">السر الأول: الوحدة في التعدد</strong><br>كل شيء في هذا الكون — من الذرة إلى المجرة — يسير وفق قانون واحد: الوحدة في التعدد. النملة وحدها ضعيفة، لكن مملكة النمل قوة لا تُقهر. القطرة وحدها لا تعني شيئاً، لكن البحر يحرك القارات.</p><br>
-<p><strong style="color:var(--gold-light);">السر الثاني: التوازن الدقيق</strong><br>لو تغير ميزان الجاذبية ذرة واحدة، لانهار الكون. ولو تغيرت دورة النمل في حمل الغذاء، لتغير توازن البيئة. في كل شيء توازن خفي يحرسه من لا يُرى.</p><br>
-<p><strong style="color:var(--gold-light);">السر الثالث: الغاية في كل موجود</strong><br>لم يُخلق شيء عبثاً. حتى الفطر الذي يتحلل على الأرض — هو من يُعيد دورة الحياة. وحتى سؤالك الذي يبدو بلا إجابة — هو من يُبقيك على الطريق.</p><br>
-<p style="padding:1.5rem;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.1);"><strong style="color:var(--gold-light);">تمرين الباب الأول:</strong><br>اجلس في مكانٍ فيه طبيعة. انظر إلى شيء واحد — شجرة، نملة، سحابة — وتساءل: ما الغاية منه في منظومة الكون؟ ثم دوّن ما وصلت إليه.</p>`
-  },
-  g1_2: {
-    title: 'الباب الثاني: بوابة المفاتيح الذهبية',
-    body: `<p>لكل باب موصد مفتاح. وفي هذه البوابة، نتعلم مفتاحين لا غنى عنهما:</p><br>
-<p><strong style="color:var(--gold-light);">المفتاح الأول: الصمت المتأمل</strong><br>أبي لم يُعلّمني بالكلام. علّمني بالصمت والإشارة. الصمت ليس فراغاً — هو امتلاء من نوع آخر. حين تصمت، تبدأ المخلوقات بالكلام: النملة، الريح، دقات قلبك.</p><br>
-<p><strong style="color:var(--gold-light);">المفتاح الثاني: السؤال الصحيح</strong><br>ليس كل سؤال يُفتح بجواب. بعض الأسئلة مفاتيح بذاتها. حين تسأل "لماذا؟" بصدق — لا للجدال — فأنت قد فتحت باباً للعبور. السؤال الصحيح يُضيء الطريق قبل أن تصل الإجابة.</p><br>
-<p style="padding:1rem;background:rgba(201,168,76,0.04);border-right:3px solid var(--gold);">كيف تصنع مفتاحك الذهبي؟<br>• خصص عشر دقائق يومياً للصمت المتأمل — بلا هاتف، بلا ضوضاء.<br>• احمل معك سؤالاً واحداً لمدة أسبوع. لا تبحث عن إجابته. فقط اصطحبه.</p>`
-  },
-  g1_3: {
-    title: 'الباب الثالث: بوابة الاستعداد الذاتي',
-    body: `<p>قبل أن تدخل أي ميدان، لا بد من الاستعداد. وهذا الاستعداد له ثلاثة أسنان:</p><br>
-<p><strong style="color:var(--gold-light);">السن الأولى: معرفة نقاط قوتك</strong><br>النملة تعرف أنها قادرة على حمل أضعاف وزنها. لا تحاول أن تطير. تعرف ما تستطيعه فتُحسنه. اسأل نفسك: ما الذي أعمله بسهولة بينما يجد فيه غيري صعوبة؟</p><br>
-<p><strong style="color:var(--gold-light);">السن الثانية: قبول نقاط ضعفك</strong><br>المرآة المكسورة تعكس الصورة بشكل مختلف. لكنها لا تزال مرآة. ضعفك ليس نهايتك — هو الشظية التي تنتظر أن تجدها وتضعها في مكانها الصحيح.</p><br>
-<p><strong style="color:var(--gold-light);">السن الثالثة: طقس الدخول اليومي</strong><br>كل صباح، قبل أن تبدأ يومك، خذ نفساً عميقاً وقل: "أنا تلميذ مبتدئ. الكون معلمي. وكل ما سيحدث اليوم هو درس."</p><br>
-<p style="padding:1rem;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.1);">طقس الدخول: ابدأ كل يوم بسؤال واحد، واختم كل يوم بشكر على درس واحد تعلمته.</p>`
-  },
-  g1_4: {
-    title: 'الباب الرابع: بوابة الرزق',
-    body: `<p>النملة لا تطلب الرزق — تسعى إليه. والطير لا يدّخر — يثق أنه سيجد. هنا أسرار بوابة الرزق في أربعة فصول:</p><br>
-<p><strong style="color:var(--gold-light);">الفصل الأول: الرزق المكتوب والرزق المكسوب</strong><br>ما كُتب لك سيصلك حتماً. لكن الكسب أمانة — لا يأخذها الكسول ولا يضيّعها الحريص. السعي هو العبادة، والتوكل هو الوقود.</p><br>
-<p><strong style="color:var(--gold-light);">الفصل الثاني: الرزق الخفي</strong><br>الصحة رزق. الابتسامة التي تلقاها رزق. الدرس الذي تعلمته من ألمك رزق. توسّع مفهوم الرزق ليشمل كل نعمة.</p><br>
-<p><strong style="color:var(--gold-light);">الفصل الثالث: قانون الإعطاء</strong><br>النملة لا تأكل وحدها ما تحمل. تضعه في المخزن لأفراد المملكة. كلما أعطيت أكثر، كلما اتسع مجالك. الكف المفتوحة تستقبل أكثر من الكف المغلوقة.</p><br>
-<p><strong style="color:var(--gold-light);">الفصل الرابع: صبر الشجرة</strong><br>الشجرة لا تعطي ثمارها في اليوم الأول. لكنها لا تتوقف عن النمو. الرزق الحقيقي يأتي في موسمه، لمن لم يتوقف عن الزرع.</p>`
-  },
-  g1_5: {
-    title: 'الباب الخامس: بوابة النجاح',
-    body: `<p>درسنا النجاح من أعمق مصادره — من هندسة خلية النحل:</p><br>
-<p><strong style="color:var(--gold-light);">الفصل الأول: هندسة السداسية</strong><br>خلية النحل سداسية لأنها أكفأ شكل هندسي يستوعب أكبر قدر بأقل مساحة. النجاح الحقيقي هو الكفاءة — ليس الإنجاز الأضخم، بل الإنجاز الأذكى.</p><br>
-<p><strong style="color:var(--gold-light);">الفصل الثاني: قانون التخصص</strong><br>في خلية النحل، لكل نحلة دورها: البناء، الجمع، الحماية، التلقيح. لا أحد يحاول أن يفعل كل شيء. النجاح في التعمق، لا في التشتت.</p><br>
-<p><strong style="color:var(--gold-light);">الفصل الثالث: قانون الملكة والمجتمع</strong><br>قوة الملكة من قوة المجتمع. وقوة المجتمع من وضوح دور كل فرد فيه. النجاح الفردي وهم إن لم يُبنَ على خدمة أكبر منه.</p>`
-  },
-  g1_6: {
-    title: 'الباب السادس: بوابة المعرفة',
-    body: `<p><strong style="color:var(--gold-light);">الفصل الأول: العلم الذي يُحيي</strong><br>ليس كل ما تعلمته يُضيء. بعض المعرفة تُثقل ولا تُرفع. العلم الذي يُحيي هو الذي يجعلك أكثر تواضعاً، أكثر رحمةً، وأقل يقيناً بالأجوبة النهائية.</p><br>
-<p><strong style="color:var(--gold-light);">الفصل الثاني: تجربة الشقَّين</strong><br>في الفيزياء الكمومية، حين نراقب الجسيم يتصرف كجسيم. وحين لا نراقبه يتصرف كموجة. أنت أيضاً — أنت من يُحدد شكل ما تراه. المعرفة ليست اكتشاف الواقع، بل خلقه.</p><br>
-<p><strong style="color:var(--gold-light);">الفصل الثالث: حدود المعرفة</strong><br>قمة المعرفة أن تعرف حدودها. سقراط عرف أنه لا يعرف. والتلميذ المبتدئ يعرف أنه لم يبدأ بعد. هذا الاعتراف هو أول درجة في السلّم.</p>`
-  },
-  g1_7: {
-    title: 'الباب السابع: بوابة الحكمة',
-    body: `<p><strong style="color:var(--gold-light);">الفصل الأول: الفرق بين العلم والحكمة</strong><br>العلم يعرف أن السكين تقطع. الحكمة تعرف متى تقطع ومتى تضع السكين جانباً. العلم يملأ الوعاء. الحكمة تعرف أي وعاء يستحق أن يُملأ.</p><br>
-<p><strong style="color:var(--gold-light);">الفصل الثاني: الحكمة في الصمت</strong><br>أكثر الحكمة في العالم تأتي من صمت المتأملين. النملة لا تُعلن عن طريقها — تمشيه. الغراب لم يشرح كيف ستُواري سوءة أخيك — أظهره. الحكمة تُظهر ولا تشرح.</p><br>
-<p><strong style="color:var(--gold-light);">الفصل الثالث: الحكمة والخضوع</strong><br>أحكم الحكماء من عرف أنه خاضع لحكمة أكبر. حين تعرف أن "وُجُودُ فَنَائِكَ هو فَنَاءُ وُجُودِكَ" — هنا تبدأ رحلة الحكمة الحقيقية.</p><br>
-<p style="padding:1.5rem;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.1);text-align:center;font-style:italic;">"وُجُودُ فَنَائِكَ هو فَنَاءُ وُجُودِكَ"<br><span style="font-size:0.85rem;color:var(--text-dim);">فأدركت أن البَقَاءَ لا يَكُونُ إلَّا بِالذَّوَبان في الحَضْرَةِ التِي لَا تَفْنَى.</span></p>`
-  },
-  g2_1: {
-    title: 'الباب الأول: دستور الطبيعة',
-    body: `<p>الطبيعة لا تشرع قوانينها — تعيشها. في دستورها ثلاثة قوانين لا تتبدل:</p><br>
-<p><strong style="color:#64b48c;">القانون الأول: التوازن المقدس</strong><br>لكل فعل رد فعل مساوٍ ومعاكس. ليس في الفيزياء فقط — في كل شيء. كل انتهاك لتوازن تعود عليه عاقبة. وكل احترام للتوازن يُعيد للكون نظامه.</p><br>
-<p><strong style="color:#64b48c;">القانون الثاني: التنوع كقوة</strong><br>الغابة التي فيها أنواع لا تحصى من الأشجار أقوى من الغابة المتجانسة. الإنسان الذي تتنوع خبراته أحكم من ذاك الذي لم يعش إلا مساراً واحداً.</p><br>
-<p><strong style="color:#64b48c;">القانون الثالث: الدورة الكاملة</strong><br>الشجرة تنمو، تُثمر، تذبل، تموت، تتحلل، وتُغذّي شجرة جديدة. لا شيء ينتهي في الطبيعة — كل نهاية بداية في ثوب آخر. هكذا أنت أيضاً.</p>`
-  },
-  g2_2: {
-    title: 'الباب الثاني: مملكة النمل',
-    body: `<p>النملة تحمل أضعاف وزنها. ليس لأنها قوية وحدها — بل لأنها تعرف لماذا تحمل.</p><br>
-<p><strong style="color:#64b48c;">الدرس الأول: الهدف المشترك</strong><br>لا نملة في المملكة تعمل لنفسها. كل حبة قمح تُحمل هي لمملكة بأكملها. حين يكون هدفك أكبر منك، تجد قوة لم تعرفها.</p><br>
-<p><strong style="color:#64b48c;">الدرس الثاني: التواصل بلا كلام</strong><br>النمل يتواصل بالفيرومونات — رسائل كيميائية تُخبر بالطريق والخطر والفرص. نحن أيضاً نتواصل بما لا نقوله: بالنظرة، بالحضور، بالاهتمام الحقيقي.</p><br>
-<p><strong style="color:#64b48c;">الدرس الثالث: لا قائد وحيد</strong><br>الملكة لا تُصدر أوامر. هي رمز التنظيم، لكن كل نملة تعرف دورها. القيادة الحقيقية تُنشئ قادة، لا تابعين.</p><br>
-<p><strong style="color:#64b48c;">الدرس الرابع: الاستعداد للشتاء في الصيف</strong><br>النمل يجمع في الصيف لأجل الشتاء. التخطيط ليس عدم توكل — هو التوكل الناضج، الذي يعمل اليوم لأجل غد لا يعرفه.</p>`
-  },
-  g2_3: {
-    title: 'الباب الثالث: مملكة النحل',
-    body: `<p>النحلة تطير مئات الكيلومترات لتجمع رحيقاً يكفي لملعقة عسل صغيرة. هذا ليس هدراً — هذا اقتصاد الدقة.</p><br>
-<p><strong style="color:#64b48c;">درس الهندسة السداسية</strong><br>خلية النحل: أكبر مساحة بأقل مادة بأقوى هيكل. هذا درس في كل قرار تتخذه — ابحث عن الحل الذي يُعطيك أكبر نتيجة بأقل تعقيد.</p><br>
-<p><strong style="color:#64b48c;">درس الرقصة</strong><br>النحلة التي تجد الرحيق ترجع وترقص — رقصتها خريطة دقيقة تُخبر الأخريات بالاتجاه والمسافة والجودة. التواصل الفعّال فن وعلم معاً.</p><br>
-<p><strong style="color:#64b48c;">درس العسل</strong><br>العسل لا يفسد. المعرفة الحقيقية كذلك — لا تفسد بمرور الزمن. اعمل على ما يبقى، لا على ما يزول.</p>`
-  },
-  g2_4: {
-    title: 'الباب الرابع: عالم الغراب',
-    body: `<p>﴿ فَبَعَثَ اللَّهُ غُرَابًا يَبْحَثُ فِي الْأَرْضِ لِيُرِيَهُ كَيْفَ يُوَارِي سَوْأَةَ أَخِيهِ ﴾</p><br>
-<p>الغراب لم يقرأ كتاباً. لكنه فعل ما احتاج الإنسان أن يراه. هذا هو الذكاء الفطري — ذكاء الحل المباشر.</p><br>
-<p><strong style="color:#64b48c;">الدرس الأول: انظر إلى المشكلة، لا إلى المشكلة في المشكلة</strong><br>الغراب لم يفكر في فلسفة الموت. حفر وواري. البساطة أحياناً هي الحكمة العليا.</p><br>
-<p><strong style="color:#64b48c;">الدرس الثاني: الذكاء التكيفي</strong><br>الغراب يستخدم الأدوات. يخطط. يتذكر الوجوه. في البيئات الصعبة، الأكثر تكيفاً هو الأكثر بقاءً — ليس الأقوى.</p><br>
-<p><strong style="color:#64b48c;">الدرس الثالث: التعلم بالمراقبة</strong><br>ابن آدم تعلم من الغراب بالمراقبة. أكثر دروسنا العميقة لا تأتي من الكتب — تأتي من الانتباه.</p>`
-  },
-  g2_5: {
-    title: 'الباب الخامس: عالم العنكبوت',
-    body: `<p>العنكبوت يبني بيته في الفراغ. لا أساس تحته، لا جدار يستند إليه. يبني من داخله — من خيوط ينسجها هو.</p><br>
-<p><strong style="color:#64b48c;">درس الشبكة الحية</strong><br>شبكة العنكبوت أقوى بوزنها من الصلب. السر في الهندسة، لا في المادة. كذلك علاقاتك — قوتها في تصميمها، لا في عددها.</p><br>
-<p><strong style="color:#64b48c;">درس المرونة</strong><br>الشبكة لا تكسر عند الضربة — تمتصها وتعود. الصمود الحقيقي ليس في الصلابة بل في المرونة.</p><br>
-<p><strong style="color:#64b48c;">درس إعادة البناء</strong><br>حين تُكسر الشبكة، العنكبوت يبدأ من جديد — دون شكوى. كل بداية جديدة تجربة تُضاف، لا وقت يُضاع.</p><br>
-<p style="padding:1rem;background:rgba(100,180,140,0.04);border-right:3px solid #64b48c;">﴿ وَإِنَّ أَوْهَنَ الْبُيُوتِ لَبَيْتُ الْعَنكَبُوتِ ﴾<br><span style="font-size:0.9rem;color:var(--text-dim);">الضعف في مادته — لكن في هندسته حكمة لا تُقهر.</span></p>`
-  },
-  g2_6: {
-    title: 'الباب السادس: معادن البشر',
-    body: `<p>كما في الأرض معادن تختلف في قيمتها وطبيعتها، في البشر كذلك:</p><br>
-<p><strong style="color:#64b48c;">🥇 الذهب</strong><br>نادر. لا يصدأ. يُزين ولا يُخفي. إنسان الذهب نادر في كل جيل — صادق حتى حين يُكلفه الصدق. يبقى نقياً في أقذر البيئات.</p><br>
-<p><strong style="color:#64b48c;">🥈 الفضة</strong><br>قيّمة ومرنة. إنسان الفضة يُكيّف دون أن يُفقد قيمته. يُصنع منه الكثير — الطب، الفن، العلم. لكنه يتأثر بالهواء — يحتاج إلى تلميع دوري.</p><br>
-<p><strong style="color:#64b48c;">⚙️ الحديد</strong><br>الأكثر شيوعاً والأشد قوةً. إنسان الحديد يبني ويحمي. لكنه يصدأ حين يُهمل. القوة دون صيانة — تُفسدها الأيام.</p><br>
-<p><strong style="color:#64b48c;">🔩 النحاس</strong><br>يتغير لونه مع الزمن. يُصبح أجمل بالاستخدام. إنسان النحاس يتعلم من كل تجربة ويزداد عمقاً.</p><br>
-<p>فأنت: أيّ معدن تحمل في داخلك اليوم؟ وأيّ معدن تريد أن تصبح؟</p>`
-  },
-  g2_7: {
-    title: 'الباب السابع: صالة المرايا — الاستعداد للقاء الذات',
-    body: `<p>قبل أن تدخل صالة المرايا في الجزء الثالث، هناك استعداد لا بد منه:</p><br>
-<p><strong style="color:#b8bcc8;">الاستعداد الأول: التخلص من التوقعات</strong><br>المرآة لا تُعطيك ما تريد رؤيته. تُعطيك ما هو موجود. ادخل الصالة بلا توقع. دع المرآة تُريك.</p><br>
-<p><strong style="color:#b8bcc8;">الاستعداد الثاني: قبول الكسر</strong><br>المرآة المكسورة لا تعني فشلاً — تعني تعدداً. كل شظية تعكس زاوية مختلفة من الحقيقة. الكمال ليس في مرآة واحدة كاملة، بل في جمع كل الشظايا.</p><br>
-<p><strong style="color:#b8bcc8;">الاستعداد الثالث: الشجاعة</strong><br>لقاء الذات يحتاج شجاعة أكثر من أي ميدان آخر. لأن المواجهة الوحيدة التي لا يمكنك الهروب منها هي مواجهة نفسك.</p><br>
-<p style="text-align:center;font-size:1.3rem;color:#b8bcc8;margin-top:2rem;">الباب مفتوح.<br>المرآة تنتظر.</p>`
-  }
+  g1_1: { title: 'الباب الأول: بوابة الأسرار الكونية', body: `<p>في هذا الباب الأول من النفق، نقف أمام ثلاثة أسرار يحملها الكون في طياته:</p><br><p><strong style="color:var(--gold-light);">السر الأول: الوحدة في التعدد</strong><br>كل شيء في هذا الكون — من الذرة إلى المجرة — يسير وفق قانون واحد: الوحدة في التعدد. النملة وحدها ضعيفة، لكن مملكة النمل قوة لا تُقهر.</p><br><p><strong style="color:var(--gold-light);">السر الثاني: التوازن الدقيق</strong><br>لو تغير ميزان الجاذبية ذرة واحدة، لانهار الكون. في كل شيء توازن خفي يحرسه من لا يُرى.</p><br><p><strong style="color:var(--gold-light);">السر الثالث: الغاية في كل موجود</strong><br>لم يُخلق شيء عبثاً. حتى سؤالك الذي يبدو بلا إجابة — هو من يُبقيك على الطريق.</p>` },
+  g1_2: { title: 'الباب الثاني: بوابة المفاتيح الذهبية', body: `<p><strong style="color:var(--gold-light);">المفتاح الأول: الصمت المتأمل</strong><br>أبي لم يُعلّمني بالكلام. علّمني بالصمت والإشارة. الصمت ليس فراغاً — هو امتلاء من نوع آخر.</p><br><p><strong style="color:var(--gold-light);">المفتاح الثاني: السؤال الصحيح</strong><br>ليس كل سؤال يُفتح بجواب. بعض الأسئلة مفاتيح بذاتها. حين تسأل "لماذا؟" بصدق — لا للجدال — فأنت قد فتحت باباً للعبور.</p>` },
+  g1_3: { title: 'الباب الثالث: بوابة الاستعداد الذاتي', body: `<p><strong style="color:var(--gold-light);">السن الأولى: معرفة نقاط قوتك</strong><br>النملة تعرف أنها قادرة على حمل أضعاف وزنها. اسأل نفسك: ما الذي أعمله بسهولة بينما يجد فيه غيري صعوبة؟</p><br><p><strong style="color:var(--gold-light);">السن الثانية: قبول نقاط ضعفك</strong><br>المرآة المكسورة تعكس الصورة بشكل مختلف. لكنها لا تزال مرآة.</p><br><p><strong style="color:var(--gold-light);">السن الثالثة: طقس الدخول اليومي</strong><br>كل صباح قبل أن تبدأ يومك: "أنا تلميذ مبتدئ. الكون معلمي."</p>` },
+  g1_4: { title: 'الباب الرابع: بوابة الرزق', body: `<p><strong style="color:var(--gold-light);">الفصل الأول: الرزق المكتوب والرزق المكسوب</strong><br>ما كُتب لك سيصلك حتماً. السعي هو العبادة، والتوكل هو الوقود.</p><br><p><strong style="color:var(--gold-light);">الفصل الثاني: الرزق الخفي</strong><br>الصحة رزق. الابتسامة رزق. الدرس من الألم رزق.</p><br><p><strong style="color:var(--gold-light);">الفصل الثالث: قانون الإعطاء</strong><br>النملة لا تأكل وحدها ما تحمل. الكف المفتوحة تستقبل أكثر من الكف المغلوقة.</p><br><p><strong style="color:var(--gold-light);">الفصل الرابع: صبر الشجرة</strong><br>الشجرة لا تعطي ثمارها في اليوم الأول. الرزق الحقيقي يأتي في موسمه.</p>` },
+  g1_5: { title: 'الباب الخامس: بوابة النجاح', body: `<p><strong style="color:var(--gold-light);">هندسة السداسية</strong><br>خلية النحل: أكبر مساحة بأقل مادة بأقوى هيكل. النجاح الحقيقي هو الكفاءة.</p><br><p><strong style="color:var(--gold-light);">قانون التخصص</strong><br>في خلية النحل لكل نحلة دورها. النجاح في التعمق لا في التشتت.</p><br><p><strong style="color:var(--gold-light);">قانون الملكة والمجتمع</strong><br>النجاح الفردي وهم إن لم يُبنَ على خدمة أكبر منه.</p>` },
+  g1_6: { title: 'الباب السادس: بوابة المعرفة', body: `<p><strong style="color:var(--gold-light);">العلم الذي يُحيي</strong><br>العلم الذي يُحيي هو الذي يجعلك أكثر تواضعاً وأكثر رحمة.</p><br><p><strong style="color:var(--gold-light);">تجربة الشقَّين</strong><br>حين نراقب الجسيم يتصرف كجسيم. وحين لا نراقبه يتصرف كموجة. المعرفة ليست اكتشاف الواقع، بل خلقه.</p><br><p><strong style="color:var(--gold-light);">حدود المعرفة</strong><br>قمة المعرفة أن تعرف حدودها.</p>` },
+  g1_7: { title: 'الباب السابع: بوابة الحكمة', body: `<p><strong style="color:var(--gold-light);">الفرق بين العلم والحكمة</strong><br>العلم يعرف أن السكين تقطع. الحكمة تعرف متى تقطع ومتى تضع السكين جانباً.</p><br><p><strong style="color:var(--gold-light);">الحكمة في الصمت</strong><br>الحكمة تُظهر ولا تشرح.</p><br><p style="padding:1.5rem;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.1);text-align:center;font-style:italic;">"وُجُودُ فَنَائِكَ هو فَنَاءُ وُجُودِكَ"</p>` },
+  g2_1: { title: 'الباب الأول: دستور الطبيعة', body: `<p><strong style="color:#64b48c;">القانون الأول: التوازن المقدس</strong><br>لكل فعل رد فعل مساوٍ ومعاكس. في كل شيء.</p><br><p><strong style="color:#64b48c;">القانون الثاني: التنوع كقوة</strong><br>الغابة التي فيها أنواع لا تحصى أقوى من الغابة المتجانسة.</p><br><p><strong style="color:#64b48c;">القانون الثالث: الدورة الكاملة</strong><br>لا شيء ينتهي في الطبيعة — كل نهاية بداية في ثوب آخر.</p>` },
+  g2_2: { title: 'الباب الثاني: مملكة النمل', body: `<p><strong style="color:#64b48c;">الدرس الأول: الهدف المشترك</strong><br>لا نملة في المملكة تعمل لنفسها. حين يكون هدفك أكبر منك، تجد قوة لم تعرفها.</p><br><p><strong style="color:#64b48c;">الدرس الثاني: التواصل بلا كلام</strong><br>النمل يتواصل بالفيرومونات. نحن أيضاً نتواصل بما لا نقوله.</p><br><p><strong style="color:#64b48c;">الدرس الثالث: لا قائد وحيد</strong><br>القيادة الحقيقية تُنشئ قادة، لا تابعين.</p><br><p><strong style="color:#64b48c;">الدرس الرابع: الاستعداد للشتاء في الصيف</strong><br>التخطيط ليس عدم توكل — هو التوكل الناضج.</p>` },
+  g2_3: { title: 'الباب الثالث: مملكة النحل', body: `<p><strong style="color:#64b48c;">درس الهندسة السداسية</strong><br>خلية النحل: أكبر مساحة بأقل مادة بأقوى هيكل.</p><br><p><strong style="color:#64b48c;">درس الرقصة</strong><br>النحلة التي تجد الرحيق ترجع وترقص — رقصتها خريطة دقيقة.</p><br><p><strong style="color:#64b48c;">درس العسل</strong><br>العسل لا يفسد. المعرفة الحقيقية كذلك.</p>` },
+  g2_4: { title: 'الباب الرابع: عالم الغراب', body: `<p>﴿ فَبَعَثَ اللَّهُ غُرَابًا يَبْحَثُ فِي الْأَرْضِ لِيُرِيَهُ كَيْفَ يُوَارِي سَوْأَةَ أَخِيهِ ﴾</p><br><p><strong style="color:#64b48c;">الدرس الأول: البساطة هي الحكمة العليا</strong><br>الغراب لم يفكر في فلسفة الموت. حفر وواري.</p><br><p><strong style="color:#64b48c;">الدرس الثاني: الذكاء التكيفي</strong><br>في البيئات الصعبة، الأكثر تكيفاً هو الأكثر بقاءً.</p><br><p><strong style="color:#64b48c;">الدرس الثالث: التعلم بالمراقبة</strong><br>أكثر دروسنا العميقة لا تأتي من الكتب — تأتي من الانتباه.</p>` },
+  g2_5: { title: 'الباب الخامس: عالم العنكبوت', body: `<p><strong style="color:#64b48c;">درس الشبكة الحية</strong><br>شبكة العنكبوت أقوى بوزنها من الصلب. السر في الهندسة لا في المادة.</p><br><p><strong style="color:#64b48c;">درس المرونة</strong><br>الشبكة لا تكسر عند الضربة — تمتصها وتعود.</p><br><p><strong style="color:#64b48c;">درس إعادة البناء</strong><br>حين تُكسر الشبكة، العنكبوت يبدأ من جديد — دون شكوى.</p><br><p style="padding:1rem;background:rgba(100,180,140,0.04);border-right:3px solid #64b48c;">﴿ وَإِنَّ أَوْهَنَ الْبُيُوتِ لَبَيْتُ الْعَنكَبُوتِ ﴾</p>` },
+  g2_6: { title: 'الباب السادس: معادن البشر', body: `<p><strong style="color:#64b48c;">🥇 الذهب</strong><br>نادر. لا يصدأ. إنسان الذهب صادق حتى حين يُكلفه الصدق.</p><br><p><strong style="color:#64b48c;">🥈 الفضة</strong><br>قيّمة ومرنة. لكنها يحتاج إلى تلميع دوري.</p><br><p><strong style="color:#64b48c;">⚙️ الحديد</strong><br>الأكثر شيوعاً والأشد قوةً. لكنه يصدأ حين يُهمل.</p><br><p><strong style="color:#64b48c;">🔩 النحاس</strong><br>يتغير لونه مع الزمن. يُصبح أجمل بالاستخدام.</p>` },
+  g2_7: { title: 'الباب السابع: صالة المرايا — الاستعداد للقاء الذات', body: `<p><strong style="color:#b8bcc8;">الاستعداد الأول: التخلص من التوقعات</strong><br>المرآة لا تُعطيك ما تريد رؤيته. تُعطيك ما هو موجود.</p><br><p><strong style="color:#b8bcc8;">الاستعداد الثاني: قبول الكسر</strong><br>المرآة المكسورة لا تعني فشلاً — تعني تعدداً.</p><br><p><strong style="color:#b8bcc8;">الاستعداد الثالث: الشجاعة</strong><br>لقاء الذات يحتاج شجاعة أكثر من أي ميدان آخر.</p><br><p style="text-align:center;font-size:1.3rem;color:#b8bcc8;margin-top:2rem;">الباب مفتوح. المرآة تنتظر.</p>` }
 };
 
 const mirrorMessages = [
-  "حين لا ينظر إليك أحد، أنت الأقرب إلى حقيقتك. ذاك الذي يبقى في الغرفة الفارغة — هو الأنت الحقيقي.",
+  "حين لا ينظر إليك أحد، أنت الأقرب إلى حقيقتك.",
   "ما تخاف رؤيته في المرآة هو غالباً الشيء الذي يحتاج أكثر ما يحتاج إلى نور.",
-  "الحقيقة التي تراها مصفاة بخوفك وأملك وذكرياتك. المرآة لا تكذب — لكن العيون تُفسّر.",
-  "قبل الاسم كنت وجوداً. بعد الاسم صرت فكرة. الحقيقة في ما كنته قبل أن تُسمّى.",
-  "ما لم تقله بعد هو الأثقل في الروح والأكثر حاجة إلى أن يُقال — ولو لنفسك.",
-  "حين تتوقف الجسد يستمر. الروح تمشي في كل لحظة توقف — تلك الرحلة الصامتة هي الأعمق."
+  "الحقيقة التي تراها مصفاة بخوفك وأملك وذكرياتك.",
+  "قبل الاسم كنت وجوداً. بعد الاسم صرت فكرة.",
+  "ما لم تقله بعد هو الأثقل في الروح والأكثر حاجة إلى أن يُقال.",
+  "حين تتوقف الجسد يستمر. الروح تمشي في كل لحظة توقف."
 ];
 
-// ===== STATE =====
+// ============================================================
+// STATE
+// ============================================================
 let selectedShard = null;
 let placedShards = 0;
 let specialRevealed = false;
@@ -1134,35 +1166,26 @@ let ambientGain = null;
 let audioCtx = null;
 let editedTexts = {};
 
-// ===== AUDIO SYSTEM =====
+// ============================================================
+// ✅ FIX: متغير لتتبع مفتاح النافذة المفتوحة حالياً
+// هذا هو جوهر إصلاح مشكلة التداخل
+// ============================================================
+let currentModalKey = '';
+
+// ============================================================
+// AUDIO
+// ============================================================
 function getAudioCtx() {
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   return audioCtx;
 }
-
-function createNoise(ctx, duration, freq=0.02) {
-  const bufferSize = ctx.sampleRate * duration;
-  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * freq;
-  return buffer;
-}
-
 function stopAmbient() {
   if (currentAmbient) {
-    try {
-      ambientGain.gain.exponentialRampToValueAtTime(0.001, getAudioCtx().currentTime + 1.5);
-      setTimeout(() => { try { currentAmbient.stop(); } catch(e){} currentAmbient = null; }, 1600);
-    } catch(e) { currentAmbient = null; }
+    try { ambientGain.gain.exponentialRampToValueAtTime(0.001, getAudioCtx().currentTime + 1.5); setTimeout(() => { try { currentAmbient.stop(); } catch(e){} currentAmbient = null; }, 1600); }
+    catch(e) { currentAmbient = null; }
   }
 }
-
-function playAmbient(type) {
-  // إلغاء الصوت المحيط بالكامل (لا تفعل شيئاً)
-  return;
-} 
+function playAmbient(type) { return; }
 function playSoundEffect(type) {
   if (isMuted) return;
   try {
@@ -1171,7 +1194,6 @@ function playSoundEffect(type) {
     gain.connect(ctx.destination);
     gain.gain.setValueAtTime(0.15, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-
     if (type === 'gate' || type === 'gate1') {
       const osc = ctx.createOscillator(); osc.type = 'sine';
       osc.frequency.setValueAtTime(330, ctx.currentTime);
@@ -1183,24 +1205,18 @@ function playSoundEffect(type) {
       osc.frequency.exponentialRampToValueAtTime(550, ctx.currentTime + 0.2);
       osc.connect(gain); osc.start(); osc.stop(ctx.currentTime + 0.35);
     } else if (type === 'mirror') {
-      // Crystal-like ping
-      const osc = ctx.createOscillator(); osc.type = 'sine';
-      osc.frequency.value = 1200;
+      const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = 1200;
       const g2 = ctx.createGain(); g2.gain.setValueAtTime(0.1, ctx.currentTime);
       g2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
-      osc.connect(g2); g2.connect(ctx.destination);
-      osc.start(); osc.stop(ctx.currentTime + 0.6);
+      osc.connect(g2); g2.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.6);
     } else if (type === 'modalOpen') {
-      const osc = ctx.createOscillator(); osc.type = 'sine';
-      osc.frequency.value = 523.25;
+      const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = 523.25;
       osc.connect(gain); osc.start(); osc.stop(ctx.currentTime + 0.2);
     } else if (type === 'modalClose') {
-      const osc = ctx.createOscillator(); osc.type = 'sine';
-      osc.frequency.value = 392;
+      const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = 392;
       osc.connect(gain); osc.start(); osc.stop(ctx.currentTime + 0.15);
     } else if (type === 'place') {
-      const osc = ctx.createOscillator(); osc.type = 'sine';
-      osc.frequency.value = 523.25;
+      const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = 523.25;
       osc.connect(gain); osc.start(); osc.stop(ctx.currentTime + 0.15);
     } else if (type === 'complete') {
       [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
@@ -1226,40 +1242,29 @@ function playSoundEffect(type) {
         o.start(ctx.currentTime + i * 0.08); o.stop(ctx.currentTime + i * 0.08 + 0.25);
       });
     } else if (type === 'error') {
-      const osc = ctx.createOscillator(); osc.type = 'sawtooth';
-      osc.frequency.value = 160;
+      const osc = ctx.createOscillator(); osc.type = 'sawtooth'; osc.frequency.value = 160;
       gain.gain.setValueAtTime(0.08, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
       osc.connect(gain); osc.start(); osc.stop(ctx.currentTime + 0.3);
     } else if (type === 'note') {
-      const osc = ctx.createOscillator(); osc.type = 'sine';
-      osc.frequency.value = 740;
+      const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = 740;
       gain.gain.setValueAtTime(0.06, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
       osc.connect(gain); osc.start(); osc.stop(ctx.currentTime + 0.2);
     }
   } catch(e) {}
 }
-
 function toggleMute() {
   isMuted = !isMuted;
-  const btn = document.getElementById('mute-btn');
+  document.getElementById('mute-btn').textContent = isMuted ? '🔇' : '🔊';
   const indicator = document.getElementById('ambient-indicator');
-  if (isMuted) {
-    btn.textContent = '🔇';
-    if (ambientGain) ambientGain.gain.exponentialRampToValueAtTime(0.001, getAudioCtx().currentTime + 0.5);
-    indicator.classList.remove('visible');
-    // Pause bars animation
-    document.querySelectorAll('.sound-bar').forEach(b => b.style.animationPlayState = 'paused');
-  } else {
-    btn.textContent = '🔊';
-    if (ambientGain) ambientGain.gain.exponentialRampToValueAtTime(0.12, getAudioCtx().currentTime + 0.5);
-    indicator.classList.add('visible');
-    document.querySelectorAll('.sound-bar').forEach(b => b.style.animationPlayState = 'running');
-  }
+  if (isMuted) { indicator.classList.remove('visible'); document.querySelectorAll('.sound-bar').forEach(b => b.style.animationPlayState = 'paused'); }
+  else { indicator.classList.add('visible'); document.querySelectorAll('.sound-bar').forEach(b => b.style.animationPlayState = 'running'); }
 }
 
-// ===== ENTER SITE =====
+// ============================================================
+// ENTER SITE
+// ============================================================
 function enterSite() {
   const tunnel = document.getElementById('tunnel-screen');
   const site = document.getElementById('main-site');
@@ -1274,7 +1279,7 @@ function enterSite() {
       initScrollObserver();
       loadSavedNotes();
       loadEditedTexts();
-      playAmbient('tunnel');
+      loadCustomChapters(); // ✅ تحميل الفصول المخصصة
     }, 100);
   }, 1200);
 }
@@ -1284,37 +1289,81 @@ function scrollToSection(id) {
   if (el) { const top = el.getBoundingClientRect().top + window.scrollY - 70; window.scrollTo({top, behavior:'smooth'}); }
 }
 
-// ===== MODAL =====
+// ============================================================
+// ✅ MODAL — الإصلاح الجوهري لمشكلة التداخل
+// ============================================================
 function openModal(key) {
+  // ── 1. حدد المفتاح الحالي وخزّنه في المتغير العالمي
+  currentModalKey = key;
+  const modalBox = document.getElementById('modal-box');
+  modalBox.setAttribute('data-modal-key', key);
+
+  // ── 2. احصل على المحتوى (المحفوظ أو الافتراضي)
   const content = modalContent[key];
-  if (!content) return;
-  // Check if edited version exists
   const savedTitle = localStorage.getItem('modal_title_' + key);
-  const savedBody = localStorage.getItem('modal_body_' + key);
-  document.getElementById('modal-title').innerHTML = savedTitle || content.title;
-  document.getElementById('modal-body').innerHTML = savedBody || content.body;
+  const savedBody  = localStorage.getItem('modal_body_'  + key);
+
+  const titleEl = document.getElementById('modal-title');
+  const bodyEl  = document.getElementById('modal-body');
+
+  // ── 3. ضع المحتوى الصحيح لهذا الفصل تحديداً
+  titleEl.innerHTML = savedTitle || (content ? content.title : 'فصل جديد');
+  bodyEl.innerHTML  = savedBody  || (content ? content.body  : '<p>لم يُكتب المحتوى بعد. انقر للتحرير في وضع التحرير.</p>');
+
+  // ── 4. ✅ أزل أي أحداث blur قديمة من دورات فتح سابقة
+  //    (نستبدل العنصر بنسخة جديدة لضمان عدم وجود مستمعين قديمين)
+  const newTitleEl = titleEl.cloneNode(true);
+  const newBodyEl  = bodyEl.cloneNode(true);
+  titleEl.parentNode.replaceChild(newTitleEl, titleEl);
+  bodyEl.parentNode.replaceChild(newBodyEl, bodyEl);
+
+  // ── 5. في وضع التحرير: اجعل العناصر قابلة للتحرير مع ربط المفتاح الصحيح
+  if (isEditMode) {
+    const capturedKey = key; // التقاط المفتاح في closure
+
+    newTitleEl.contentEditable = 'true';
+    newTitleEl.addEventListener('blur', function() {
+      localStorage.setItem('modal_title_' + capturedKey, this.innerHTML);
+      showEditorStatus('تم حفظ عنوان "' + capturedKey + '" ✓');
+      playSoundEffect('save');
+    });
+
+    newBodyEl.contentEditable = 'true';
+    newBodyEl.addEventListener('blur', function() {
+      localStorage.setItem('modal_body_' + capturedKey, this.innerHTML);
+      showEditorStatus('تم حفظ محتوى "' + capturedKey + '" ✓');
+      playSoundEffect('save');
+    });
+  }
+
+  // ── 6. الملاحظات
   const saved = localStorage.getItem('note_' + key);
-  document.getElementById('modal-notes').value = saved || '';
-  document.getElementById('modal-notes').onchange = () => {
-    localStorage.setItem('note_' + key, document.getElementById('modal-notes').value);
+  const notesEl = document.getElementById('modal-notes');
+  notesEl.value = saved || '';
+  notesEl.onchange = function() {
+    localStorage.setItem('note_' + key, this.value);
     playSoundEffect('note');
   };
+
+  // ── 7. افتح النافذة
   document.getElementById('modal').classList.add('active');
   document.body.style.overflow = 'hidden';
   playSoundEffect('modalOpen');
-
-  // Make modal title/body editable in edit mode
-  if (isEditMode) {
-    const titleEl = document.getElementById('modal-title');
-    const bodyEl = document.getElementById('modal-body');
-    titleEl.contentEditable = 'true';
-    titleEl.addEventListener('blur', () => { localStorage.setItem('modal_title_' + key, titleEl.innerHTML); showEditorStatus('تم الحفظ ✓'); });
-    bodyEl.contentEditable = 'true';
-    bodyEl.addEventListener('blur', () => { localStorage.setItem('modal_body_' + key, bodyEl.innerHTML); showEditorStatus('تم الحفظ ✓'); });
-  }
 }
 
 function closeModal() {
+  // ✅ عند الإغلاق: احفظ أي تعديلات معلقة تلقائياً
+  if (isEditMode && currentModalKey) {
+    const titleEl = document.getElementById('modal-title');
+    const bodyEl  = document.getElementById('modal-body');
+    if (titleEl && titleEl.contentEditable === 'true') {
+      localStorage.setItem('modal_title_' + currentModalKey, titleEl.innerHTML);
+    }
+    if (bodyEl && bodyEl.contentEditable === 'true') {
+      localStorage.setItem('modal_body_' + currentModalKey, bodyEl.innerHTML);
+    }
+  }
+  currentModalKey = '';
   document.getElementById('modal').classList.remove('active');
   document.body.style.overflow = '';
   playSoundEffect('modalClose');
@@ -1334,7 +1383,9 @@ function showMirrorMsg(idx) {
   document.body.appendChild(overlay);
 }
 
-// ===== SHARD PUZZLE =====
+// ============================================================
+// SHARD PUZZLE
+// ============================================================
 function selectShard(el) {
   if (el.classList.contains('selected')) { el.classList.remove('selected'); selectedShard = null; return; }
   document.querySelectorAll('.shard.selected').forEach(s => s.classList.remove('selected'));
@@ -1344,18 +1395,16 @@ function selectShard(el) {
     showHint("هذه الشظية المضيئة تحمل الرقم ١ — لكن لا يمكنك وضعها مكان الأولى. ستجد مكانها في النهاية.");
   }
 }
-
 function placeSelectedShard(slot) {
   if (!selectedShard) { showHint("اختر شظية أولاً، ثم انقر على الموقع المناسب."); return; }
   const isLastSlot = slot.id === 'last-slot';
-  const isSpecial = selectedShard.dataset.num === 'special';
+  const isSpecial  = selectedShard.dataset.num === 'special';
   if (isSpecial && !isLastSlot) { showHint("الشظية المضيئة لا يمكن وضعها هنا. ابحث عن موضعها الصحيح..."); playSoundEffect('error'); return; }
   if (!isSpecial && isLastSlot && !specialRevealed) { showHint("هذا الموضع محجوز... لشيء ما لم تجده بعد."); playSoundEffect('error'); return; }
   if (slot.classList.contains('has-shard')) { showHint("هذا الموضع ممتلئ."); playSoundEffect('error'); return; }
-  const num = selectedShard.dataset.num;
   const numMap = {'2':'٢','3':'٣','4':'٤','5':'٥','6':'٦','7':'٧','8':'٨','9':'٩','10':'١٠','11':'١١','12':'١٢','13':'١٣','14':'١٤','15':'١٥','special':'١✦'};
   slot.classList.add('has-shard');
-  slot.textContent = numMap[num] || num;
+  slot.textContent = numMap[selectedShard.dataset.num] || selectedShard.dataset.num;
   if (isSpecial) { slot.classList.add('glowing'); slot.style.color = 'var(--gold-light)'; }
   else slot.style.color = 'rgba(200,210,255,0.7)';
   selectedShard.remove();
@@ -1371,7 +1420,6 @@ function placeSelectedShard(slot) {
   else if (placedShards >= totalSlots - 1 && specialRevealed) showHint("الآن ضع الشظية المضيئة في الموضع الأخير...");
   else showHint(`تقدّم جيد. تحتاج ${totalSlots - placedShards} شظايا أخرى.`);
 }
-
 function completeMirror() {
   playSoundEffect('complete');
   mirrorComplete = true;
@@ -1391,7 +1439,6 @@ function completeMirror() {
     }, 600);
   }, 800);
 }
-
 function showHint(text) {
   const hint = document.getElementById('puzzle-hint');
   hint.textContent = text;
@@ -1400,19 +1447,25 @@ function showHint(text) {
   hint._timeout = setTimeout(() => { hint.style.opacity = '0.5'; }, 4000);
 }
 
+// ============================================================
+// NOTES
+// ============================================================
 function saveNote(key) {
-  const el = document.getElementById(key + '-notes') || document.getElementById('start-notes');
+  const id = key === 'start' ? 'start-notes' : (key + '-notes');
+  const el = document.getElementById(id);
   if (el) { localStorage.setItem('note_' + key, el.value); playSoundEffect('note'); }
 }
-
 function loadSavedNotes() {
   ['part3', 'start'].forEach(k => {
-    const el = document.getElementById(k + '-notes');
+    const id = k === 'start' ? 'start-notes' : (k + '-notes');
+    const el = document.getElementById(id);
     if (el) el.value = localStorage.getItem('note_' + k) || '';
   });
 }
 
-// ===== SCROLL & ANIMATION =====
+// ============================================================
+// SCROLL & ANIMATION
+// ============================================================
 let lastSection = '';
 function initScrollObserver() {
   window.addEventListener('scroll', () => {
@@ -1427,15 +1480,6 @@ function initScrollObserver() {
         if (rect.top <= 200 && rect.bottom > 200) {
           dots.forEach(d => d.classList.remove('active'));
           if (dots[i]) dots[i].classList.add('active');
-          // Ambient switching
-          if (id !== lastSection) {
-            lastSection = id;
-            if (id === 'hero' || id === 'intro-section') playAmbient('tunnel');
-            else if (id === 'part1') playAmbient('part1');
-            else if (id === 'part2') playAmbient('part2');
-            else if (id === 'part3') playAmbient('part3');
-            else if (id === 'appendix-section') playAmbient('tunnel');
-          }
         }
       }
     });
@@ -1445,7 +1489,6 @@ function initScrollObserver() {
   }, {threshold:0.1});
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 }
-
 function initParticles() {
   const container = document.getElementById('particles-container');
   for (let i = 0; i < 12; i++) {
@@ -1456,7 +1499,9 @@ function initParticles() {
   }
 }
 
-// ===== EDITOR MODE =====
+// ============================================================
+// ✅ EDITOR MODE — مُصلح للعمل بشكل صحيح مع النوافذ
+// ============================================================
 const EDITOR_PASSWORD = 'AntAhmed6388@';
 
 function openEditorPassword() {
@@ -1466,16 +1511,13 @@ function openEditorPassword() {
   document.getElementById('editor-error').textContent = '';
   setTimeout(() => document.getElementById('editor-password-input').focus(), 100);
 }
-
 function closeEditorPassword() {
   document.getElementById('editor-password-overlay').classList.remove('active');
 }
-
 function handlePasswordKey(e) {
   if (e.key === 'Enter') confirmEditorPassword();
   if (e.key === 'Escape') closeEditorPassword();
 }
-
 function confirmEditorPassword() {
   const pw = document.getElementById('editor-password-input').value;
   if (pw === EDITOR_PASSWORD) {
@@ -1488,7 +1530,6 @@ function confirmEditorPassword() {
     setTimeout(() => { document.getElementById('editor-error').textContent = ''; }, 3000);
   }
 }
-
 function enterEditMode() {
   isEditMode = true;
   document.body.classList.add('edit-mode');
@@ -1497,48 +1538,48 @@ function enterEditMode() {
   document.getElementById('editor-toolbar').classList.add('visible');
   playSoundEffect('unlock');
 
-  // Make all [data-editable] elements contenteditable
+  // تفعيل التحرير على العناصر الثابتة في الصفحة
   document.querySelectorAll('[data-editable]').forEach(el => {
     el.contentEditable = 'true';
-    el.addEventListener('blur', onEditableBlur);
-    el.addEventListener('input', onEditableInput);
+    // نزيل المستمع القديم ونضيف جديداً لتجنب التكرار
+    el.removeEventListener('blur', _onEditableBlur);
+    el.addEventListener('blur', _onEditableBlur);
+    el.removeEventListener('input', _onEditableInput);
+    el.addEventListener('input', _onEditableInput);
   });
   showEditorStatus('وضع التحرير مفعّل ✏️');
 }
-
 function exitEditMode() {
   isEditMode = false;
   document.body.classList.remove('edit-mode');
   document.getElementById('editor-btn').classList.remove('active');
   document.getElementById('editor-btn').textContent = '🔒';
   document.getElementById('editor-toolbar').classList.remove('visible');
-
   document.querySelectorAll('[data-editable]').forEach(el => {
     el.contentEditable = 'false';
-    el.removeEventListener('blur', onEditableBlur);
-    el.removeEventListener('input', onEditableInput);
+    el.removeEventListener('blur', _onEditableBlur);
+    el.removeEventListener('input', _onEditableInput);
   });
+  // ✅ إغلاق أي نافذة مفتوحة للتأكد من حفظ التعديلات
+  if (document.getElementById('modal').classList.contains('active')) {
+    closeModal();
+  }
   playSoundEffect('modalClose');
 }
 
-function onEditableBlur(e) {
-  const el = e.target;
-  const id = el.dataset.editId;
+// ✅ دوال مستمع موحدة (named functions) لإمكانية إزالتها
+function _onEditableBlur(e) {
+  const id = e.target.dataset.editId;
   if (id) {
-    localStorage.setItem('edit_' + id, el.innerHTML);
-    editedTexts[id] = el.innerHTML;
+    localStorage.setItem('edit_' + id, e.target.innerHTML);
+    editedTexts[id] = e.target.innerHTML;
     showEditorStatus('تم حفظ "' + id + '" ✓');
     playSoundEffect('save');
   }
 }
-
-function onEditableInput(e) {
-  const el = e.target;
-  const id = el.dataset.editId;
-  if (id) {
-    editedTexts[id] = el.innerHTML;
-    showEditorStatus('يكتب...');
-  }
+function _onEditableInput(e) {
+  const id = e.target.dataset.editId;
+  if (id) editedTexts[id] = e.target.innerHTML;
 }
 
 function saveAllEdits() {
@@ -1547,6 +1588,13 @@ function saveAllEdits() {
     localStorage.setItem('edit_' + id, el.innerHTML);
     editedTexts[id] = el.innerHTML;
   });
+  // ✅ أيضاً احفظ محتوى النافذة المفتوحة حالياً إن وُجدت
+  if (currentModalKey) {
+    const titleEl = document.getElementById('modal-title');
+    const bodyEl  = document.getElementById('modal-body');
+    if (titleEl) localStorage.setItem('modal_title_' + currentModalKey, titleEl.innerHTML);
+    if (bodyEl)  localStorage.setItem('modal_body_'  + currentModalKey, bodyEl.innerHTML);
+  }
   showEditorStatus('تم حفظ جميع التعديلات ✓ (' + Object.keys(editedTexts).length + ' عنصر)');
   playSoundEffect('unlock');
 }
@@ -1559,23 +1607,157 @@ function showEditorStatus(msg) {
 }
 
 function loadEditedTexts() {
-  // Load all saved edits from localStorage on page load
   const prefix = 'edit_';
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (key && key.startsWith(prefix)) {
-      const id = key.substring(prefix.length);
+      const id  = key.substring(prefix.length);
       const val = localStorage.getItem(key);
-      const el = document.querySelector('[data-edit-id="' + id + '"]');
+      const el  = document.querySelector('[data-edit-id="' + id + '"]');
       if (el && val) { el.innerHTML = val; editedTexts[id] = val; }
     }
   }
 }
 
-// ===== PRINT BOOK =====
+// ============================================================
+// ✅ إضافة فصل جديد ديناميكياً
+// ============================================================
+function openAddChapterDialog() {
+  document.getElementById('add-chapter-overlay').classList.add('active');
+  document.getElementById('new-chapter-title').value = '';
+  document.getElementById('new-chapter-desc').value = '';
+  document.getElementById('new-chapter-body').value = '';
+  document.getElementById('new-chapter-icon').value = '📄';
+  document.getElementById('add-chapter-error').textContent = '';
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('new-chapter-title').focus(), 100);
+  playSoundEffect('gate');
+}
+function closeAddChapterDialog() {
+  document.getElementById('add-chapter-overlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function confirmAddChapter() {
+  const title   = document.getElementById('new-chapter-title').value.trim();
+  const desc    = document.getElementById('new-chapter-desc').value.trim();
+  const section = document.getElementById('new-chapter-section').value;
+  const icon    = document.getElementById('new-chapter-icon').value.trim() || '📄';
+  const body    = document.getElementById('new-chapter-body').value.trim();
+  const errEl   = document.getElementById('add-chapter-error');
+
+  if (!title) { errEl.textContent = '× يرجى إدخال عنوان الفصل.'; return; }
+  errEl.textContent = '';
+
+  // ── توليد مفتاح فريد
+  const key = 'custom_' + Date.now();
+
+  // ── حفظ المحتوى في modalContent و localStorage
+  const defaultBody = body
+    ? `<p>${body.replace(/\n/g, '</p><p>')}</p>`
+    : `<p style="color:var(--text-dim);font-style:italic;">هذا الفصل جديد. فعّل وضع التحرير وانقر على هذا النص لتعديله.</p>`;
+
+  modalContent[key] = { title: title, body: defaultBody };
+  localStorage.setItem('modal_title_' + key, title);
+  localStorage.setItem('modal_body_'  + key, defaultBody);
+
+  // ── حفظ بيانات البطاقة في قائمة الفصول المخصصة
+  const existingChapters = JSON.parse(localStorage.getItem('custom_chapters') || '[]');
+  existingChapters.push({ key, title, desc, section, icon, createdAt: Date.now() });
+  localStorage.setItem('custom_chapters', JSON.stringify(existingChapters));
+
+  // ── إنشاء البطاقة في الصفحة
+  renderCustomChapterCard({ key, title, desc, section, icon });
+
+  closeAddChapterDialog();
+  playSoundEffect('unlock');
+  showEditorStatus('تم إضافة الفصل: ' + title + ' ✓');
+
+  // ── التمرير إلى القسم المضاف
+  setTimeout(() => {
+    const gridId = section + '-gates-grid';
+    const grid = document.getElementById(gridId);
+    if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300);
+}
+
+function renderCustomChapterCard(chapterData) {
+  const { key, title, desc, section, icon } = chapterData;
+  const gridId = section + '-gates-grid';
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+
+  const card = document.createElement('div');
+  card.className = 'gate-card custom-chapter';
+  card.setAttribute('data-chapter-key', key);
+  card.innerHTML = `
+    <button class="delete-chapter-btn" onclick="deleteCustomChapter('${key}', event)" title="حذف هذا الفصل">×</button>
+    <span class="gate-icon">${icon}</span>
+    <span class="gate-number">فصل مخصص</span>
+    <div class="gate-name">${title}</div>
+    <div class="gate-desc">${desc || 'انقر للقراءة والتحرير'}</div>
+  `;
+  card.addEventListener('click', function(e) {
+    if (e.target.classList.contains('delete-chapter-btn')) return;
+    openModal(key);
+    playSoundEffect('gate');
+  });
+
+  // ── إضافة تأثير ظهور
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(20px)';
+  grid.appendChild(card);
+  requestAnimationFrame(() => {
+    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    card.style.opacity = '1';
+    card.style.transform = 'translateY(0)';
+  });
+}
+
+function deleteCustomChapter(key, event) {
+  event.stopPropagation();
+  if (!confirm('هل تريد حذف هذا الفصل نهائياً؟')) return;
+
+  // إزالة من localStorage
+  const chapters = JSON.parse(localStorage.getItem('custom_chapters') || '[]');
+  const updated = chapters.filter(c => c.key !== key);
+  localStorage.setItem('custom_chapters', JSON.stringify(updated));
+  localStorage.removeItem('modal_title_' + key);
+  localStorage.removeItem('modal_body_'  + key);
+  localStorage.removeItem('note_' + key);
+  delete modalContent[key];
+
+  // إزالة البطاقة من الصفحة
+  const card = document.querySelector('[data-chapter-key="' + key + '"]');
+  if (card) {
+    card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    card.style.opacity = '0';
+    card.style.transform = 'scale(0.9)';
+    setTimeout(() => card.remove(), 300);
+  }
+  playSoundEffect('modalClose');
+  showEditorStatus('تم حذف الفصل ✓');
+}
+
+function loadCustomChapters() {
+  const chapters = JSON.parse(localStorage.getItem('custom_chapters') || '[]');
+  chapters.forEach(chapterData => {
+    // ── استعادة المحتوى من localStorage إلى modalContent
+    const savedTitle = localStorage.getItem('modal_title_' + chapterData.key);
+    const savedBody  = localStorage.getItem('modal_body_'  + chapterData.key);
+    modalContent[chapterData.key] = {
+      title: savedTitle || chapterData.title,
+      body:  savedBody  || '<p>محتوى الفصل...</p>'
+    };
+    renderCustomChapterCard(chapterData);
+  });
+}
+
+// ============================================================
+// PRINT
+// ============================================================
 function printBook() {
   playSoundEffect('gate');
-  // Build printable content
   const allContent = buildPrintContent();
   const printWin = window.open('', '_blank', 'width=900,height=700');
   if (!printWin) { alert('يرجى السماح بالنوافذ المنبثقة للطباعة'); return; }
@@ -1589,7 +1771,7 @@ function printBook() {
 @page { margin:2.5cm; size:A4; }
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:'Amiri',serif; color:#111; background:#fff; direction:rtl; font-size:12pt; line-height:1.9; }
-.cover { page-break-after:always; text-align:center; padding:4cm 2cm; min-height:25cm; display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid #c9a84c; margin:0; }
+.cover { page-break-after:always; text-align:center; padding:4cm 2cm; min-height:25cm; display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid #c9a84c; }
 .cover-title { font-size:36pt; font-weight:bold; color:#111; margin-bottom:0.5cm; line-height:1.4; }
 .cover-subtitle { font-size:16pt; color:#666; font-style:italic; margin-bottom:2cm; }
 .cover-divider { width:5cm; height:1px; background:#c9a84c; margin:1cm auto; }
@@ -1608,8 +1790,6 @@ p { margin-bottom:0.6cm; line-height:2; }
 .gate-item { margin-bottom:0.8cm; padding:0.5cm; border:1px solid #e0d4b4; page-break-inside:avoid; }
 .gate-name { font-size:13pt; font-weight:bold; color:#111; margin-bottom:0.2cm; }
 .gate-desc { font-size:10pt; color:#666; }
-.gate-num { font-family:'Cormorant Garamond',serif; font-size:8pt; letter-spacing:0.3em; color:#c9a84c; margin-bottom:0.2cm; }
-.page-num { position:running(footer); text-align:center; font-size:9pt; color:#999; }
 .footer-text { font-family:'Cormorant Garamond',serif; font-size:9pt; letter-spacing:0.2em; color:#ccc; text-align:center; margin-top:2cm; }
 </style>
 </head>
@@ -1628,431 +1808,113 @@ function getEditedText(id, fallback) {
 function buildPrintContent() {
   const parts = [];
 
-  // Cover page
+  // غلاف
   parts.push(`<div class="cover">
     <div style="font-size:4rem;margin-bottom:1cm;">🐜</div>
-    <div class="cover-title">${getEditedText('hero-title','تلميذ مبتدئ<br>في مدرسة النمل')}</div>
+    <div class="cover-title">${getEditedText('hero-title','تلميذ مبتدئ في مدرسة النمل')}</div>
     <div class="cover-subtitle">${getEditedText('hero-subtitle','دفتر ملاحظات لا يملكه كاتبه')}</div>
     <div class="cover-divider"></div>
-    <div class="cover-quote">${getEditedText('hero-quote','هذا النفق طويل، وفانوسي يخفت...<br>ألا تشاركني ضوءك؟')}</div>
+    <div class="cover-quote">${getEditedText('hero-quote','هذا النفق طويل، وفانوسي يخفت...')}</div>
     <div class="cover-en">STAND AS AN ANT, SAVOR THE HONEY</div>
   </div>`);
 
-  // Preface
+  // المقدمة
+  const introChapters = ['ch1','ch2','ch3','ch4','ch5'];
+  const customChapters = JSON.parse(localStorage.getItem('custom_chapters') || '[]');
+  const introCustom = customChapters.filter(c => c.section === 'intro');
+
   parts.push(`<div class="section">
     <div class="section-header">
-      <span class="section-label">${getEditedText('intro-label','الجزء التمهيدي · Prelude')}</span>
+      <span class="section-label">${getEditedText('intro-label','الجزء التمهيدي')}</span>
       <h2>${getEditedText('intro-title','دهليز التساؤلات')}</h2>
     </div>
-    <div class="highlight-box"><p>${getEditedText('intro-hamd','الحمد لله الذي أوجد الخلق من العدم...')}</p></div>
-    <p>${getEditedText('intro-text1','عزيزي القارئ، أكتب إليك اليوم لا كمعلم يدّعي الحكمة...')}</p>
+    <div class="highlight-box"><p>${getEditedText('intro-hamd','الحمد لله...')}</p></div>
+    <p>${getEditedText('intro-text1','عزيزي القارئ...')}</p>
     <div class="quran">${getEditedText('quran-verse1','﴿ وَلَقَدْ عَلِمْتُمُ النَّشْأَةَ الْأُولَىٰ فَلَوْلَا تَذَكَّرُونَ ﴾')}</div>
-    <h3 style="margin-bottom:0.5cm;">فصول المقدمة</h3>
-    ${['ch1','ch2','ch3','ch4','ch5'].map(key => {
+    ${[...introChapters, ...introCustom.map(c => c.key)].map(key => {
       const content = modalContent[key];
-      const savedTitle = localStorage.getItem('modal_title_' + key);
-      const savedBody = localStorage.getItem('modal_body_' + key);
-      const title = savedTitle || content.title;
-      const body = savedBody || content.body;
-      const noteKey = 'note_' + key;
-      const note = localStorage.getItem(noteKey);
+      if (!content) return '';
+      const sTitle = localStorage.getItem('modal_title_' + key);
+      const sBody  = localStorage.getItem('modal_body_'  + key);
+      const note   = localStorage.getItem('note_' + key);
       return `<div class="gate-item">
-        <div class="gate-name">${title}</div>
-        <div>${body}</div>
+        <div class="gate-name">${sTitle || content.title}</div>
+        <div>${sBody || content.body}</div>
         ${note ? '<div class="highlight-box" style="margin-top:0.4cm;"><p style="font-size:10pt;color:#666;font-style:italic;">ملاحظاتك: ' + note + '</p></div>' : ''}
       </div>`;
     }).join('')}
   </div>`);
 
-  // Part 1
+  // الجزء الأول
+  const part1Chapters = ['g1_1','g1_2','g1_3','g1_4','g1_5','g1_6','g1_7'];
+  const part1Custom   = customChapters.filter(c => c.section === 'part1');
   parts.push(`<div class="section">
     <div class="section-header">
-      <span class="section-label">${getEditedText('p1-num','الجزء الأول · Part One')}</span>
+      <span class="section-label">${getEditedText('p1-num','الجزء الأول')}</span>
       <h2>${getEditedText('p1-title','النفق الأول — بوابات التأسيس الداخلي')}</h2>
-      <p style="color:#999;font-style:italic;">${getEditedText('p1-sub','Seven Gates of Inner Foundation')}</p>
     </div>
-    ${['g1_1','g1_2','g1_3','g1_4','g1_5','g1_6','g1_7'].map(key => {
-      const content = modalContent[key];
-      const savedTitle = localStorage.getItem('modal_title_' + key);
-      const savedBody = localStorage.getItem('modal_body_' + key);
-      const title = savedTitle || content.title;
-      const body = savedBody || content.body;
-      const note = localStorage.getItem('note_' + key);
+    ${[...part1Chapters, ...part1Custom.map(c => c.key)].map(key => {
+      const content = modalContent[key]; if (!content) return '';
+      const sTitle = localStorage.getItem('modal_title_' + key);
+      const sBody  = localStorage.getItem('modal_body_'  + key);
+      const note   = localStorage.getItem('note_' + key);
       return `<div class="gate-item">
-        <div class="gate-name">${title}</div>
-        <div>${body}</div>
-        ${note ? '<div class="highlight-box" style="margin-top:0.4cm;"><p style="font-size:10pt;color:#666;font-style:italic;">ملاحظاتك: ' + note + '</p></div>' : ''}
+        <div class="gate-name">${sTitle || content.title}</div>
+        <div>${sBody || content.body}</div>
+        ${note ? '<div class="highlight-box"><p style="font-size:10pt;color:#666;font-style:italic;">ملاحظاتك: ' + note + '</p></div>' : ''}
       </div>`;
     }).join('')}
-    <div class="highlight-box" style="text-align:center;margin-top:1cm;">
-      <p style="font-style:italic;">${getEditedText('rest-quote1','"توقّف هنا قليلاً. استرح من القراءة. النملة أيضاً تستريح... لكنها تعرف لماذا تعود."')}</p>
-    </div>
   </div>`);
 
-  // Part 2
+  // الجزء الثاني
+  const part2Chapters = ['g2_1','g2_2','g2_3','g2_4','g2_5','g2_6','g2_7'];
+  const part2Custom   = customChapters.filter(c => c.section === 'part2');
   parts.push(`<div class="section">
     <div class="section-header">
-      <span class="section-label" style="color:#64b48c;">${getEditedText('p2-num','الجزء الثاني · Part Two')}</span>
+      <span class="section-label">${getEditedText('p2-num','الجزء الثاني')}</span>
       <h2>${getEditedText('p2-title','النفق الثاني — بوابات المخلوقات والمرايا')}</h2>
-      <p style="color:#999;font-style:italic;">${getEditedText('p2-sub','The Mirrors of Creation')}</p>
     </div>
-    ${['g2_1','g2_2','g2_3','g2_4','g2_5','g2_6','g2_7'].map(key => {
-      const content = modalContent[key];
-      const savedTitle = localStorage.getItem('modal_title_' + key);
-      const savedBody = localStorage.getItem('modal_body_' + key);
-      const title = savedTitle || content.title;
-      const body = savedBody || content.body;
-      const note = localStorage.getItem('note_' + key);
+    ${[...part2Chapters, ...part2Custom.map(c => c.key)].map(key => {
+      const content = modalContent[key]; if (!content) return '';
+      const sTitle = localStorage.getItem('modal_title_' + key);
+      const sBody  = localStorage.getItem('modal_body_'  + key);
+      const note   = localStorage.getItem('note_' + key);
       return `<div class="gate-item">
-        <div class="gate-name">${title}</div>
-        <div>${body}</div>
-        ${note ? '<div class="highlight-box" style="margin-top:0.4cm;"><p style="font-size:10pt;color:#666;font-style:italic;">ملاحظاتك: ' + note + '</p></div>' : ''}
+        <div class="gate-name">${sTitle || content.title}</div>
+        <div>${sBody || content.body}</div>
+        ${note ? '<div class="highlight-box"><p style="font-size:10pt;color:#666;font-style:italic;">ملاحظاتك: ' + note + '</p></div>' : ''}
       </div>`;
     }).join('')}
   </div>`);
 
-  // Part 3
+  // الخاتمة
   parts.push(`<div class="section">
     <div class="section-header">
-      <span class="section-label" style="color:#b8bcc8;">${getEditedText('p3-num','الجزء الثالث · Part Three')}</span>
-      <h2>${getEditedText('p3-title','النفق الثالث — المرآة واكتمال الذات')}</h2>
-      <p style="color:#999;font-style:italic;">${getEditedText('p3-sub','The Mirror and the Infinite')}</p>
-    </div>
-    <h3>${getEditedText('mirror-title','صالة المرايا — المواجهة الأولى')}</h3>
-    <p>${getEditedText('mirror-intro','لقد وصلت. انظر حولك. ماذا ترى؟')}</p>
-    <div class="highlight-box" style="text-align:center;">
-      <p style="font-style:italic;">${getEditedText('infinity-msg','سر اللانهاية: أنت والكون في رقصة أبدية')}</p>
-    </div>
-    <p>${getEditedText('infinity-text','الشظية الأولى لم تُستبدَل — لأنها الأصل.')}</p>
-    ${localStorage.getItem('note_part3') ? '<div class="highlight-box"><p style="font-style:italic;">تأملاتك: ' + localStorage.getItem('note_part3') + '</p></div>' : ''}
-  </div>`);
-
-  // Appendix
-  parts.push(`<div class="section">
-    <div class="section-header">
-      <span class="section-label">${getEditedText('app-label','الخاتمة والملحق · Epilogue')}</span>
+      <span class="section-label">${getEditedText('app-label','الخاتمة')}</span>
       <h2>${getEditedText('app-title','الخروج من النفق إلى العالم')}</h2>
     </div>
-    <p>${getEditedText('app-text1','حين تخرج من النفق، لن تكون الشخص ذاته الذي دخله.')}</p>
+    <p>${getEditedText('app-text1','حين تخرج من النفق...')}</p>
     <div class="gold-line"></div>
-    <p>${getEditedText('app-text2','النملة لا تعرف أنها تُعلِّم.')}</p>
-    <p>${getEditedText('app-text3','هذا الكتاب لم ينتهِ.')}</p>
-    <h3 style="margin:0.8cm 0 0.4cm;">${getEditedText('guide-title','دليل التطبيق العملي السريع')}</h3>
-    <div class="gate-item"><div class="gate-name">${getEditedText('guide-1-name','لاحظ')}</div><p>${getEditedText('guide-1-desc','اجلس يوماً واحداً دون رأي.')}</p></div>
-    <div class="gate-item"><div class="gate-name">${getEditedText('guide-2-name','اسأل')}</div><p>${getEditedText('guide-2-desc','لكل مشكلة تواجهها...')}</p></div>
-    <div class="gate-item"><div class="gate-name">${getEditedText('guide-3-name','تعاون')}</div><p>${getEditedText('guide-3-desc','مدرسة النمل تُعلّم...')}</p></div>
-    <div class="gate-item"><div class="gate-name">${getEditedText('guide-4-name','أعد')}</div><p>${getEditedText('guide-4-desc','كل فصل، ارجع إلى بوابة واحدة...')}</p></div>
+    <p>${getEditedText('app-text2','النملة لا تعرف أنها تُعلِّم...')}</p>
+    <p>${getEditedText('app-text3','هذا الكتاب لم ينتهِ...')}</p>
     ${localStorage.getItem('note_start') ? '<div class="highlight-box" style="margin-top:1cm;"><p style="font-style:italic;">بدايتك: ' + localStorage.getItem('note_start') + '</p></div>' : ''}
-    <div class="footer-text" style="margin-top:2cm;">${getEditedText('footer-quote','النملة تنتظر. النفق مفتوح. والفانوس في يدك.')}</div>
+    <div class="footer-text">${getEditedText('footer-quote','النملة تنتظر. النفق مفتوح. والفانوس في يدك.')}</div>
     <div class="footer-text">STAND AS AN ANT, SAVOR THE HONEY</div>
   </div>`);
 
   return parts.join('');
 }
 
-// ===== KEYBOARD =====
+// ============================================================
+// KEYBOARD
+// ============================================================
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeModal(); closeEditorPassword(); }
+  if (e.key === 'Escape') {
+    closeModal();
+    closeEditorPassword();
+    closeAddChapterDialog();
+  }
 });
-  // ===== حل مشكلة تداخل النوافذ =====
-let currentModalKey = null; // المفتاح الحالي للنافذة المفتوحة
-
-// تعديل دالة openModal لحل المشكلة
-const originalOpenModal = openModal;
-openModal = function(key) {
-  originalOpenModal(key); // نستدعي الدالة الأصلية أولاً
-  currentModalKey = key;
-  
-  const titleEl = document.getElementById('modal-title');
-  const bodyEl = document.getElementById('modal-body');
-  
-  // تخزين المفتاح في data attribute
-  titleEl.dataset.modalKey = key;
-  bodyEl.dataset.modalKey = key;
-  
-  if (isEditMode) {
-    enableModalEditing();
-  }
-};
-
-// تفعيل التحرير داخل النافذة
-function enableModalEditing() {
-  const titleEl = document.getElementById('modal-title');
-  const bodyEl = document.getElementById('modal-body');
-  
-  // إزالة أي مستمعات سابقة (لتجنب التكرار)
-  titleEl.removeEventListener('blur', saveModalContent);
-  bodyEl.removeEventListener('blur', saveModalContent);
-  
-  titleEl.contentEditable = 'true';
-  bodyEl.contentEditable = 'true';
-  
-  titleEl.addEventListener('blur', saveModalContent);
-  bodyEl.addEventListener('blur', saveModalContent);
-}
-
-// دالة حفظ محتوى النافذة باستخدام المفتاح المخزن
-function saveModalContent(e) {
-  const el = e.target;
-  const key = el.dataset.modalKey;
-  if (!key) return;
-  
-  if (el.id === 'modal-title') {
-    localStorage.setItem('modal_title_' + key, el.innerHTML);
-  } else if (el.id === 'modal-body') {
-    localStorage.setItem('modal_body_' + key, el.innerHTML);
-  }
-  playSoundEffect('save');
-  showEditorStatus('تم حفظ محتوى النافذة ✓');
-}
-
-// تعديل دالة closeModal لتعطيل التحرير
-const originalCloseModal = closeModal;
-closeModal = function() {
-  const titleEl = document.getElementById('modal-title');
-  const bodyEl = document.getElementById('modal-body');
-  
-  titleEl.contentEditable = 'false';
-  bodyEl.contentEditable = 'false';
-  titleEl.removeEventListener('blur', saveModalContent);
-  bodyEl.removeEventListener('blur', saveModalContent);
-  
-  originalCloseModal();
-};
-
-// تعديل دوال الدخول/الخروج من وضع التحرير لتعامل مع النافذة الحالية
-const originalEnterEditMode = enterEditMode;
-enterEditMode = function() {
-  originalEnterEditMode();
-  if (document.getElementById('modal').classList.contains('active')) {
-    enableModalEditing();
-  }
-};
-
-const originalExitEditMode = exitEditMode;
-exitEditMode = function() {
-  originalExitEditMode();
-  if (document.getElementById('modal').classList.contains('active')) {
-    document.getElementById('modal-title').contentEditable = 'false';
-    document.getElementById('modal-body').contentEditable = 'false';
-  }
-};
-
-// ===== إضافة أقسام جديدة ديناميكيًا =====
-// مصفوفة لتخزين الفصول المخصصة
-let customChapters = [];
-
-// تحميل الفصول المخصصة من localStorage
-function loadCustomChapters() {
-  const saved = localStorage.getItem('customChapters');
-  if (saved) {
-    try {
-      customChapters = JSON.parse(saved);
-    } catch(e) {
-      customChapters = [];
-    }
-  }
-  // إعادة إنشاء البطاقات المخزنة
-  customChapters.forEach(chapter => {
-    createChapterCard(chapter.key, chapter.name, chapter.icon || '📘');
-  });
-}
-
-// حفظ الفصول المخصصة
-function saveCustomChapters() {
-  localStorage.setItem('customChapters', JSON.stringify(customChapters));
-}
-
-// إنشاء بطاقة جديدة
-function createChapterCard(key, name, icon = '📘') {
-  const gatesGrid = document.querySelector('#part1 .gates-grid');
-  if (!gatesGrid) return;
-  
-  const card = document.createElement('div');
-  card.className = 'gate-card';
-  card.setAttribute('onclick', `openModal('${key}');playSoundEffect('gate')`);
-  
-  card.innerHTML = `
-    <span class="gate-icon">${icon}</span>
-    <span class="gate-number" data-editable data-edit-id="${key}-num">${name}</span>
-    <div class="gate-name" data-editable data-edit-id="${key}-name">${name}</div>
-    <div class="gate-desc" data-editable data-edit-id="${key}-desc">قسم مخصص — أضف وصفك هنا</div>
-  `;
-  
-  gatesGrid.appendChild(card);
-  
-  // إضافة المحتوى الافتراضي للنافذة
-  modalContent[key] = {
-    title: name,
-    body: `<p>هذا قسم جديد. يمكنك تحرير محتواه الآن.</p>`
-  };
-}
-
-// إنشاء قسم جديد
-function addNewChapter() {
-  const chapterName = prompt('أدخل اسم القسم الجديد:', 'فصل جديد');
-  if (!chapterName || chapterName.trim() === '') return;
-  
-  // إنشاء مفتاح فريد
-  const key = 'custom_' + Date.now();
-  
-  // إضافة إلى المصفوفة
-  customChapters.push({
-    key: key,
-    name: chapterName.trim(),
-    icon: '📘'
-  });
-  
-  // إنشاء البطاقة
-  createChapterCard(key, chapterName.trim());
-  
-  // حفظ التعديلات
-  saveCustomChapters();
-  
-  // تفعيل التحرير فورًا إذا كنا في وضع التحرير
-  if (isEditMode) {
-    // إعادة تعيين خاصية data-editable للعناصر الجديدة
-    document.querySelectorAll(`[data-edit-id^="${key}"]`).forEach(el => {
-      el.contentEditable = 'true';
-      el.addEventListener('blur', onEditableBlur);
-      el.addEventListener('input', onEditableInput);
-    });
-  }
-  
-  playSoundEffect('unlock');
-}
-
-// إضافة زر في شريط التنقل
-function addNewChapterButton() {
-  const navActions = document.querySelector('.nav-actions');
-  if (!navActions) return;
-  
-  const btn = document.createElement('button');
-  btn.className = 'nav-btn';
-  btn.innerHTML = '➕ إضافة قسم';
-  btn.onclick = addNewChapter;
-  btn.title = 'إضافة فصل جديد';
-  navActions.appendChild(btn);
-}
-
-// استدعاء الدوال عند تحميل الصفحة
-window.addEventListener('load', function() {
-  loadCustomChapters();
-  addNewChapterButton();
-});
-  // ===== حذف الأقسام المخصصة =====
-
-// دالة لحذف قسم مخصص
-function deleteChapter(key) {
-  if (!key.startsWith('custom_')) return; // نحمي الأقسام الأصلية من الحذف
-  
-  // تأكيد الحذف
-  if (!confirm('هل أنت متأكد من حذف هذا القسم؟')) return;
-  
-  // حذف البطاقة من DOM
-  const card = document.querySelector(`.gate-card[onclick*="'${key}'"]`);
-  if (card) card.remove();
-  
-  // حذف البيانات من localStorage
-  localStorage.removeItem('modal_title_' + key);
-  localStorage.removeItem('modal_body_' + key);
-  localStorage.removeItem('note_' + key);
-  
-  // حذف أي edits مرتبطة بهذا القسم (مثل عناوين البطاقة)
-  const prefix = 'edit_';
-  for (let i = localStorage.length - 1; i >= 0; i--) {
-    const storageKey = localStorage.key(i);
-    if (storageKey && storageKey.startsWith(prefix)) {
-      const id = storageKey.substring(prefix.length);
-      if (id.startsWith(key)) {
-        localStorage.removeItem(storageKey);
-      }
-    }
-  }
-  
-  // حذف من مصفوفة customChapters
-  customChapters = customChapters.filter(ch => ch.key !== key);
-  saveCustomChapters();
-  
-  // حذف من modalContent
-  delete modalContent[key];
-  
-  playSoundEffect('modalClose'); // صوت للإشارة للحذف
-  showEditorStatus('تم حذف القسم ✓');
-}
-
-// تعديل دالة createChapterCard لإضافة زر الحذف
-const originalCreateChapterCard = createChapterCard;
-createChapterCard = function(key, name, icon = '📘') {
-  // استدعاء الدالة الأصلية أولاً
-  originalCreateChapterCard(key, name, icon);
-  
-  // الآن نجد البطاقة التي تم إنشاؤها ونضيف زر الحذف
-  const gatesGrid = document.querySelector('#part1 .gates-grid');
-  if (!gatesGrid) return;
-  
-  // البطاقة الجديدة هي آخر بطاقة في grid
-  const newCard = gatesGrid.lastElementChild;
-  if (!newCard) return;
-  
-  // إضافة زر الحذف إذا كان القسم مخصصاً
-  if (key.startsWith('custom_')) {
-    const deleteBtn = document.createElement('span');
-    deleteBtn.className = 'gate-delete-btn';
-    deleteBtn.innerHTML = '🗑️';
-    deleteBtn.title = 'حذف القسم';
-    deleteBtn.style.cssText = `
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      color: rgba(255,100,100,0.8);
-      z-index: 10;
-    `;
-    
-    // منع فتح modal عند النقر على زر الحذف
-    deleteBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      deleteChapter(key);
-    });
-    
-    newCard.style.position = 'relative'; // تأكد أن البطاقة position relative
-    newCard.appendChild(deleteBtn);
-    
-    // إظهار زر الحذف عند التحويم على البطاقة في وضع التحرير
-    newCard.addEventListener('mouseenter', () => {
-      if (isEditMode) deleteBtn.style.opacity = '1';
-    });
-    newCard.addEventListener('mouseleave', () => {
-      deleteBtn.style.opacity = '0';
-    });
-  }
-};
-
-// تعديل دوال وضع التحرير لإظهار/إخفاء أزرار الحذف
-const originalEnterEditModeForDelete = enterEditMode;
-enterEditMode = function() {
-  originalEnterEditModeForDelete();
-  // إظهار أزرار الحذف للبطاقات المخصصة (اختياري: يمكن التحكم عبر CSS)
-  document.querySelectorAll('.gate-delete-btn').forEach(btn => {
-    btn.style.display = 'inline-block'; // أو أي إظهار
-  });
-};
-
-const originalExitEditModeForDelete = exitEditMode;
-exitEditMode = function() {
-  originalExitEditModeForDelete();
-  // إخفاء أزرار الحذف
-  document.querySelectorAll('.gate-delete-btn').forEach(btn => {
-    btn.style.opacity = '0'; // نخفيها
-  });
-};
-
-// إعادة تعريف الدوال الأصلية إذا كانت قد عُرّفت سابقاً (للتأكد من عدم التعارض)
-// يمكننا ببساطة وضع الكود الجديد بعد التعريفات السابقة.
 </script>
 </body>
 </html>

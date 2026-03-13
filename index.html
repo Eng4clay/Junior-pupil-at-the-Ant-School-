@@ -1754,7 +1754,192 @@ function buildPrintContent() {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeModal(); closeEditorPassword(); }
 });
+  // ===== حل مشكلة تداخل النوافذ =====
+let currentModalKey = null; // المفتاح الحالي للنافذة المفتوحة
+
+// تعديل دالة openModal لحل المشكلة
+const originalOpenModal = openModal;
+openModal = function(key) {
+  originalOpenModal(key); // نستدعي الدالة الأصلية أولاً
+  currentModalKey = key;
   
+  const titleEl = document.getElementById('modal-title');
+  const bodyEl = document.getElementById('modal-body');
+  
+  // تخزين المفتاح في data attribute
+  titleEl.dataset.modalKey = key;
+  bodyEl.dataset.modalKey = key;
+  
+  if (isEditMode) {
+    enableModalEditing();
+  }
+};
+
+// تفعيل التحرير داخل النافذة
+function enableModalEditing() {
+  const titleEl = document.getElementById('modal-title');
+  const bodyEl = document.getElementById('modal-body');
+  
+  // إزالة أي مستمعات سابقة (لتجنب التكرار)
+  titleEl.removeEventListener('blur', saveModalContent);
+  bodyEl.removeEventListener('blur', saveModalContent);
+  
+  titleEl.contentEditable = 'true';
+  bodyEl.contentEditable = 'true';
+  
+  titleEl.addEventListener('blur', saveModalContent);
+  bodyEl.addEventListener('blur', saveModalContent);
+}
+
+// دالة حفظ محتوى النافذة باستخدام المفتاح المخزن
+function saveModalContent(e) {
+  const el = e.target;
+  const key = el.dataset.modalKey;
+  if (!key) return;
+  
+  if (el.id === 'modal-title') {
+    localStorage.setItem('modal_title_' + key, el.innerHTML);
+  } else if (el.id === 'modal-body') {
+    localStorage.setItem('modal_body_' + key, el.innerHTML);
+  }
+  playSoundEffect('save');
+  showEditorStatus('تم حفظ محتوى النافذة ✓');
+}
+
+// تعديل دالة closeModal لتعطيل التحرير
+const originalCloseModal = closeModal;
+closeModal = function() {
+  const titleEl = document.getElementById('modal-title');
+  const bodyEl = document.getElementById('modal-body');
+  
+  titleEl.contentEditable = 'false';
+  bodyEl.contentEditable = 'false';
+  titleEl.removeEventListener('blur', saveModalContent);
+  bodyEl.removeEventListener('blur', saveModalContent);
+  
+  originalCloseModal();
+};
+
+// تعديل دوال الدخول/الخروج من وضع التحرير لتعامل مع النافذة الحالية
+const originalEnterEditMode = enterEditMode;
+enterEditMode = function() {
+  originalEnterEditMode();
+  if (document.getElementById('modal').classList.contains('active')) {
+    enableModalEditing();
+  }
+};
+
+const originalExitEditMode = exitEditMode;
+exitEditMode = function() {
+  originalExitEditMode();
+  if (document.getElementById('modal').classList.contains('active')) {
+    document.getElementById('modal-title').contentEditable = 'false';
+    document.getElementById('modal-body').contentEditable = 'false';
+  }
+};
+
+// ===== إضافة أقسام جديدة ديناميكيًا =====
+// مصفوفة لتخزين الفصول المخصصة
+let customChapters = [];
+
+// تحميل الفصول المخصصة من localStorage
+function loadCustomChapters() {
+  const saved = localStorage.getItem('customChapters');
+  if (saved) {
+    try {
+      customChapters = JSON.parse(saved);
+    } catch(e) {
+      customChapters = [];
+    }
+  }
+  // إعادة إنشاء البطاقات المخزنة
+  customChapters.forEach(chapter => {
+    createChapterCard(chapter.key, chapter.name, chapter.icon || '📘');
+  });
+}
+
+// حفظ الفصول المخصصة
+function saveCustomChapters() {
+  localStorage.setItem('customChapters', JSON.stringify(customChapters));
+}
+
+// إنشاء بطاقة جديدة
+function createChapterCard(key, name, icon = '📘') {
+  const gatesGrid = document.querySelector('#part1 .gates-grid');
+  if (!gatesGrid) return;
+  
+  const card = document.createElement('div');
+  card.className = 'gate-card';
+  card.setAttribute('onclick', `openModal('${key}');playSoundEffect('gate')`);
+  
+  card.innerHTML = `
+    <span class="gate-icon">${icon}</span>
+    <span class="gate-number" data-editable data-edit-id="${key}-num">${name}</span>
+    <div class="gate-name" data-editable data-edit-id="${key}-name">${name}</div>
+    <div class="gate-desc" data-editable data-edit-id="${key}-desc">قسم مخصص — أضف وصفك هنا</div>
+  `;
+  
+  gatesGrid.appendChild(card);
+  
+  // إضافة المحتوى الافتراضي للنافذة
+  modalContent[key] = {
+    title: name,
+    body: `<p>هذا قسم جديد. يمكنك تحرير محتواه الآن.</p>`
+  };
+}
+
+// إنشاء قسم جديد
+function addNewChapter() {
+  const chapterName = prompt('أدخل اسم القسم الجديد:', 'فصل جديد');
+  if (!chapterName || chapterName.trim() === '') return;
+  
+  // إنشاء مفتاح فريد
+  const key = 'custom_' + Date.now();
+  
+  // إضافة إلى المصفوفة
+  customChapters.push({
+    key: key,
+    name: chapterName.trim(),
+    icon: '📘'
+  });
+  
+  // إنشاء البطاقة
+  createChapterCard(key, chapterName.trim());
+  
+  // حفظ التعديلات
+  saveCustomChapters();
+  
+  // تفعيل التحرير فورًا إذا كنا في وضع التحرير
+  if (isEditMode) {
+    // إعادة تعيين خاصية data-editable للعناصر الجديدة
+    document.querySelectorAll(`[data-edit-id^="${key}"]`).forEach(el => {
+      el.contentEditable = 'true';
+      el.addEventListener('blur', onEditableBlur);
+      el.addEventListener('input', onEditableInput);
+    });
+  }
+  
+  playSoundEffect('unlock');
+}
+
+// إضافة زر في شريط التنقل
+function addNewChapterButton() {
+  const navActions = document.querySelector('.nav-actions');
+  if (!navActions) return;
+  
+  const btn = document.createElement('button');
+  btn.className = 'nav-btn';
+  btn.innerHTML = '➕ إضافة قسم';
+  btn.onclick = addNewChapter;
+  btn.title = 'إضافة فصل جديد';
+  navActions.appendChild(btn);
+}
+
+// استدعاء الدوال عند تحميل الصفحة
+window.addEventListener('load', function() {
+  loadCustomChapters();
+  addNewChapterButton();
+});
   
 </script>
 </body>
